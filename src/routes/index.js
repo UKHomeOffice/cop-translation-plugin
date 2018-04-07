@@ -1,5 +1,6 @@
 import express from 'express';
 import heathRouter from './healthRoutes';
+import formDataResolveRouter from './formDataResolveRoutes';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ const allowCrossDomain = (req, res, next) => {
 
 const allApiRouter = (keycloak) => {
      router.use(heathRouter);
+     router.use(formDataResolveRouter(keycloak));
      return router;
 
 };

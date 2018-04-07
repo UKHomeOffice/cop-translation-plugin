@@ -45,9 +45,11 @@
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
-    "keycloak-connect": "^3.4.3",
+    "formiojs": "^2.30.2",
+    "keycloak-connect": "^4.0.0-beta.1",
     "morgan": "^1.9.0",
     "requirejs": "^2.3.5",
+    "sinon": "^4.5.0",
     "winston": "^2.4.0"
   },
   "devDependencies": {

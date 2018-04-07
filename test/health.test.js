@@ -1,19 +1,17 @@
 process.env.NODE_ENV = 'test';
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../src/index');
-let should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../src/index');
+const should = chai.should();
 
 chai.use(chaiHttp);
-
-
 
 describe('Health', () => {
     describe('/GET healthz', () => {
         it('it should GET status of OK', (done) => {
             chai.request(server)
-                .get('/api/healthz')
+                .get('/api/translation/healthz')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -25,7 +23,7 @@ describe('Health', () => {
     describe ("/GET readiness", () => {
         it('it should GET ready of true', (done) => {
             chai.request(server)
-                .get('/api/readiness')
+                .get('/api/translation/readiness')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');

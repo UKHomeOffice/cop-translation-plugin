@@ -10,6 +10,7 @@ const areRequired = (req, params) => {
 const isBoolean = (req, param) => {
   if (typeof req.param(param) === 'undefined' || req.param(param) === null) {
     req.assert(param, ERROR_STATUS.INVALID_PARAMETER).isBoolean();
+
   }
 };
 

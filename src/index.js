@@ -40,7 +40,9 @@ app.use(morgan('common'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator);
 app.use(route.allowCrossDomain);
-app.use('/api', route.allApiRouter(keycloak));
+app.use(keycloak.middleware());
+
+app.use('/api/translation', route.allApiRouter(keycloak));
 
 
 const server = http.createServer(app).listen(app.get('port'), function () {
