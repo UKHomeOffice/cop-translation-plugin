@@ -45,3 +45,14 @@ Using the logged in user's credentials the service will create a data context wh
 3. Teams
 4. Reference data
 5. Environment contexts (URL resolutions)
+
+
+**_All endpoints are protected using Keycloak_**
+
+The following environment variables are required:
+
+1. AUTH_CLIENT_ID
+2. AUTH_URL
+3. AUTH_REALM
+4. SESSION_SECRET
+

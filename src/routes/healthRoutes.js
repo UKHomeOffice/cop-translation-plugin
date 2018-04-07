@@ -2,11 +2,13 @@ import express from 'express';
 
 import healthController from '../controllers/healthController';
 
-const router = express.Router();
+const healthRouter = express.Router();
 
-router
-    .get('/healthz', [healthController.healthCheck])
+healthRouter
+    .get('/healthz', [healthController.healthCheck]);
+
+healthRouter
     .get('/readiness', [healthController.readinessCheck]);
 
-export default router;
+export default healthRouter;
 
