@@ -9,7 +9,8 @@ const healthCheck = (req, res) => {
 const readinessCheck = (req, res) => {
     logger.info("Readiness check initiated");
     responseHandler.res(null, {"ready" : true}, res);
-}
+};
+
 export default {
     healthCheck,
     readinessCheck

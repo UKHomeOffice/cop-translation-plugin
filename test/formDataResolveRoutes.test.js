@@ -1,4 +1,7 @@
 process.env.NODE_ENV = 'test';
+process.env.SESSION_SECRET="test";
+
+import nock from 'nock';
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -7,7 +10,7 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
-describe('Form Data Resolution', () => {
+describe('Form Data Routes Resolution', () => {
     describe('/GET forms', () => {
         it('it should GET 403 as not authenticated', (done) => {
             chai.request(server)

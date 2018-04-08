@@ -1,15 +1,18 @@
 process.env.NODE_ENV = 'test';
+process.env.SESSION_SECRET="test";
 
+import * as logger from 'winston';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../src/index');
 const should = chai.should();
 
+
 chai.use(chaiHttp);
 
-describe('Health', () => {
+describe('Health Routes', () => {
     describe('/GET healthz', () => {
-        it('it should GET status of OK', (done) => {
+        it('it should return a boyd of {status:OK}', (done) => {
             chai.request(server)
                 .get('/api/translation/healthz')
                 .end((err, res) => {
@@ -21,10 +24,11 @@ describe('Health', () => {
         });
     });
     describe ("/GET readiness", () => {
-        it('it should GET ready of true', (done) => {
+        it('it should return a body of {ready:true}', (done) => {
             chai.request(server)
                 .get('/api/translation/readiness')
                 .end((err, res) => {
+                    logger.info(JSON.stringify(res));
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.include({"ready": true});

@@ -1,0 +1,11 @@
+class StaffAttributes {
+    constructor(attributes) {
+        this.phone = attributes ? attributes.phone : null;
+        this.grade = attributes ? attributes.grade : null;
+        this.securityCleared = attributes ? attributes.securitycleared : null;
+        this.securityClearedDate = attributes ? attributes.securitycleareddate : null;
+        this.departmentCode = attributes ? attributes.departmentcode : null;
+    }
+}
+
+export default StaffAttributes;

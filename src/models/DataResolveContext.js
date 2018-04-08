@@ -1,4 +1,3 @@
-import KeycloakContext from "./KeycloakContext";
 
 class DataResolveContext {
 
