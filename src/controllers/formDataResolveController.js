@@ -10,6 +10,18 @@ import EnvironmentContext from "../models/EnvironmentContext";
 const regExp = new RegExp('\\{(.+?)\\}');
 
 
+const taskVariables = async (taskId) => {
+
+};
+
+const processInstanceVariables = async (processInstanceId) => {
+
+};
+
+const userDetails = async (email) => {
+
+};
+
 const getFormSchema = (req, res) => {
 
     const formName = req.params.formName;
@@ -18,6 +30,14 @@ const getFormSchema = (req, res) => {
     const keycloakContext = new KeycloakContext(req.kauth);
 
     const dataResolveContext = new DataResolveContext(keycloakContext, null, new EnvironmentContext(process.env));
+
+    const taskId = req.query.taskId;
+
+    if (taskId) {
+        //load task instance variables
+        //load process instance variables
+        //set into data context
+    }
 
     axios.get(`${process.env.FORM_URL}/form?name=${formName}`)
         .then((response) => {
@@ -49,12 +69,12 @@ const handleDefaultValueExpressions = (component, dataResolveContext) => {
     if (component.defaultValue) {
         try {
             if (regExp.test(component.defaultValue)) {
-                component.defaultValue = component.defaultValue.replace(regExp,  (match, capture) => {
-                    const val =  JSONPath.value(dataResolveContext, capture);
+                component.defaultValue = component.defaultValue.replace(regExp, (match, capture) => {
+                    const val = JSONPath.value(dataResolveContext, capture);
                     logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, component.key, val);
                     return val;
                 });
-               }
+            }
         } catch (e) {
             logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", component.defaultValue, e);
         }
