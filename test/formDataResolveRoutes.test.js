@@ -1,8 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.SESSION_SECRET="test";
 
-import nock from 'nock';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../src/index');
