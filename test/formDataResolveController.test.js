@@ -9,99 +9,7 @@ import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import expect from 'expect';
 import formDataController from '../src/controllers/formDataResolveController';
-
-const forms = [{
-    components: [
-        {
-            type: 'textfield',
-            key: 'firstName',
-            label: 'First Name',
-            placeholder: 'Enter your first name.',
-            defaultValue: '{$.keycloakContext.givenName}',
-            input: true
-        },
-        {
-            type: 'textfield',
-            key: 'lastName',
-            label: 'Last Name',
-            placeholder: 'Enter your last name',
-            defaultValue: '{$.keycloakContext.familyName}',
-            input: true
-        },
-        {
-            type: 'hidden',
-            key: 'sessionId',
-            label: 'sessionid',
-            defaultValue: '{$.keycloakContext.sessionId}',
-            input: true
-        },
-        {
-            type: 'button',
-            action: 'submit',
-            label: 'Submit',
-            theme: 'primary'
-        }
-    ]
-}];
-
-const dataUrlForm = [
-    {
-        components: [
-            {
-                "errorLabel": "Region selection required to filter location",
-                "tooltip": "Selecting a region will filter the location drop down list",
-                "customClass": "",
-                "properties": {},
-                "conditional": {
-                    "show": "",
-                    "when": null,
-                    "eq": ""
-                },
-                "tags": [],
-                "labelPosition": "top",
-                "type": "select",
-                "validate": {
-                    "required": true
-                },
-                "clearOnHide": true,
-                "hidden": false,
-                "persistent": true,
-                "unique": false,
-                "protected": false,
-                "multiple": false,
-                "template": "<span>{{ item.regionname }}</span>",
-                "authenticate": false,
-                "filter": "",
-                "refreshOn": "",
-                "defaultValue": "",
-                "valueProperty": "regionid",
-                "dataSrc": "url",
-                "data": {
-                    "disableLimit": true,
-                    "values": [
-                        {
-                            "value": "",
-                            "label": ""
-                        }
-                    ],
-                    "json": "",
-                    "url": "{$.environmentContext.referenceDataUrl}/region",
-                    "resource": "",
-                    "custom": "",
-                    "headers": []
-                },
-                "placeholder": "Select a region",
-                "key": "regionid",
-                "label": "Region",
-                "tableView": true,
-                "input": true,
-                "lockKey": true,
-                "hideLabel": false
-            }
-        ]
-    }
-
-]
+import * as forms from './forms'
 
 describe('Form Data Resolve Controller', () => {
 
@@ -109,7 +17,7 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=testForm')
-                .reply(200, forms);
+                .reply(200, forms.simpleForm);
         });
         it('it should return an updated form schema for keycloakContext', (done) => {
             const request = httpMocks.createRequest({
@@ -160,7 +68,7 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=dataUrlForm')
-                .reply(200, dataUrlForm);
+                .reply(200, forms.dataUrlForm);
         });
         it('it should return an updated form schema for url', (done) => {
             const request = httpMocks.createRequest({

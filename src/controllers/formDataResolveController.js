@@ -25,15 +25,13 @@ const userDetails = async (email) => {
 const getFormSchema = (req, res) => {
 
     const formName = req.params.formName;
-
     logger.info("Getting form schema for %s", formName);
-    const keycloakContext = new KeycloakContext(req.kauth);
-
-    const dataResolveContext = new DataResolveContext(keycloakContext, null, new EnvironmentContext(process.env));
+    const dataResolveContext = new DataResolveContext(new KeycloakContext(req.kauth), null, new EnvironmentContext(process.env));
 
     const taskId = req.query.taskId;
 
     if (taskId) {
+        logger.info("Task id %s ...loading process and task info", taskId);
         //load task instance variables
         //load process instance variables
         //set into data context
@@ -55,48 +53,37 @@ const getFormSchema = (req, res) => {
         })
         .catch((error) => {
             logger.error("Error occurred while requesting form '%s'", error.message);
-            let errorStatus;
-            if (!error.response) {
-                errorStatus = 'Error: Network Error connecting to form engine';
-            } else {
-                errorStatus = error.response.data.message;
-            }
+            const errorStatus = !error.response ? 'Error: Network Error connecting to form engine' : error.response.data.message;
             responseHandler.res({code: 500, message: errorStatus}, {}, res);
         });
 };
 
 const handleDefaultValueExpressions = (component, dataResolveContext) => {
     if (component.defaultValue) {
-        try {
-            if (regExp.test(component.defaultValue)) {
-                component.defaultValue = component.defaultValue.replace(regExp, (match, capture) => {
-                    const val = JSONPath.value(dataResolveContext, capture);
-                    logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, component.key, val);
-                    return val;
-                });
-            }
-        } catch (e) {
-            logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", component.defaultValue, e);
+        component.defaultValue = performJsonPathResolution(component.key,
+            component.defaultValue, dataResolveContext);
+    }
+};
+
+const performJsonPathResolution = (key, value, dataResolveContext) => {
+    try {
+        if (regExp.test(value)) {
+            return value.replace(regExp, (match, capture) => {
+                const val = JSONPath.value(dataResolveContext, capture);
+                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, val);
+                return val;
+            });
         }
+        return value;
+    } catch (e) {
+        logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", value, e);
     }
 };
 
 const handleUrlComponents = (component, dataResolveContext) => {
     if (component.data && component.dataSrc === 'url') {
-        const url = component.data.url;
         component.lazyLoad = true;
-        if (regExp.test(url)) {
-            try {
-                component.data.url = url.replace(regExp, (match, capture) => {
-                    const val = JSONPath.value(dataResolveContext, capture);
-                    logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, component.key, val);
-                    return val;
-                });
-            } catch (e) {
-                logger.error("Error occurred while trying to resolve url %s...error message %s", url, e);
-            }
-
-        }
+        component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
         const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
         const header = component.data.headers.find(h => h.key === 'Authorization');
         if (header) {
