@@ -1,9 +1,8 @@
-
 class DataResolveContext {
 
-    constructor(keycloakContext, userContext, environmentContext) {
+    constructor(keycloakContext, userDetailsContext, environmentContext) {
         this.keycloakContext = keycloakContext;
-        this.userContext = userContext;
+        this.userDetailsContext = userDetailsContext;
         this.environmentContext = environmentContext;
     }
 }

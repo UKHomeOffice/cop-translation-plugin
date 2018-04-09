@@ -11,15 +11,12 @@ const regExp = new RegExp('\\{(.+?)\\}');
 
 
 const taskVariables = async (taskId) => {
-
 };
 
 const processInstanceVariables = async (processInstanceId) => {
-
 };
 
 const userDetails = async (email) => {
-
 };
 
 const getFormSchema = (req, res) => {
@@ -77,6 +74,7 @@ const performJsonPathResolution = (key, value, dataResolveContext) => {
         return value;
     } catch (e) {
         logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", value, e);
+        return value;
     }
 };
 
