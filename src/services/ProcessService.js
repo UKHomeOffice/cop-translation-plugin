@@ -1,4 +1,4 @@
-import axios from "axios/index";
+import axios from "axios";
 import * as logger from 'winston';
 
 const getTaskData = async (taskId, headers) => {
@@ -19,11 +19,17 @@ const getTaskVariables = async (taskId, headers) => {
 
 };
 const getProcessVariables = async (processInstanceId, headers) => {
-    return axios({
-        url: `${process.env.WORKFLOW_URL}/api/workflow/process-instance/${processInstanceId}/variables`,
-        method: 'GET',
-        headers: headers
-    });
+    try {
+        return axios({
+            url: `${process.env.WORKFLOW_URL}/api/workflow/process-instance/${processInstanceId}/variables`,
+            method: 'GET',
+            headers: headers
+        });
+    } catch (e) {
+        logger.error("Failed to get process variable data %s", e);
+        throw e;
+    }
+
 };
 
 

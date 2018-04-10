@@ -54,12 +54,13 @@ const getFormSchema = (req, res) => {
 
             getUserDetails(keycloakContext.email, headers).then((user) => {
                 if (taskId && processInstanceId) {
-                    processVariables(taskId, processInstanceId, headers)
-                        .then((data) => {
+                    axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId,headers)])
+                        .then(axios.spread((taskData, taskVariables, processVariables) => {
                             applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env),
-                                new ProcessContext(data[2]),
-                                new TaskContext(data[0], data[1])), form, res);
-                        }).catch((e) => {
+                                new ProcessContext(processVariables),
+                                new TaskContext(taskData, taskVariables)), form, res);
+
+                        })).catch((e) => {
                         logger.error("Failed to resolve process data promise %s", e);
                         responseHandler.res({
                             code: 400,

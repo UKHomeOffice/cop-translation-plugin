@@ -10,6 +10,7 @@ const http = require('http');
 
 import session from 'express-session';
 import Keycloak from 'keycloak-connect';
+import * as axios from "axios";
 
 let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
@@ -17,6 +18,27 @@ let kcConfig = {
     serverUrl: process.env.AUTH_URL,
     realm: process.env.AUTH_REALM
 };
+
+axios.interceptors.request.use(
+    (config) => {
+        logger.debug('Request: URL [%s] -> Method [%s]', config.url, config.method.toUpperCase());
+        return config
+    },
+    (error) => {
+        return Promise.reject(error);
+    });
+
+axios.interceptors.response.use((response) => {
+    logger.debug('Response: URL [%s] -> Method [%s] -> Response status [%s]', response.config.url, response.config.method.toUpperCase(), response.status);
+    return response
+}, (error) => {
+    logger.error('Response Error: URL [%s] -> Method [%s] -> Status [%s] -> Message [%s]', error.response.config.url,
+        error.response.config.method.toUpperCase(),
+        error.response.status,
+        JSON.stringify(error.response.data)
+    );
+    return Promise.reject(error);
+});
 
 
 const app = express();
@@ -26,7 +48,7 @@ const port = process.env.PORT || 3001;
 app.set('port', port);
 
 const memoryStore = new session.MemoryStore();
-const keycloak = new Keycloak({ store: memoryStore }, kcConfig);
+const keycloak = new Keycloak({store: memoryStore}, kcConfig);
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -37,7 +59,7 @@ app.use(session({
 
 app.use(bodyParser.json());
 app.use(morgan('common'));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
 app.use(route.allowCrossDomain);
 app.use(keycloak.middleware());
