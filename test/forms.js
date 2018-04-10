@@ -97,7 +97,7 @@ const processContextForm = [{
             key: 'firstName',
             label: 'First Name',
             placeholder: 'Enter your first name.',
-            defaultValue: '{$.processContext.person.givenName}',
+            defaultValue: '{$.processContext.person.firstName}',
             input: true
         },
         {
@@ -124,8 +124,70 @@ const processContextForm = [{
     ]
 }];
 
+const taskContextForm = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'formName',
+            label: 'Form Name',
+            defaultValue: '{$.taskContext.name}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.processContext.person.firstName}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'lastName',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.processContext.person.lastName}',
+            input: true
+        },
+        {
+            type: 'hidden',
+            key: 'id',
+            label: 'id',
+            defaultValue: '{$.taskContext.person.id}',
+            input: true
+        },
+        {
+            type: 'button',
+            action: 'submit',
+            label: 'Submit',
+            theme: 'primary'
+        }
+    ]
+}];
+
+const userDetailsContextForm = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'grade',
+            label: 'Grade',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.userDetailsContext.grade}',
+            input: true
+        },
+        {
+            type: 'button',
+            action: 'submit',
+            label: 'Submit',
+            theme: 'primary'
+        }
+    ]
+}];
+
 export {
     dataUrlForm,
     simpleForm,
-    processContextForm
+    processContextForm,
+    taskContextForm,
+    userDetailsContextForm
 }

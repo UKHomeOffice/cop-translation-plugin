@@ -1,14 +1,14 @@
-class TaskVariableContext {
+class TaskContext {
 
     constructor(task, variables) {
-        this.taskId = task.id;
-        this.name = task.name;
-        this.description = task.description;
-        this.createDate = task.created;
-        this.dueDate = task.due;
-        this.followUpDate = task.followUp;
-        this.priority = thas.priority;
-
+        Object.keys(task.data.task).forEach(taskKey => {
+            this[taskKey] = task.data.task[taskKey];
+        });
+        Object.keys(variables.data).forEach(key => {
+            this[key] = variables.data[key].value;
+        });
     }
+
 }
-export default TaskVariableContext;
+
+export default TaskContext;

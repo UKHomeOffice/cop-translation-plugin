@@ -2,7 +2,7 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import * as logger from 'winston';
 
-import expressValidator from './utilities/validators';
+import expressValidator from 'express-validator';
 import route from './routes';
 import morgan from 'morgan';
 
@@ -38,7 +38,7 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(morgan('common'));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(expressValidator);
+app.use(expressValidator());
 app.use(route.allowCrossDomain);
 app.use(keycloak.middleware());
 

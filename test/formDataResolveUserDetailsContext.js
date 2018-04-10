@@ -12,22 +12,25 @@ import formDataController from '../src/controllers/formDataResolveController';
 import * as forms from './forms'
 
 describe('Form Data Resolve Controller', () => {
-
-    describe('A call to data resolve controller for input type', () => {
+    describe('A call to data resolve controller for user details  context', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
-                .get('/form?name=testForm')
-                .reply(200, forms.simpleForm);
+                .get('/form?name=userDetailsContextForm')
+                .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
-                .reply(200, []);
+                .reply(200, [{
+                    "grade": "test",
+                    "phone": "testphone",
+                    "personid": "personid"
+                }]);
         });
-        it('it should return an updated form schema for keycloakContext', (done) => {
+        it('it should return an updated form schema for user details context', (done) => {
             const request = httpMocks.createRequest({
                 method: 'GET',
-                url: '/api/translation/form/testFrom',
+                url: '/api/translation/form/userDetailsContextForm',
                 params: {
-                    formName: "testForm"
+                    formName: "userDetailsContextForm"
                 },
                 kauth: {
                     grant: {
@@ -55,34 +58,30 @@ describe('Form Data Resolve Controller', () => {
                 expect(response._isEndCalled()).toBe(true);
                 const updatedForm = JSON.parse(response._getData());
 
-                const firstName = JSONPath.value(updatedForm, "$..components[?(@.key=='firstName')].defaultValue");
-                const lastName = JSONPath.value(updatedForm, "$..components[?(@.key=='lastName')].defaultValue");
-                const sessionId = JSONPath.value(updatedForm, "$..components[?(@.key=='sessionId')].defaultValue");
+                const grade = JSONPath.value(updatedForm, "$..components[?(@.key=='grade')].defaultValue");
 
-                expect(firstName).toEqual("testgivenname");
-                expect(lastName).toEqual("testfamilyname");
-                expect(sessionId).toEqual("session_id");
+                expect(grade).toEqual("test");
+
                 done();
             });
         });
     });
 
-    describe('A call to data resolve controller for url type', () => {
+    describe('A call to data resolve controller for with details for user context', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
-                .get('/form?name=dataUrlForm')
-                .reply(200, forms.dataUrlForm);
+                .get('/form?name=userDetailsContextForm')
+                .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
-
         });
-        it('it should return an updated form schema for url', (done) => {
+        it('it should return an updated form schema with null values', (done) => {
             const request = httpMocks.createRequest({
                 method: 'GET',
-                url: '/api/translation/form/dataUrlForm',
+                url: '/api/translation/form/userDetailsContextForm',
                 params: {
-                    formName: "dataUrlForm"
+                    formName: "userDetailsContextForm"
                 },
                 kauth: {
                     grant: {
@@ -109,11 +108,12 @@ describe('Form Data Resolve Controller', () => {
                 expect(response.statusCode).toEqual(200);
                 expect(response._isEndCalled()).toBe(true);
                 const updatedForm = JSON.parse(response._getData());
-                const url = JSONPath.value(updatedForm, "$..components[?(@.key=='regionid')].data.url");
-                expect(url).toEqual("http://localhost:9001/region");
+                const grade = JSONPath.value(updatedForm, "$..components[?(@.key=='grade')].defaultValue");
+
+                expect(grade).toEqual(null);
+
                 done();
             });
         });
     });
-
 });

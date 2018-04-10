@@ -1,8 +1,24 @@
 const taskData = {
-
+    task: {
+        name: "taskName",
+        description: "taskDescription"
+    }
 };
 
-const taskVariables = {};
+const taskVariables = {
+    person: {
+        type: "Object",
+        value: {
+            firstName: "firstNameFromProcess",
+            lastName: "lastNameFromProcess",
+            id: "idFromProcess"
+        },
+        valueInfo: {
+            objectTypeName: "xxxx",
+            serializationDataFormat: "application/json"
+        }
+    }
+};
 
 const processVariables = {
     type: {
