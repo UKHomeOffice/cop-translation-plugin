@@ -2,7 +2,7 @@ pipeline:
 
   test:
     image: node:8
-    command:
+    commands:
       - npm install
       - npm test
     when:
