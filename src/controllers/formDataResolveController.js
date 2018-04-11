@@ -42,11 +42,8 @@ const getFormSchema = (req, res) => {
                             new TaskContext(taskData, taskVariables)), form, res);
 
                     })).catch((e) => {
-                    logger.error("Failed to resolve process data promise %s", e);
-                    responseHandler.res({
-                        code: 400,
-                        message: `Failed to resolve process data for form ${e}`
-                    }, {}, res);
+                        logger.error("Failed to resolve process data promise %s", e);
+                        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, res);
                 });
             } else {
                 applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env)), form, res);

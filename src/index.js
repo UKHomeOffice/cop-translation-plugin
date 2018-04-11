@@ -11,6 +11,7 @@ const http = require('http');
 import session from 'express-session';
 import Keycloak from 'keycloak-connect';
 import * as axios from "axios";
+import moment from 'moment';
 
 let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
@@ -21,7 +22,7 @@ let kcConfig = {
 
 axios.interceptors.request.use(
     (config) => {
-       logger.debug('Request: URL [%s] -> Method [%s]', config.url, config.method.toUpperCase());
+        logger.info('Request: [%s] "%s %s"', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), config.method.toUpperCase(), config.url);
         return config
     },
     (error) => {
@@ -29,11 +30,13 @@ axios.interceptors.request.use(
     });
 
 axios.interceptors.response.use((response) => {
-    logger.debug('Response: URL [%s] -> Method [%s] -> Response status [%s]', response.config.url, response.config.method.toUpperCase(), response.status);
+    logger.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
     return response
 }, (error) => {
-    logger.error('Response Error: URL [%s] -> Method [%s] -> Status [%s] -> Message [%s]', error.response.config.url,
+    logger.error('Error: [%s] "%s %s" %s %s',
+        moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'),
         error.response.config.method.toUpperCase(),
+        error.response.config.url,
         error.response.status,
         JSON.stringify(error.response.data)
     );
