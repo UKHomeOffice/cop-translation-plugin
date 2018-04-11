@@ -1,5 +1,6 @@
 process.env.NODE_ENV = 'test';
 process.env.SESSION_SECRET="test";
+process.env.SESSION_NAME="test";
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');

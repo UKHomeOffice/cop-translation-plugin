@@ -1,5 +1,7 @@
 process.env.NODE_ENV = 'test';
 process.env.SESSION_SECRET="test";
+process.env.SESSION_NAME="test";
+
 
 import * as logger from 'winston';
 const chai = require('chai');

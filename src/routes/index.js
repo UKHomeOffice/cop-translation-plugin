@@ -4,14 +4,6 @@ import formDataResolveRouter from './formDataResolveRoutes';
 
 const router = express.Router();
 
-const allowCrossDomain = (req, res, next) => {
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, PATCH, DELETE, OPTIONS');
-    next();
-};
-
-
 const allApiRouter = (keycloak) => {
      router.use(heathRouter);
      router.use(formDataResolveRouter(keycloak));
@@ -20,7 +12,6 @@ const allApiRouter = (keycloak) => {
 };
 
 export default {
-    allowCrossDomain,
     allApiRouter,
 }
 

@@ -12,6 +12,7 @@ import session from 'express-session';
 import Keycloak from 'keycloak-connect';
 import * as axios from "axios";
 import moment from 'moment';
+import helmet from 'helmet';
 
 let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
@@ -57,14 +58,15 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
-    store: memoryStore
+    store: memoryStore,
+    name: process.env.SESSION_NAME
 }));
 
 app.use(bodyParser.json());
 app.use(morgan('common'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
-app.use(route.allowCrossDomain);
+app.use(helmet())
 app.use(keycloak.middleware());
 
 app.use('/api/translation', route.allApiRouter(keycloak));
