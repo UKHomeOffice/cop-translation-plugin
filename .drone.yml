@@ -1,4 +1,11 @@
 pipeline:
+
+  translation-service-test:
+    image: quay.io/ukhomeofficedigital/nodejs-base:v8.9.4
+    command:
+      - npm install
+      - npm test
+
   translation-service-build:
     image: docker:17.09.1
     environment:

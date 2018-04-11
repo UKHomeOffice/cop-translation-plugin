@@ -3,7 +3,7 @@ process.env.SESSION_SECRET="test";
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const server = require('../src/index');
+const server = require('../../src/index');
 const should = chai.should();
 
 chai.use(chaiHttp);

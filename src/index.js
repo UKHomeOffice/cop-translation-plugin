@@ -21,7 +21,7 @@ let kcConfig = {
 
 axios.interceptors.request.use(
     (config) => {
-        logger.debug('Request: URL [%s] -> Method [%s]', config.url, config.method.toUpperCase());
+       logger.debug('Request: URL [%s] -> Method [%s]', config.url, config.method.toUpperCase());
         return config
     },
     (error) => {

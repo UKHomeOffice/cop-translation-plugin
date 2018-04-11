@@ -8,8 +8,8 @@ import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import expect from 'expect';
-import formDataController from '../src/controllers/formDataResolveController';
-import * as forms from './forms'
+import formDataController from '../../src/controllers/formDataResolveController';
+import * as forms from '../forms'
 
 describe('Form Data Resolve Controller', () => {
 
