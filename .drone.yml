@@ -1,7 +1,7 @@
 pipeline:
 
   translation-service-test:
-    image: quay.io/ukhomeofficedigital/nodejs-base:v8.9.4
+    image: node:8
     command:
       - npm install
       - npm test
