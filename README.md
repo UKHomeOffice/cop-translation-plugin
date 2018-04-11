@@ -59,6 +59,7 @@ The following environment variables are required:
 6. REFERENCE_DATA_URL
 7. SESSION_NAME
 
+
 #### Methods
 
 ##### POST
@@ -144,6 +145,7 @@ Response from service:
 
 /api/translation/form/{testFormName}
 
+Returns updated form schema
 
 
 Running tests in IntelliJ:
