@@ -1,12 +1,15 @@
 pipeline:
 
-  translation-service-test:
+  test:
     image: node:8
     command:
       - npm install
       - npm test
+    when:
+      branch: master
+      event: push
 
-  translation-service-build:
+  build:
     image: docker:17.09.1
     environment:
       - DOCKER_HOST=tcp://172.17.0.1:2375
