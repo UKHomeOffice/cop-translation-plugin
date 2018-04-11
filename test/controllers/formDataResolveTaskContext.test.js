@@ -177,7 +177,7 @@ describe('Form Data Resolve Controller', () => {
         it('it should return an updated form schema for task context', (done) => {
             const request = httpMocks.createRequest({
                 method: 'GET',
-                url: '/api/translation/form/taskContextForm',
+                url: '/api/translation/form',
                 params: {
                     formName: "taskContextForm"
                 },

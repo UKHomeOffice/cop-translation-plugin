@@ -64,7 +64,7 @@ The following environment variables are required:
 
 /api/translation/form
 
-Example form schema:
+Example form schema that exists within the Form Engine Microservice:
 ```$json
 
 {
@@ -95,7 +95,7 @@ Example form schema:
 
 ```
 
-Example POST:
+Example POST to the translation service:
 
 ```json
 {
@@ -108,7 +108,7 @@ Example POST:
  }
 }
 ```
-Response
+Response from service:
 
 ```$json
 
