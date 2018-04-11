@@ -11,6 +11,7 @@ import TaskContext from "../models/TaskContext";
 import {getProcessVariables, getTaskData, getTaskVariables} from "../services/ProcessService";
 import UserDetailsContext from "../models/UserDetailsContext";
 import {getUserDetails} from "../services/ReferenceService";
+import {getForm} from "../services/FormEngineService";
 
 const regExp = new RegExp('\\{(.+?)\\}');
 
@@ -19,13 +20,13 @@ const getFormSchemaForContext = (req, res) => {
     const data = req.body;
     const formName = data.formName;
     logger.info("Custom data context [%s]", JSON.stringify(data.dataContext));
-    form(formName, res, (form) => {
+    getForm(formName, res, (form) => {
         applyContextResolution(data.dataContext, form, res);
     });
 };
 
 const getFormSchema = (req, res) => {
-    form(req.params.formName, res, (form) => {
+    getForm(req.params.formName, res, (form) => {
         const keycloakContext = new KeycloakContext(req.kauth);
         logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
         const taskId = req.query.taskId;
@@ -61,36 +62,6 @@ const createHeader = (keycloakContext) => {
         'Accept-Type': 'application/json'
     };
 };
-
-const getForm = async (formName) => {
-    try {
-        const response = await axios.get(`${process.env.FORM_URL}/form?name=${formName}`);
-        return response.data ? response.data[0] : null;
-    } catch (e) {
-        throw e;
-    }
-};
-
-
-const form = (formName, res, callback) => {
-    logger.info("Getting form schema for %s", formName);
-    getForm(formName)
-        .then((form) => {
-            if (form) {
-                callback(form)
-            } else {
-                logger.error("Form with name [%s] does not exist", formName);
-                responseHandler.res({code: 404, message: `Form with name '${formName}' does not exist`}, {}, res);
-            }
-        }).catch((error) => handleFormLoadingError(error, res));
-};
-
-const handleFormLoadingError = (error, res) => {
-    logger.error("Error occurred while requesting form '%s'", error.message);
-    const errorStatus = !error.response ? 'Error: Network Error connecting to form engine' : error.response.data.message;
-    responseHandler.res({code: 500, message: errorStatus}, {}, res);
-};
-
 
 const applyContextResolution = (dataContext, form, res) => {
     FormioUtils.eachComponent(form.components, (component) => {
