@@ -58,4 +58,87 @@ The following environment variables are required:
 5. WORKFLOW_URL
 6. REFERENCE_DATA_URL
 
-Supports GET and POST
+#### Methods
+
+##### POST
+
+/api/translation/form
+
+Example form schema:
+```$json
+
+{
+  components: [
+    {
+      type: 'textfield',
+      key: 'firstName',
+      label: 'First Name',
+      input: true,
+      defaultValue: '$.firstName'
+    },
+    {
+      type: 'textfield',
+      key: 'lastName',
+      label: 'Last Name',
+      defaultValue: '$.myCustomObject.lastName'
+      input: true
+    },
+    {
+      type: 'button',
+      action: 'submit',
+      label: 'Submit',
+      theme: 'primary'
+    }
+  ]
+}
+
+
+```
+
+Example POST:
+
+```json
+{
+ "formName": "formName",
+ "dataContext": {
+    "firstName": "test",
+    "myCustomObject": {
+        "lastName" : "test"
+    }
+ }
+}
+```
+Response
+
+```$json
+
+{
+  components: [
+    {
+      type: 'textfield',
+      key: 'firstName',
+      label: 'First Name',
+      input: true,
+      defaultValue: 'test'
+    },
+    {
+      type: 'textfield',
+      key: 'lastName',
+      label: 'Last Name',
+      defaultValue: 'test'
+      input: true
+    },
+    {
+      type: 'button',
+      action: 'submit',
+      label: 'Submit',
+      theme: 'primary'
+    }
+  ]
+}
+
+```
+
+##### GET
+
+/api/translation/form/{testFormName}
