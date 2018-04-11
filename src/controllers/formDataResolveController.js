@@ -14,6 +14,46 @@ import {getUserDetails} from "../services/ReferenceService";
 
 const regExp = new RegExp('\\{(.+?)\\}');
 
+
+const getFormSchemaForContext = (req, res) => {
+    const data = req.body;
+    const formName = data.formName;
+    logger.info("Custom data context [%s]", JSON.stringify(data.dataContext));
+    form(formName, res, (form) => {
+        applyContextResolution(data.dataContext, form, res);
+    });
+};
+
+const getFormSchema = (req, res) => {
+    form(req.params.formName, res, (form) => {
+        const keycloakContext = new KeycloakContext(req.kauth);
+        logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
+        const taskId = req.query.taskId;
+        const processInstanceId = req.query.processInstanceId;
+        const headers = createHeader(keycloakContext);
+
+        getUserDetails(keycloakContext.email, headers).then((user) => {
+            if (taskId && processInstanceId) {
+                axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
+                    .then(axios.spread((taskData, taskVariables, processVariables) => {
+                        applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env),
+                            new ProcessContext(processVariables),
+                            new TaskContext(taskData, taskVariables)), form, res);
+
+                    })).catch((e) => {
+                    logger.error("Failed to resolve process data promise %s", e);
+                    responseHandler.res({
+                        code: 400,
+                        message: `Failed to resolve process data for form ${e}`
+                    }, {}, res);
+                });
+            } else {
+                applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env)), form, res);
+            }
+        });
+    });
+};
+
 const createHeader = (keycloakContext) => {
     return {
         'Authorization': `Bearer ${keycloakContext.accessToken}`,
@@ -31,43 +71,24 @@ const getForm = async (formName) => {
     }
 };
 
-const getFormSchema = (req, res) => {
-    const formName = req.params.formName;
+
+const form = (formName, res, callback) => {
     logger.info("Getting form schema for %s", formName);
+    getForm(formName)
+        .then((form) => {
+            if (form) {
+                callback(form)
+            } else {
+                logger.error("Form with name [%s] does not exist", formName);
+                responseHandler.res({code: 404, message: `Form with name '${formName}' does not exist`}, {}, res);
+            }
+        }).catch((error) => handleFormLoadingError(error, res));
+};
 
-    getForm(formName).then((form) => {
-        if (form) {
-            const keycloakContext = new KeycloakContext(req.kauth);
-            logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
-
-            const taskId = req.query.taskId;
-            const processInstanceId = req.query.processInstanceId;
-            const headers = createHeader(keycloakContext);
-
-            getUserDetails(keycloakContext.email, headers).then((user) => {
-                if (taskId && processInstanceId) {
-                    axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId,headers)])
-                        .then(axios.spread((taskData, taskVariables, processVariables) => {
-                            applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env),
-                                new ProcessContext(processVariables),
-                                new TaskContext(taskData, taskVariables)), form, res);
-
-                        })).catch((e) => {
-                        logger.error("Failed to resolve process data promise %s", e);
-                        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, res);
-                    });
-                } else {
-                    applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env)), form, res);
-                }
-            });
-        } else {
-            responseHandler.res({code: 404, message: `Form with name '${formName}' does not exist`}, {}, res);
-        }
-    }).catch((error) => {
-        logger.error("Error occurred while requesting form '%s'", error.message);
-        const errorStatus = !error.response ? 'Error: Network Error connecting to form engine' : error.response.data.message;
-        responseHandler.res({code: 500, message: errorStatus}, {}, res);
-    });
+const handleFormLoadingError = (error, res) => {
+    logger.error("Error occurred while requesting form '%s'", error.message);
+    const errorStatus = !error.response ? 'Error: Network Error connecting to form engine' : error.response.data.message;
+    responseHandler.res({code: 500, message: errorStatus}, {}, res);
 };
 
 
@@ -89,7 +110,7 @@ const handleDefaultValueExpressions = (component, dataResolveContext) => {
 const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
         if (regExp.test(value)) {
-            const updatedValue =  value.replace(regExp, (match, capture) => {
+            const updatedValue = value.replace(regExp, (match, capture) => {
                 const val = JSONPath.value(dataResolveContext, capture);
                 logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, val);
                 return val;
@@ -122,5 +143,6 @@ const handleUrlComponents = (component, dataResolveContext) => {
 
 
 export default {
-    getFormSchema
+    getFormSchema,
+    getFormSchemaForContext
 };

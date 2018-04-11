@@ -55,4 +55,7 @@ The following environment variables are required:
 2. AUTH_URL
 3. AUTH_REALM
 4. SESSION_SECRET
+5. WORKFLOW_URL
+6. REFERENCE_DATA_URL
 
+Supports GET and POST

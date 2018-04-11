@@ -8,6 +8,8 @@ const formDataResolveRouter = (keycloak) => {
     router
         .get('/form/:formName',
             [keycloak.protect(), formDataResolveController.getFormSchema]);
+    router
+        .post('/form', [keycloak.protect(), formDataResolveController.getFormSchemaForContext]);
     return router;
 };
 

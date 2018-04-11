@@ -184,10 +184,39 @@ const userDetailsContextForm = [{
     ]
 }];
 
+
+const customContextForm = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.givenName}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'lastName',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.myCustomObject.familyName}',
+            input: true
+        },
+        {
+            type: 'button',
+            action: 'submit',
+            label: 'Submit',
+            theme: 'primary'
+        }
+    ]
+}];
+
 export {
     dataUrlForm,
     simpleForm,
     processContextForm,
     taskContextForm,
-    userDetailsContextForm
+    userDetailsContextForm,
+    customContextForm
 }
