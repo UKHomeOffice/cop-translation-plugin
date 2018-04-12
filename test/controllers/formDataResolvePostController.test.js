@@ -59,7 +59,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=randomForm')
                 .reply(200, []);
         });
-        it('it should return an updated form schema for custom context', (done) => {
+        it('it should return 404 status', (done) => {
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form',
