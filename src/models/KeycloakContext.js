@@ -1,4 +1,3 @@
-
 class KeycloakContext {
     constructor(kauth) {
         this.accessToken = kauth.grant.access_token.token;
