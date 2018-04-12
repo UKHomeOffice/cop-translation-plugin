@@ -17,7 +17,7 @@ const getForm = (formName, res, callback) => {
     loadForm(formName)
         .then((form) => {
             if (form) {
-                callback(form)
+                callback(res,form)
             } else {
                 logger.error("Form with name [%s] does not exist", formName);
                 responseHandler.res({code: 404, message: `Form with name '${formName}' does not exist`}, {}, res);

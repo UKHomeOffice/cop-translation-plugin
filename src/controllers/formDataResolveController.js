@@ -20,13 +20,13 @@ const getFormSchemaForContext = (req, res) => {
     const data = req.body;
     const formName = data.formName;
     logger.info("Custom data context [%s]", JSON.stringify(data.dataContext));
-    getForm(formName, res, (form) => {
-        applyContextResolution(data.dataContext, form, res);
+    getForm(formName, res, (response, form) => {
+        applyContextResolution(data.dataContext, form, response);
     });
 };
 
 const getFormSchema = (req, res) => {
-    getForm(req.params.formName, res, (form) => {
+    getForm(req.params.formName, res, (response, form) => {
         const keycloakContext = new KeycloakContext(req.kauth);
         logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
         const taskId = req.query.taskId;
@@ -39,14 +39,14 @@ const getFormSchema = (req, res) => {
                     .then(axios.spread((taskData, taskVariables, processVariables) => {
                         applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env),
                             new ProcessContext(processVariables),
-                            new TaskContext(taskData, taskVariables)), form, res);
+                            new TaskContext(taskData, taskVariables)), form, response);
 
                     })).catch((e) => {
                         logger.error("Failed to resolve process data promise %s", e);
-                        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, res);
+                        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, response);
                 });
             } else {
-                applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env)), form, res);
+                applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env)), form, response);
             }
         });
     });
