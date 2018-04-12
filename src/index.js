@@ -47,7 +47,7 @@ axios.interceptors.response.use((response) => {
 
 const app = express();
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 8080;
 
 app.set('port', port);
 
