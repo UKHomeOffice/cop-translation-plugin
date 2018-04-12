@@ -20,9 +20,8 @@ const getFormSchemaForContext = (req, res) => {
     const data = req.body;
     const formName = data.formName;
     if (data.dataContext) {
-        logger.info("Custom data context [%s]", JSON.stringify(data.dataContext));
         getForm(formName, res, (response, form) => {
-            applyContextResolution(data.dataContext, form, response);
+           parseForm(req, form, response, data.dataContext)
         });
     } else {
         logger.error("No data context defined for POST");
@@ -30,35 +29,43 @@ const getFormSchemaForContext = (req, res) => {
     }
 };
 
+
 const getFormSchema = (req, res) => {
     getForm(req.params.formName, res, (response, form) => {
-        const keycloakContext = new KeycloakContext(req.kauth);
-        logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
-        const taskId = req.query.taskId;
-        const processInstanceId = req.query.processInstanceId;
-        const headers = createHeader(keycloakContext);
-
-        getUserDetails(keycloakContext.email, headers).then((user) => {
-            if (taskId && processInstanceId) {
-                axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
-                    .then(axios.spread((taskData, taskVariables, processVariables) => {
-                        applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
-                            new EnvironmentContext(process.env),
-                            new ProcessContext(processVariables),
-                            new TaskContext(taskData, taskVariables)), form, response);
-
-                    })).catch((e) => {
-                        logger.error("Failed to resolve process data promise %s", e);
-                        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, response);
-                });
-            } else {
-                applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
-                    new EnvironmentContext(process.env)), form, response);
-            }
-        });
+        parseForm(req, form, response, null);
     });
 };
 
+
+const parseForm = (req, form, response, customDataContext)  => {
+    const keycloakContext = new KeycloakContext(req.kauth);
+    logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
+    const taskId = req.query.taskId;
+    const processInstanceId = req.query.processInstanceId;
+    const headers = createHeader(keycloakContext);
+    if (customDataContext) {
+        logger.info("Custom data context [%s]", JSON.stringify(customDataContext));
+    }
+    getUserDetails(keycloakContext.email, headers).then((user) => {
+        logger.info("User detected...[%s]", user);
+        if (taskId && processInstanceId) {
+            axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
+                .then(axios.spread((taskData, taskVariables, processVariables) => {
+                    applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
+                        new EnvironmentContext(process.env),
+                        new ProcessContext(processVariables),
+                        new TaskContext(taskData, taskVariables), customDataContext), form, response);
+
+                })).catch((e) => {
+                logger.error("Failed to resolve process data promise %s", e);
+                responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, response);
+            });
+        } else {
+            applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
+                new EnvironmentContext(process.env), null, null, customDataContext), form, response);
+        }
+    });
+};
 const createHeader = (keycloakContext) => {
     return {
         'Authorization': `Bearer ${keycloakContext.accessToken}`,

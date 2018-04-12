@@ -18,6 +18,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:8000')
                 .get('/form?name=customContextForm')
                 .reply(200, forms.customContextForm);
+            nock('http://localhost:9001')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .reply(200, []);
         });
         it('it should return an updated form schema for custom context', (done) => {
             const request = httpMocks.createRequest({
@@ -30,6 +33,21 @@ describe('Form Data Resolve Controller', () => {
                         myCustomObject: {
                             familyName: "customLastName"
                         }
+                    }
+                },
+                kauth: {
+                    grant: {
+                        access_token: {
+                            token: "test-token",
+                            content: {
+                                session_state: "session_id",
+                                email: "email",
+                                preferred_username: "test",
+                                given_name: "testgivenname",
+                                family_name: "testfamilyname"
+                            }
+                        }
+
                     }
                 }
             });
@@ -58,6 +76,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:8000')
                 .get('/form?name=randomForm')
                 .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .reply(200, []);
         });
         it('it should return 404 status', (done) => {
             const request = httpMocks.createRequest({
@@ -70,6 +91,21 @@ describe('Form Data Resolve Controller', () => {
                         myCustomObject: {
                             familyName: "customLastName"
                         }
+                    }
+                },
+                kauth: {
+                    grant: {
+                        access_token: {
+                            token: "test-token",
+                            content: {
+                                session_state: "session_id",
+                                email: "email",
+                                preferred_username: "test",
+                                given_name: "testgivenname",
+                                family_name: "testfamilyname"
+                            }
+                        }
+
                     }
                 }
             });

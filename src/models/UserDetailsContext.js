@@ -2,14 +2,15 @@
 class UserDetailsContext {
 
     constructor(user) {
-        this.personid = user ? user.personid : null;
-        this.email = user ? user.email : null;
-        this.grade = user ? user.grade: null;
-        this.departmentCode = user ? user.departmentcode: null;
-        this.securityCleared = user ? user.securitycleared: false;
-        this.securityClearedDate = user ? user.securitycleareddate: null;
-        this.phone = user ? user.phone: null;
-        this.personId = user? user.personid: null;
+        const hasUser = user && user !== undefined;
+        this.personid = hasUser ? user.personid : null;
+        this.email = hasUser ? user.email : null;
+        this.grade = hasUser ? user.grade: null;
+        this.departmentCode = hasUser ? user.departmentcode: null;
+        this.securityCleared = hasUser ? user.securitycleared: false;
+        this.securityClearedDate = hasUser ? user.securitycleareddate: null;
+        this.phone = hasUser ? user.phone: null;
+        this.personId = hasUser? user.personid: null;
     }
 }
 

@@ -66,7 +66,7 @@ app.use(bodyParser.json());
 app.use(morgan('common'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
-app.use(helmet())
+app.use(helmet());
 app.use(keycloak.middleware());
 
 app.use('/api/translation', route.allApiRouter(keycloak));

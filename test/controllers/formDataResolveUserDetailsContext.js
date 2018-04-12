@@ -18,7 +18,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
                 .reply(200, [{
                     "grade": "test",
                     "phone": "testphone",
@@ -38,7 +38,7 @@ describe('Form Data Resolve Controller', () => {
                             token: "test-token",
                             content: {
                                 session_state: "session_id",
-                                email: "email",
+                                email: "emailTest123",
                                 preferred_username: "test",
                                 given_name: "testgivenname",
                                 family_name: "testfamilyname"
@@ -73,7 +73,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', (done) => {
@@ -89,7 +89,7 @@ describe('Form Data Resolve Controller', () => {
                             token: "test-token",
                             content: {
                                 session_state: "session_id",
-                                email: "email",
+                                email: "noEmail",
                                 preferred_username: "test",
                                 given_name: "testgivenname",
                                 family_name: "testfamilyname"
