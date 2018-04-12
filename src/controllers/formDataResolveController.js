@@ -19,10 +19,15 @@ const regExp = new RegExp('\\{(.+?)\\}');
 const getFormSchemaForContext = (req, res) => {
     const data = req.body;
     const formName = data.formName;
-    logger.info("Custom data context [%s]", JSON.stringify(data.dataContext));
-    getForm(formName, res, (response, form) => {
-        applyContextResolution(data.dataContext, form, response);
-    });
+    if (data.dataContext) {
+        logger.info("Custom data context [%s]", JSON.stringify(data.dataContext));
+        getForm(formName, res, (response, form) => {
+            applyContextResolution(data.dataContext, form, response);
+        });
+    } else {
+        logger.error("No data context defined for POST");
+        responseHandler.res({code: 400, message: 'No data context provided to perform data resolution'}, {}, res);
+    }
 };
 
 const getFormSchema = (req, res) => {
@@ -37,7 +42,8 @@ const getFormSchema = (req, res) => {
             if (taskId && processInstanceId) {
                 axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
                     .then(axios.spread((taskData, taskVariables, processVariables) => {
-                        applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env),
+                        applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
+                            new EnvironmentContext(process.env),
                             new ProcessContext(processVariables),
                             new TaskContext(taskData, taskVariables)), form, response);
 
@@ -46,7 +52,8 @@ const getFormSchema = (req, res) => {
                         responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, response);
                 });
             } else {
-                applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user), new EnvironmentContext(process.env)), form, response);
+                applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
+                    new EnvironmentContext(process.env)), form, response);
             }
         });
     });
