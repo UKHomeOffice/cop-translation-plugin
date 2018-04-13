@@ -39,7 +39,6 @@ const getFormSchema = (req, res) => {
 
 const parseForm = (req, form, response, customDataContext)  => {
     const keycloakContext = new KeycloakContext(req.kauth);
-    logger.debug("Form loaded...initiating processing " + JSON.stringify(form));
     const taskId = req.query.taskId;
     const processInstanceId = req.query.processInstanceId;
     const headers = createHeader(keycloakContext);
@@ -47,7 +46,6 @@ const parseForm = (req, form, response, customDataContext)  => {
         logger.info("Custom data context [%s]", JSON.stringify(customDataContext));
     }
     getUserDetails(keycloakContext.email, headers).then((user) => {
-        logger.info("User detected...[%s]", user);
         if (taskId && processInstanceId) {
             axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
                 .then(axios.spread((taskData, taskVariables, processVariables) => {

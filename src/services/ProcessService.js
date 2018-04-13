@@ -1,29 +1,25 @@
 import axios from "axios";
 import * as logger from 'winston';
 
-const getTaskData = async (taskId, headers) => {
+
+
+const getApiCall = ( url, headers) => {
     return axios({
-        url: `${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}`,
+        url: `${url}`,
         method: 'GET',
         headers: headers
     });
+};
 
+const getTaskData = async (taskId, headers) => {
+    return getApiCall(`${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}`, headers);
 };
 
 const getTaskVariables = async (taskId, headers) => {
-    return axios({
-        url: `${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}/variables`,
-        method: 'GET',
-        headers: headers
-    })
-
+    return getApiCall(`${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}/variables`, headers);
 };
 const getProcessVariables = async (processInstanceId, headers) => {
-    return axios({
-        url: `${process.env.WORKFLOW_URL}/api/workflow/process-instance/${processInstanceId}/variables`,
-        method: 'GET',
-        headers: headers
-    });
+    return getApiCall( `${process.env.WORKFLOW_URL}/api/workflow/process-instance/${processInstanceId}/variables`, headers);
 };
 
 
