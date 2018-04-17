@@ -14,6 +14,20 @@ import * as axios from "axios";
 import moment from 'moment';
 import helmet from 'helmet';
 
+
+if (process.env.NODE_ENV === 'production') {
+    logger.info('Setting ca bundle');
+    const trustedCa = [
+        '/etc/ssl/certs/ca-bundle.crt'
+    ];
+
+    https.globalAgent.options.ca = [];
+    for (const ca of trustedCa) {
+        https.globalAgent.options.ca.push(fs.readFileSync(ca));
+    }
+    logger.info('ca bundle set...');
+}
+
 let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
     bearerOnly: true,
