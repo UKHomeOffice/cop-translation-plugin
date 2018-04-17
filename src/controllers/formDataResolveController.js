@@ -90,7 +90,12 @@ const handleDefaultValueExpressions = (component, dataResolveContext) => {
 const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
         if (regExp.test(value)) {
-            const updatedValue = value.replace(regExp, (match, capture) => {
+
+            String.prototype.replaceAll = function(search, replacement) {
+                const target = this;
+                return target.replace(new RegExp(search, 'g'), replacement);
+            };
+            const updatedValue = value.replaceAll(regExp, (match, capture) => {
                 const val = JSONPath.value(dataResolveContext, capture);
                 logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, val);
                 return val;

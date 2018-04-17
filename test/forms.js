@@ -73,7 +73,7 @@ const dataUrlForm = [
                         }
                     ],
                     "json": "",
-                    "url": "{$.environmentContext.referenceDataUrl}/region",
+                    "url": "{$.environmentContext.referenceDataUrl}/{$.environmentContext.prestDbName}/region",
                     "resource": "",
                     "custom": "",
                     "headers": []

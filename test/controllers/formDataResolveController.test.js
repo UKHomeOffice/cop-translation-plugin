@@ -111,7 +111,7 @@ describe('Form Data Resolve Controller', () => {
                 expect(response._isEndCalled()).toBe(true);
                 const updatedForm = JSON.parse(response._getData());
                 const url = JSONPath.value(updatedForm, "$..components[?(@.key=='regionid')].data.url");
-                expect(url).toEqual("http://localhost:9001/region");
+                expect(url).toEqual("http://localhost:9001/test/region");
                 done();
             });
         });
