@@ -2,7 +2,7 @@ import axios from "axios/index";
 
 const getUserDetails = async (email, headers) => {
     const response = await axios({
-        url: `${process.env.REFERENCE_DATA_URL}/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=${email}`,
+        url: `${process.env.REFERENCE_DATA_URL}/${process.env.TX_DB_NAME}/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=${email}`,
         method: 'GET',
         headers: headers
     });

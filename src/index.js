@@ -52,12 +52,9 @@ axios.interceptors.response.use((response) => {
     }
     return response
 }, (error) => {
-    logger.error('Error: [%s] "%s %s" %s %s',
+    logger.error('Error: [%s] [%s]',
         moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'),
-        error.response.config.method.toUpperCase(),
-        error.response.config.url,
-        error.response.status,
-        JSON.stringify(error.response.data)
+        JSON.stringify(error.message)
     );
     return Promise.reject(error);
 });

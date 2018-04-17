@@ -2,6 +2,7 @@ process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
 process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
+process.env.TX_DB_NAME = "test";
 
 
 import JSONPath from "jsonpath";
@@ -19,7 +20,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=testForm')
                 .reply(200, forms.simpleForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for keycloakContext', (done) => {
@@ -73,7 +74,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=dataUrlForm')
                 .reply(200, forms.dataUrlForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
 
         });

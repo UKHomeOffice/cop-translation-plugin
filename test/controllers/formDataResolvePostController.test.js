@@ -2,6 +2,8 @@ process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
 process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
+process.env.TX_DB_NAME = "test";
+
 
 
 import JSONPath from "jsonpath";
@@ -19,7 +21,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=customContextForm')
                 .reply(200, forms.customContextForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for custom context', (done) => {
@@ -77,7 +79,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=randomForm')
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
         });
         it('it should return 404 status', (done) => {

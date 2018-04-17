@@ -2,6 +2,8 @@ process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
 process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
+process.env.TX_DB_NAME = "test";
+
 
 
 import JSONPath from "jsonpath";
@@ -18,7 +20,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
+                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
                 .reply(200, [{
                     "grade": "test",
                     "phone": "testphone",
@@ -73,7 +75,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=noEmail')
+                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', (done) => {
