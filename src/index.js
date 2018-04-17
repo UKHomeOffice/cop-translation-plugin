@@ -8,6 +8,7 @@ import morgan from 'morgan';
 
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
 
 import session from 'express-session';
 import Keycloak from 'keycloak-connect';
