@@ -1,4 +1,4 @@
-import axios from "axios/index";
+import axios from "axios";
 import responseHandler from "../utilities/handlers/responseHandler";
 import * as logger from "winston/lib/winston";
 

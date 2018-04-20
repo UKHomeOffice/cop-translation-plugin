@@ -65,11 +65,7 @@ const parseForm = (req, form, response, customDataContext)  => {
     });
 };
 const createHeader = (keycloakContext) => {
-    return {
-        'Authorization': `Bearer ${keycloakContext.accessToken}`,
-        'Content-Type': 'application/json',
-        'Accept-Type': 'application/json'
-    };
+    A
 };
 
 const applyContextResolution = (dataContext, form, res) => {
