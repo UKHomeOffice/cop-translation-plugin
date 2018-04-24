@@ -21,11 +21,21 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
-                .reply(200, [{
-                    "grade": "test",
-                    "phone": "testphone",
-                    "personid": "personid"
-                }]);
+                .reply(200,
+
+                    [
+                        {
+                            "staffattributesid": 13,
+                            "email": "email",
+                            "grade": "test",
+                            "securitycleared": false,
+                            "securitycleareddate": null,
+                            "personid": "personid",
+                            "phone": "testphone",
+                            "firstname": "first",
+                            "lastname": "last"
+                        }
+                    ]);
         });
         it('it should return an updated form schema for user details context', (done) => {
             const request = httpMocks.createRequest({

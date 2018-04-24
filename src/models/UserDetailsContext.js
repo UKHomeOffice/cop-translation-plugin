@@ -3,7 +3,6 @@ class UserDetailsContext {
 
     constructor(user) {
         const hasUser = user && user !== undefined;
-        this.personid = hasUser ? user.personid : null;
         this.email = hasUser ? user.email : null;
         this.grade = hasUser ? user.grade: null;
         this.departmentCode = hasUser ? user.departmentcode: null;
