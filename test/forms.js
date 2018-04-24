@@ -176,6 +176,14 @@ const userDetailsContextForm = [{
             input: true
         },
         {
+            type: 'textfield',
+            key: 'personid',
+            label: 'personid',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.userDetailsContext.personId}',
+            input: true
+        },
+        {
             type: 'button',
             action: 'submit',
             label: 'Submit',

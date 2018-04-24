@@ -1,4 +1,5 @@
 import axios from "axios/index";
+import * as logger from 'winston';
 
 const getUserDetails = async (email, headers) => {
     const response = await axios({
@@ -6,7 +7,11 @@ const getUserDetails = async (email, headers) => {
         method: 'GET',
         headers: headers
     });
-    return response.data ? response.data[0] : null;
+    const details =  response.data ? response.data[0] : null;
+    if (details) {
+        logger.info("User details found");
+    }
+    return details
 };
 
 export {

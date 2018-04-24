@@ -46,6 +46,9 @@ const parseForm = (req, form, response, customDataContext)  => {
         logger.info("Custom data context [%s]", JSON.stringify(customDataContext));
     }
     getUserDetails(keycloakContext.email, headers).then((user) => {
+        if (user) {
+            logger.info(`User found ${JSON.stringify(user)}`);
+        }
         if (taskId && processInstanceId) {
             axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
                 .then(axios.spread((taskData, taskVariables, processVariables) => {

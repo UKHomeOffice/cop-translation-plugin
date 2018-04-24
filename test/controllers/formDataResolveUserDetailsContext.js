@@ -71,8 +71,10 @@ describe('Form Data Resolve Controller', () => {
                 const updatedForm = JSON.parse(response._getData());
 
                 const grade = JSONPath.value(updatedForm, "$..components[?(@.key=='grade')].defaultValue");
+                const personId = JSONPath.value(updatedForm, "$..components[?(@.key=='personid')].defaultValue");
 
                 expect(grade).toEqual("test");
+                expect(personId).toEqual("personid");
 
                 done();
             });
