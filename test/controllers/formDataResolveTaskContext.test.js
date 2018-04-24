@@ -32,7 +32,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, tasks.processVariables);
 
             nock('http://localhost:9001')
-                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
 
 
@@ -173,7 +173,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(404, { message: "process does not exist"});
 
             nock('http://localhost:9001')
-                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for task context', (done) => {

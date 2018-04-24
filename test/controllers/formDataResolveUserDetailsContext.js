@@ -20,7 +20,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
                 .reply(200,
 
                     [
@@ -84,10 +84,12 @@ describe('Form Data Resolve Controller', () => {
     describe('A call to data resolve controller for with details for user context', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
+                .log(console.log)
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/test/public/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=noEmail')
+                .log(console.log)
+                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', (done) => {
