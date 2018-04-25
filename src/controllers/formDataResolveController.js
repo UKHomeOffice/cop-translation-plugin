@@ -103,7 +103,7 @@ const performJsonPathResolution = (key, value, dataResolveContext) => {
             };
             const updatedValue = value.replaceAll(regExp, (match, capture) => {
                 const val = JSONPath.value(dataResolveContext, capture);
-                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, val);
+                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val? val : "no match"));
                 return val;
             });
             return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;
