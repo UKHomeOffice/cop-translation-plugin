@@ -65,7 +65,10 @@ const parseForm = (req, form, response, customDataContext)  => {
             applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
                 new EnvironmentContext(process.env), null, null, customDataContext), form, response);
         }
-    });
+    }).catch ((err) => {
+        logger.error("Failed to load user details %s", err.toString());
+        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${err.toString()}`}, {}, response);
+    })
 };
 const createHeader = (keycloakContext) => {
     return {
