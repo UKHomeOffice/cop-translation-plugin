@@ -19,7 +19,7 @@ const getTaskVariables = async (taskId, headers) => {
     return getApiCall(`${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}/variables`, headers);
 };
 const getProcessVariables = async (processInstanceId, headers) => {
-    return getApiCall( `${process.env.WORKFLOW_URL}/api/workflow/process-instance/${processInstanceId}/variables`, headers);
+    return getApiCall( `${process.env.WORKFLOW_URL}/api/workflow/process-instances/${processInstanceId}/variables`, headers);
 };
 
 
