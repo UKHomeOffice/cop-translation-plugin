@@ -28,7 +28,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/workflow/tasks/taskId/variables')
                 .reply(200, tasks.taskVariables);
             nock('http://localhost:9000')
-                .get('/api/workflow/process-instance/processInstanceId/variables')
+                .get('/api/workflow/process-instances/processInstanceId/variables')
                 .reply(200, tasks.processVariables);
 
             nock('http://localhost:9001')
@@ -98,7 +98,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/workflow/tasks/taskId/variables')
                 .reply(200, tasks.taskVariables);
             nock('http://localhost:9000')
-                .get('/api/workflow/process-instance/processInstanceId/variables')
+                .get('/api/workflow/process-instances/processInstanceId/variables')
                 .reply(200, tasks.processVariables);
 
             nock('http://localhost:9001')
