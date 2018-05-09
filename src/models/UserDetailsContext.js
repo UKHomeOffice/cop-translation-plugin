@@ -1,6 +1,4 @@
 
-// info: User found {"staffattributesid":13,"email":"amin.mohammed-coleman@digital.homeoffice.gov.uk","grade":"None","securitycleared":false,"securitycleareddate":null,"personid":"be457624-a91c-4e28-9995-560c131f566f","phone":"+44 7887 563451","firstname":"Amin","lastname":"Mohammed-Coleman"}
-
 class UserDetailsContext {
 
     constructor(user) {
