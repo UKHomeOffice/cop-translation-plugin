@@ -73,7 +73,7 @@ const dataUrlForm = [
                         }
                     ],
                     "json": "",
-                    "url": "{$.environmentContext.referenceDataUrl}/{$.environmentContext.prestDbName}/region",
+                    "url": "{$.environmentContext.platformDataUrl}/region",
                     "resource": "",
                     "custom": "",
                     "headers": []
@@ -172,7 +172,7 @@ const userDetailsContextForm = [{
             key: 'grade',
             label: 'Grade',
             placeholder: 'Enter your first name.',
-            defaultValue: '{$.userDetailsContext.grade}',
+            defaultValue: '{$.staffDetailsDataContext.gradeId}',
             input: true
         },
         {
@@ -180,7 +180,7 @@ const userDetailsContextForm = [{
             key: 'personid',
             label: 'personid',
             placeholder: 'Enter your first name.',
-            defaultValue: '{$.userDetailsContext.personId}',
+            defaultValue: '{$.staffDetailsDataContext.staffId}',
             input: true
         },
         {

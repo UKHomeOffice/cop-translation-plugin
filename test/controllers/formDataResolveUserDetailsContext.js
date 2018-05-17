@@ -1,8 +1,7 @@
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
-process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
-process.env.TX_DB_NAME = "test";
+process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
 
 
 
@@ -20,20 +19,28 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=emailTest123')
+                .get('/staffview?email=eq.emailTest123')
                 .reply(200,
 
                     [
                         {
-                            "staffattributesid": 13,
-                            "email": "email",
-                            "grade": "test",
-                            "securitycleared": false,
-                            "securitycleareddate": null,
-                            "personid": "personid",
-                            "phone": "testphone",
-                            "firstname": "first",
-                            "lastname": "last"
+                            "phone": "phone",
+                            "email": "emailTest123",
+                            "gradetypeid": "gradetypeid",
+                            "firstname": "firstname",
+                            "surname": "surname",
+                            "qualificationtypes": [
+                                {
+                                    "qualificationname": "dummy",
+                                    "qualificationtype": "1"
+                                },
+                                {
+                                    "qualificationname": "staff",
+                                    "qualificationtype": "2"
+                                }
+                            ],
+                            "staffid": "staffid",
+                            "gradename": "grade"
                         }
                     ]);
         });
@@ -52,8 +59,8 @@ describe('Form Data Resolve Controller', () => {
                                 session_state: "session_id",
                                 email: "emailTest123",
                                 preferred_username: "test",
-                                given_name: "testgivenname",
-                                family_name: "testfamilyname"
+                                given_name: "firstname",
+                                family_name: "surname"
                             }
                         }
 
@@ -73,8 +80,8 @@ describe('Form Data Resolve Controller', () => {
                 const grade = JSONPath.value(updatedForm, "$..components[?(@.key=='grade')].defaultValue");
                 const personId = JSONPath.value(updatedForm, "$..components[?(@.key=='personid')].defaultValue");
 
-                expect(grade).toEqual("test");
-                expect(personId).toEqual("personid");
+                expect(grade).toEqual("gradetypeid");
+                expect(personId).toEqual("staffid");
 
                 done();
             });
@@ -89,7 +96,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .log(console.log)
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=noEmail')
+                .get('/staffview?email=eq.noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', (done) => {

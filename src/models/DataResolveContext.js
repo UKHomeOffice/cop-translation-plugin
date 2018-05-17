@@ -1,13 +1,13 @@
 class DataResolveContext {
 
     constructor(keycloakContext,
-                userDetailsContext,
+                staffDetailsDataContext,
                 environmentContext,
                 processContext,
                 taskContext,
                 customDataContext) {
         this.keycloakContext = keycloakContext;
-        this.userDetailsContext = userDetailsContext;
+        this.staffDetailsDataContext = staffDetailsDataContext;
         this.environmentContext = environmentContext;
         this.processContext = processContext;
         this.taskContext = taskContext;

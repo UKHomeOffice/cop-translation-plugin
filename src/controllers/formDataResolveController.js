@@ -9,8 +9,8 @@ import EnvironmentContext from "../models/EnvironmentContext";
 import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import {getProcessVariables, getTaskData, getTaskVariables} from "../services/ProcessService";
-import UserDetailsContext from "../models/UserDetailsContext";
-import {getUserDetails} from "../services/ReferenceService";
+import StaffDetailsContext from "../models/StaffDetailsContext";
+import {getStaffDetails} from "../services/PlatformDataService";
 import {getForm} from "../services/FormEngineService";
 
 const regExp = new RegExp('\\{(.+?)\\}');
@@ -45,14 +45,14 @@ const parseForm = (req, form, response, customDataContext)  => {
     if (customDataContext) {
         logger.info("Custom data context [%s]", JSON.stringify(customDataContext));
     }
-    getUserDetails(keycloakContext.email, headers).then((user) => {
-        if (user) {
-            logger.info(`User found ${JSON.stringify(user)}`);
+    getStaffDetails(keycloakContext.email).then((staff) => {
+        if (staff) {
+            logger.info(`staff found ${JSON.stringify(staff)}`);
         }
         if (taskId && processInstanceId) {
             axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
                 .then(axios.spread((taskData, taskVariables, processVariables) => {
-                    applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
+                    applyContextResolution(new DataResolveContext(keycloakContext, new StaffDetailsContext(staff),
                         new EnvironmentContext(process.env),
                         new ProcessContext(processVariables),
                         new TaskContext(taskData, taskVariables), customDataContext), form, response);
@@ -62,7 +62,7 @@ const parseForm = (req, form, response, customDataContext)  => {
                 responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, response);
             });
         } else {
-            applyContextResolution(new DataResolveContext(keycloakContext, new UserDetailsContext(user),
+            applyContextResolution(new DataResolveContext(keycloakContext, new StaffDetailsContext(staff),
                 new EnvironmentContext(process.env), null, null, customDataContext), form, response);
         }
     }).catch ((err) => {
@@ -121,13 +121,15 @@ const handleUrlComponents = (component, dataResolveContext) => {
         component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
         const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
         const header = component.data.headers.find(h => h.key === 'Authorization');
-        if (header) {
-            header.value = bearerValue;
-        } else {
-            component.data.headers.push({
-                "key": "Authorization",
-                "value": bearerValue
-            });
+        if (component.data.tags && !component.data.tags.contains('platform-read-data')) {
+            if (header) {
+                header.value = bearerValue;
+            } else {
+                component.data.headers.push({
+                    "key": "Authorization",
+                    "value": bearerValue
+                });
+            }
         }
     }
 };

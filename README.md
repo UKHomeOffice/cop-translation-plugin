@@ -41,10 +41,11 @@ A form schema may have default values with Json Path expression returned from th
 Using the logged in user's credentials the service will create a data context which will be used to resolve the json path expressions. Data resolvers will consist of:
 
 1. Keycloak
-2. User and Staff Attributes
+2. Staff Attributes
 3. Teams
 4. Reference data
 5. Environment contexts (URL resolutions)
+6. Process and task variables
 
 
 **_All endpoints are protected using Keycloak_**
@@ -56,7 +57,7 @@ The following environment variables are required:
 3. AUTH_REALM
 4. SESSION_SECRET
 5. WORKFLOW_URL
-6. REFERENCE_DATA_URL
+6. PLATFORM_DATA_URL
 7. SESSION_NAME
 
 
