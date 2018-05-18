@@ -4,7 +4,7 @@ import * as logger from 'winston';
 
 const getStaffDetails = async (email) => {
     const response = await axios({
-        url: `${process.env.PLATFORM_DATA_URL}/staffview?email=eq.${email}`,
+        url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${email}`,
         method: 'GET',
         headers: {
             'Content-Type' : 'application/json'

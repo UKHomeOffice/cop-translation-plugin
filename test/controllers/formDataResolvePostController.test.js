@@ -21,7 +21,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=customContextForm')
                 .reply(200, forms.customContextForm);
             nock('http://localhost:9001')
-                .get('/staffview?email=eq.email')
+                .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for custom context', (done) => {
@@ -79,7 +79,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=randomForm')
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/staffview?email=eq.email')
+                .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
         });
         it('it should return 404 status', (done) => {

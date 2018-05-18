@@ -19,7 +19,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=testForm')
                 .reply(200, forms.simpleForm);
             nock('http://localhost:9001')
-                .get('/staffview?email=eq.email')
+                .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for keycloakContext', (done) => {
@@ -74,7 +74,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=dataUrlForm')
                 .reply(200, forms.dataUrlForm);
             nock('http://localhost:9001')
-                .get('/staffview?email=eq.email')
+                .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
 
         });

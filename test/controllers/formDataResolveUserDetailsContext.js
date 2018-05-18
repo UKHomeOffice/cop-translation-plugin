@@ -19,7 +19,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/staffview?email=eq.emailTest123')
+                .get('/api/platform-data/staffview?email=eq.emailTest123')
                 .reply(200,
 
                     [
@@ -96,7 +96,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .log(console.log)
-                .get('/staffview?email=eq.noEmail')
+                .get('/api/platform-data/staffview?email=eq.noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', (done) => {
