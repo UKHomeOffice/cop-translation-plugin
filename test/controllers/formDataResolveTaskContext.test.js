@@ -35,6 +35,10 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
 
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
+                .reply(200, []);
+
 
         });
         it('it should return an updated form schema for process context', (done) => {
@@ -103,6 +107,9 @@ describe('Form Data Resolve Controller', () => {
 
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
+                .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for task context', (done) => {
@@ -175,8 +182,11 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
+                .reply(200, []);
         });
-        it('it should return an updated form schema for task context', (done) => {
+        it('it should return an updated form without updated task/process info', (done) => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form',
@@ -209,7 +219,7 @@ describe('Form Data Resolve Controller', () => {
 
             formDataController.getFormSchema(request, response);
             response.on('end', () => {
-                expect(response.statusCode).toEqual(400);
+                expect(response.statusCode).toEqual(200);
                 expect(response._isEndCalled()).toBe(true);
 
                 done();

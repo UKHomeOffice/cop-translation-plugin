@@ -23,6 +23,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
+                .reply(200, []);
         });
         it('it should return an updated form schema for custom context', (done) => {
             const request = httpMocks.createRequest({
@@ -57,7 +60,7 @@ describe('Form Data Resolve Controller', () => {
                 eventEmitter: require('events').EventEmitter
             });
 
-            formDataController.getFormSchemaForContext(request, response);
+            const formSchemaForContext = formDataController.getFormSchemaForContext(request, response);
             response.on('end', () => {
                 expect(response.statusCode).toEqual(200);
                 expect(response._isEndCalled()).toBe(true);
@@ -80,6 +83,9 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, []);
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
+                .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return 404 status', (done) => {

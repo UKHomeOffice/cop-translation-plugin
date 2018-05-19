@@ -3,21 +3,49 @@ import * as logger from 'winston';
 
 
 const getStaffDetails = async (email) => {
-    const response = await axios({
-        url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${email}`,
-        method: 'GET',
-        headers: {
-            'Content-Type' : 'application/json'
+    try {
+        const response = await axios({
+            url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${email}`,
+            method: 'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+        const details =  response.data ? response.data[0] : null;
+        if (details) {
+            logger.info(`Staff details found... ${JSON.stringify(details)}`);
         }
-    });
-    const details =  response.data ? response.data[0] : null;
-    if (details) {
-        logger.info(`Staff details found... ${JSON.stringify(details)}`);
+        return details
+    } catch (err) {
+        logger.error(`Failed to get staff details ${err.toString()}`);
+        return null;
     }
-    return details
+
+};
+
+const getShiftDetails = async(email) => {
+    try {
+        const response = await axios({
+            url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/shift?email=eq.${email}`,
+            method: 'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+        const details =  response.data ? response.data[0] : null;
+        if (details) {
+            logger.info(`Shift details found... ${JSON.stringify(details)}`);
+        }
+        return details
+    } catch (err) {
+        logger.error(`Failed to get shift details ${err.toString()}`)
+        return null;
+    }
+
 };
 
 export {
-    getStaffDetails
+    getStaffDetails,
+    getShiftDetails
 }
 

@@ -1,7 +1,6 @@
 import responseHandler from "../utilities/handlers/responseHandler";
 import * as logger from 'winston';
 import KeycloakContext from "../models/KeycloakContext";
-import axios from 'axios';
 import FormioUtils from 'formiojs/utils';
 import DataResolveContext from "../models/DataResolveContext";
 import JSONPath from 'jsonpath'
@@ -10,66 +9,68 @@ import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import {getProcessVariables, getTaskData, getTaskVariables} from "../services/ProcessService";
 import StaffDetailsContext from "../models/StaffDetailsContext";
-import {getStaffDetails} from "../services/PlatformDataService";
+import {getShiftDetails, getStaffDetails} from "../services/PlatformDataService";
 import {getForm} from "../services/FormEngineService";
+import ShiftDetailsContext from "../models/ShiftDetailsContext";
 
 const regExp = new RegExp('\\{(.+?)\\}');
 
 
-const getFormSchemaForContext = (req, res) => {
+const getFormSchemaForContext = async (req, res) => {
     const data = req.body;
     const formName = data.formName;
+    const {taskId, processInstanceId} = req.query;
+    const kauth = req.kauth;
     if (data.dataContext) {
-        getForm(formName, res, (response, form) => {
-           parseForm(req, form, response, data.dataContext)
-        });
+        const form = await dataResolvedForm({formName, taskId, processInstanceId, kauth}, data.dataContext);
+        responseHandler.res(null, {formName, form}, res);
     } else {
         logger.error("No data context defined for POST");
-        responseHandler.res({code: 400, message: 'No data context provided to perform data resolution'}, {}, res);
+        responseHandler.res({code: 400, message: 'No data context provided to perform data resolution'}, {formName}, res);
     }
 };
 
 
-const getFormSchema = (req, res) => {
-    getForm(req.params.formName, res, (response, form) => {
-        parseForm(req, form, response, null);
-    });
-};
-
-
-const parseForm = (req, form, response, customDataContext)  => {
-    const keycloakContext = new KeycloakContext(req.kauth);
-    const taskId = req.query.taskId;
-    const processInstanceId = req.query.processInstanceId;
+const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, customDataContext) => {
+    const form = await getForm(formName);
+    if (!form) {
+        return null;
+    }
+    const keycloakContext = new KeycloakContext(kauth);
     const headers = createHeader(keycloakContext);
-    if (customDataContext) {
-        logger.info("Custom data context [%s]", JSON.stringify(customDataContext));
-    }
-    getStaffDetails(keycloakContext.email).then((staff) => {
-        if (staff) {
-            logger.info(`staff found ${JSON.stringify(staff)}`);
-        }
-        if (taskId && processInstanceId) {
-            axios.all([getTaskData(taskId, headers), getTaskVariables(taskId, headers), getProcessVariables(processInstanceId, headers)])
-                .then(axios.spread((taskData, taskVariables, processVariables) => {
-                    applyContextResolution(new DataResolveContext(keycloakContext, new StaffDetailsContext(staff),
-                        new EnvironmentContext(process.env),
-                        new ProcessContext(processVariables),
-                        new TaskContext(taskData, taskVariables), customDataContext), form, response);
 
-                })).catch((e) => {
-                logger.error("Failed to resolve process data promise %s", e);
-                responseHandler.res({code: 400, message: `Failed to resolve process data for form ${e}`}, {}, response);
-            });
-        } else {
-            applyContextResolution(new DataResolveContext(keycloakContext, new StaffDetailsContext(staff),
-                new EnvironmentContext(process.env), null, null, customDataContext), form, response);
-        }
-    }).catch ((err) => {
-        logger.error("Failed to load user details %s", err.toString());
-        responseHandler.res({code: 400, message: `Failed to resolve process data for form ${err.toString()}`}, {}, response);
-    })
+    const email = keycloakContext.email;
+    const staffDetails = await getStaffDetails(email);
+    const shiftDetails = await getShiftDetails(email);
+    const staffDetailsContext = new StaffDetailsContext(staffDetails);
+    const environmentContext = new EnvironmentContext(process.env);
+    const shiftDetailsContext = new ShiftDetailsContext(shiftDetails);
+    let contextData;
+    if (taskId && processInstanceId) {
+        const taskData = await getTaskData(taskId, headers);
+        const processData = await getProcessVariables(processInstanceId, headers);
+        const taskVariables  =  await getTaskVariables(taskId, headers);
+        contextData = new DataResolveContext(keycloakContext, staffDetailsContext,
+            environmentContext,
+            new ProcessContext(processData),
+            new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext);
+
+    } else {
+        contextData = new DataResolveContext(keycloakContext,
+            staffDetailsContext, environmentContext, null, null,
+            customDataContext, shiftDetailsContext);
+    }
+    return applyFormResolution(contextData, form);
 };
+
+const getFormSchema = async (req, res) => {
+    const {formName} = req.params;
+    const {taskId, processInstanceId} = req.query;
+    const kauth = req.kauth;
+    const form = await dataResolvedForm({formName, taskId, processInstanceId, kauth}, null);
+    responseHandler.res(null, {formName, form}, res)
+};
+
 const createHeader = (keycloakContext) => {
     return {
         'Authorization': `Bearer ${keycloakContext.accessToken}`,
@@ -78,12 +79,13 @@ const createHeader = (keycloakContext) => {
     };
 };
 
-const applyContextResolution = (dataContext, form, res) => {
+
+const applyFormResolution = (dataContext, form) => {
     FormioUtils.eachComponent(form.components, (component) => {
         handleDefaultValueExpressions(component, dataContext);
         handleUrlComponents(component, dataContext);
     });
-    responseHandler.res(null, form, res);
+    return form;
 };
 
 const handleDefaultValueExpressions = (component, dataResolveContext) => {
@@ -97,13 +99,13 @@ const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
         if (regExp.test(value)) {
 
-            String.prototype.replaceAll = function(search, replacement) {
+            String.prototype.replaceAll = function (search, replacement) {
                 const target = this;
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
             const updatedValue = value.replaceAll(regExp, (match, capture) => {
                 const val = JSONPath.value(dataResolveContext, capture);
-                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val? val : "no match"));
+                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
                 return val;
             });
             return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;

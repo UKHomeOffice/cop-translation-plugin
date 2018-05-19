@@ -21,6 +21,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
+                .reply(200, []);
         });
         it('it should return an updated form schema for keycloakContext', (done) => {
             const request = httpMocks.createRequest({
@@ -50,6 +53,7 @@ describe('Form Data Resolve Controller', () => {
             });
 
             formDataController.getFormSchema(request, response);
+
             response.on('end', () => {
                 expect(response.statusCode).toEqual(200);
                 expect(response._isEndCalled()).toBe(true);
@@ -75,6 +79,9 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, forms.dataUrlForm);
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
+                .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
 
         });

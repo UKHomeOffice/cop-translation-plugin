@@ -5,7 +5,8 @@ class DataResolveContext {
                 environmentContext,
                 processContext,
                 taskContext,
-                customDataContext) {
+                customDataContext,
+                shiftDetailsContext) {
         this.keycloakContext = keycloakContext;
         this.staffDetailsDataContext = staffDetailsDataContext;
         this.environmentContext = environmentContext;
@@ -16,6 +17,7 @@ class DataResolveContext {
                 this[key] = customDataContext[key];
             });
         }
+        this.shiftDetailsContext = shiftDetailsContext;
     }
 }
 

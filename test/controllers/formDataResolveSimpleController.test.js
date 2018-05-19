@@ -21,7 +21,10 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=noContextData')
                 .reply(200, forms.noContextData);
             nock('http://localhost:9001')
-                .get('/api/reference-data/staffattributes?_join=inner:person:staffattributes.personid:$eq:person.personid&staffattributes.email=email')
+                .get('/api/staffview?email=eq.email')
+                .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return form without any data resolution', (done) => {

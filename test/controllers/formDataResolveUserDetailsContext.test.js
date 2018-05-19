@@ -43,6 +43,10 @@ describe('Form Data Resolve Controller', () => {
                             "gradename": "grade"
                         }
                     ]);
+
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.emailTest123')
+                .reply(200, []);
         });
         it('it should return an updated form schema for user details context', (done) => {
             const request = httpMocks.createRequest({
@@ -97,6 +101,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:9001')
                 .log(console.log)
                 .get('/api/platform-data/staffview?email=eq.noEmail')
+                .reply(200, []);
+            nock('http://localhost:9001')
+                .get('/api/platform-data/shift?email=eq.noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', (done) => {
