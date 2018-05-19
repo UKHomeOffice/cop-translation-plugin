@@ -32,13 +32,9 @@ const getShiftDetails = async(email) => {
                 'Content-Type' : 'application/json'
             }
         });
-        const details =  response.data ? response.data[0] : null;
-        if (details) {
-            logger.info(`Shift details found... ${JSON.stringify(details)}`);
-        }
-        return details
+        return response.data ? response.data[0] : null
     } catch (err) {
-        logger.error(`Failed to get shift details ${err.toString()}`)
+        logger.error(`Failed to get shift details ${err.toString()}`);
         return null;
     }
 

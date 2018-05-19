@@ -85,6 +85,7 @@ const applyFormResolution = (dataContext, form) => {
         handleDefaultValueExpressions(component, dataContext);
         handleUrlComponents(component, dataContext);
     });
+
     return form;
 };
 
