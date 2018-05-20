@@ -1,9 +1,8 @@
 class ShiftDetailsContext {
     constructor(shift) {
-        if (shift && shift.data) {
-            const data = shift.data;
-            Object.keys(data).forEach(key => {
-                this[key] = data[key];
+        if (shift) {
+            Object.keys(shift).forEach(key => {
+                this[key] = shift[key];
             });
         }
     }
