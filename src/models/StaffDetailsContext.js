@@ -2,7 +2,7 @@
 class StaffDetailsContext {
 
     constructor(staff) {
-        const hasUser = staff && staff !== undefined;
+        const hasUser = staff && (typeof staff !== "undefined");
         this.email = hasUser ? staff.email : null;
         this.gradeId = hasUser ? staff.gradetypeid: null;
         this.phone = hasUser ? staff.phone: null;

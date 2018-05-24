@@ -1,6 +1,6 @@
 import express from 'express';
-import heathRouter from './healthRoutes';
-import formDataResolveRouter from './formDataResolveRoutes';
+import heathRouter from './healthRouter';
+import formDataResolveRouter from './formDataResolveRouter';
 
 const router = express.Router();
 
