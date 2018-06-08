@@ -120,7 +120,6 @@ const performJsonPathResolution = (key, value, dataResolveContext) => {
 
 const handleUrlComponents = (component, dataResolveContext) => {
     if (component.data && component.dataSrc === 'url') {
-        component.lazyLoad = true;
         component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
         const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
         const header = component.data.headers.find(h => h.key === 'Authorization');
