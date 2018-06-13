@@ -15,7 +15,7 @@ describe('Form Data Routes Resolution', () => {
             chai.request(server)
                 .get('/api/translation/form/423423')
                 .end((err, res) => {
-                    res.should.have.status(404);
+                    res.should.have.status(403);
                     done();
                 });
         });

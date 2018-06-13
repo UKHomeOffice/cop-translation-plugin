@@ -34,9 +34,7 @@ let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
     serverUrl: process.env.AUTH_URL,
     realm: process.env.AUTH_REALM,
-    credentials: {
-        secret: process.env.AUTH_CLIENT_SECRET
-    }
+    bearerOnly: true
 };
 
 axios.interceptors.request.use(
