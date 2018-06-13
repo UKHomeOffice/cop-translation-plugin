@@ -32,7 +32,6 @@ if (process.env.NODE_ENV === 'production') {
 
 let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
-    bearerOnly: true,
     serverUrl: process.env.AUTH_URL,
     realm: process.env.AUTH_REALM
 };
