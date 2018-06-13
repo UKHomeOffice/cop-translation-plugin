@@ -33,7 +33,10 @@ if (process.env.NODE_ENV === 'production') {
 let kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
     serverUrl: process.env.AUTH_URL,
-    realm: process.env.AUTH_REALM
+    realm: process.env.AUTH_REALM,
+    credentials: {
+        secret: process.env.AUTH_CLIENT_SECRET
+    }
 };
 
 axios.interceptors.request.use(
