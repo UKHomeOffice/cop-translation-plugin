@@ -9,7 +9,7 @@ import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import {getProcessVariables, getTaskData, getTaskVariables} from "../services/ProcessService";
 import StaffDetailsContext from "../models/StaffDetailsContext";
-import {getShiftDetails, getStaffDetails} from "../services/PlatformDataService";
+import {getLocation, getLocationType, getShiftDetails, getStaffDetails} from "../services/PlatformDataService";
 import {getForm} from "../services/FormEngineService";
 import ShiftDetailsContext from "../models/ShiftDetailsContext";
 
@@ -42,9 +42,19 @@ const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, cu
     const email = keycloakContext.email;
     const staffDetails = await getStaffDetails(email);
     const shiftDetails = await getShiftDetails(email);
+
     const staffDetailsContext = new StaffDetailsContext(staffDetails);
     const environmentContext = new EnvironmentContext(process.env);
-    const shiftDetailsContext = new ShiftDetailsContext(shiftDetails);
+    let shiftDetailsContext = null;
+
+    if (shiftDetails) {
+        const location = await getLocation(shiftDetails.currentlocationid);
+        const locationType = await getLocationType(location.bflocationtypeid);
+        logger.info(`locationType ${JSON.stringify(locationType)}`);
+        shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
+        logger.info(`Shift details context ${JSON.stringify(shiftDetailsContext)}`);
+    }
+
     let contextData;
     if (taskId && processInstanceId) {
         const taskData = await getTaskData(taskId, headers);

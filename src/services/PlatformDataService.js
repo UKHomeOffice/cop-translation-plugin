@@ -9,10 +9,10 @@ const getStaffDetails = async (email) => {
             url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${email}`,
             method: 'GET',
             headers: {
-                'Content-Type' : 'application/json'
+                'Content-Type': 'application/json'
             }
         });
-        const details =  response.data ? response.data[0] : null;
+        const details = response.data ? response.data[0] : null;
         if (details) {
             logger.info(`Staff details found... ${JSON.stringify(details)}`);
         }
@@ -24,18 +24,42 @@ const getStaffDetails = async (email) => {
 
 };
 
-const getShiftDetails = async(email) => {
+const getLocation = async (locationid) => {
+    const locationDetails = await axios({
+        url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rf_location?locationid=eq.${locationid}`,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    return locationDetails ? locationDetails.data[0] : null;
+};
+
+
+const getLocationType = async(bflocationtypeid) => {
+    const locationType = await axios({
+        url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rf_bflocationtype/${bflocationtypeid}`,
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    return locationType ? locationType.data : null;
+
+};
+
+const getShiftDetails = async (email) => {
     try {
         const response = await axios({
             url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/shift?email=eq.${email}`,
             method: 'GET',
             headers: {
-                'Content-Type' : 'application/json'
+                'Content-Type': 'application/json'
             }
         });
-         const shiftDetails = response.data ? response.data[0] : null;
-         logger.info(`Shift details ${JSON.stringify(shiftDetails)}`);
-         return shiftDetails;
+        const shiftDetails = response.data ? response.data[0] : null;
+        logger.info(`Shift details ${JSON.stringify(shiftDetails)}`);
+        return shiftDetails;
     } catch (err) {
         logger.error(`Failed to get shift details ${err.toString()}`);
         return null;
@@ -45,6 +69,8 @@ const getShiftDetails = async(email) => {
 
 export {
     getStaffDetails,
-    getShiftDetails
+    getShiftDetails,
+    getLocation,
+    getLocationType
 }
 

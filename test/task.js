@@ -8,11 +8,7 @@ const taskData = {
 const taskVariables = {
     person: {
         type: "Object",
-        value: {
-            firstName: "firstNameFromProcess",
-            lastName: "lastNameFromProcess",
-            id: "idFromProcess"
-        },
+        value: "{\"firstName\": \"firstNameFromProcess\",\"lastName\": \"lastNameFromProcess\",\"id\": \"idFromProcess\"}",
         valueInfo: {
             objectTypeName: "xxxx",
             serializationDataFormat: "application/json"
@@ -28,11 +24,7 @@ const processVariables = {
     },
     person: {
         type: "Object",
-        value: {
-            firstName: "firstNameFromProcess",
-            lastName: "lastNameFromProcess",
-            id: "idFromProcess"
-        },
+        value: "{\"firstName\": \"firstNameFromProcess\",\"lastName\": \"lastNameFromProcess\",\"id\": \"idFromProcess\"}",
         valueInfo: {
             objectTypeName: "xxxx",
             serializationDataFormat: "application/json"

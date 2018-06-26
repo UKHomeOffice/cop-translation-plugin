@@ -32,6 +32,33 @@ const simpleForm = [{
     ]
 }];
 
+const shiftForm = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'currentlocationname',
+            label: 'Current Location',
+            placeholder: 'Current Location',
+            defaultValue: '{$.shiftDetailsContext.currentlocationname}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'portclassificationquery',
+            label: 'Classification Query',
+            placeholder: 'classificationquery',
+            defaultValue: '{$.shiftDetailsContext.portclassificationquery}',
+            input: true
+        },
+        {
+            type: 'button',
+            action: 'submit',
+            label: 'Submit',
+            theme: 'primary'
+        }
+    ]
+}];
+
 const dataUrlForm = [
     {
         components: [
@@ -254,5 +281,6 @@ export {
     taskContextForm,
     userDetailsContextForm,
     customContextForm,
-    noContextData
+    noContextData,
+    shiftForm
 }
