@@ -49,10 +49,11 @@ const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, cu
 
     if (shiftDetails) {
         const location = await getLocation(shiftDetails.currentlocationid);
-        const locationType = await getLocationType(location.bflocationtypeid);
-        logger.info(`locationType ${JSON.stringify(locationType)}`);
+        let locationType = null;
+        if (location.bflocationtypeid !== null) {
+            locationType = await getLocationType(location.bflocationtypeid);
+        }
         shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
-        logger.info(`Shift details context ${JSON.stringify(shiftDetailsContext)}`);
     }
 
     let contextData;
