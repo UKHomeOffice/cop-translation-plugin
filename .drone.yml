@@ -1,6 +1,6 @@
 workspace:
   base: /build
-  path: src/github.com/ukhomeoffice/private-workflow-executor
+  path: src/github.com/ukhomeoffice/borders-private-translation-service
 
 pipeline:
   test:
