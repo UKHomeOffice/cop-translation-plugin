@@ -89,17 +89,45 @@ const createHeader = (keycloakContext) => {
         'Accept-Type': 'application/json'
     };
 };
+const performJsonPathResolution = (key, value, dataResolveContext) => {
+    try {
+        if (regExp.test(value)) {
+
+            String.prototype.replaceAll = function (search, replacement) {
+                const target = this;
+                return target.replace(new RegExp(search, 'g'), replacement);
+            };
+            const updatedValue = value.replaceAll(regExp, (match, capture) => {
+                const val = JSONPath.value(dataResolveContext, capture);
+                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
+                return val;
+            });
+            return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;
+        }
+        return value;
+    } catch (e) {
+        logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", value, e);
+        return value;
+    }
+};
 
 
-const applyFormResolution = (dataContext, form) => {
-    FormioUtils.eachComponent(form.components, (component) => {
-        handleDefaultValueExpressions(component, dataContext);
-        handleUrlComponents(component, dataContext);
-    });
-
-    handleNestedForms(form);
-
-    return form;
+const handleUrlComponents = (component, dataResolveContext) => {
+    if (component.data && component.dataSrc === 'url') {
+        component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
+        const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
+        const header = component.data.headers.find(h => h.key === 'Authorization');
+        if (component.data.tags && !component.data.tags.contains('platform-read-data')) {
+            if (header) {
+                header.value = bearerValue;
+            } else {
+                component.data.headers.push({
+                    "key": "Authorization",
+                    "value": bearerValue
+                });
+            }
+        }
+    }
 };
 
 const handleNestedForms = (form) => {
@@ -123,45 +151,24 @@ const handleDefaultValueExpressions = (component, dataResolveContext) => {
     }
 };
 
-const performJsonPathResolution = (key, value, dataResolveContext) => {
-    try {
-        if (regExp.test(value)) {
+const applyFormResolution = (dataContext, form) => {
+    FormioUtils.eachComponent(form.components, (component) => {
+        handleDefaultValueExpressions(component, dataContext);
+        handleUrlComponents(component, dataContext);
+    });
 
-            String.prototype.replaceAll = function (search, replacement) {
-                const target = this;
-                return target.replace(new RegExp(search, 'g'), replacement);
-            };
-            const updatedValue = value.replaceAll(regExp, (match, capture) => {
-                const val = JSONPath.value(dataResolveContext, capture);
-                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
-                return val;
-            });
-            return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;
-        }
-        return value;
-    } catch (e) {
-        logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", value, e);
-        return value;
-    }
+    handleNestedForms(form);
+
+    return form;
 };
 
-const handleUrlComponents = (component, dataResolveContext) => {
-    if (component.data && component.dataSrc === 'url') {
-        component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
-        const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
-        const header = component.data.headers.find(h => h.key === 'Authorization');
-        if (component.data.tags && !component.data.tags.contains('platform-read-data')) {
-            if (header) {
-                header.value = bearerValue;
-            } else {
-                component.data.headers.push({
-                    "key": "Authorization",
-                    "value": bearerValue
-                });
-            }
-        }
-    }
-};
+
+
+
+
+
+
+
 
 
 export default {
