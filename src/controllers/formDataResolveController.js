@@ -15,65 +15,6 @@ import ShiftDetailsContext from "../models/ShiftDetailsContext";
 
 const regExp = new RegExp('\\{(.+?)\\}');
 
-
-const getFormSchemaForContext = async (req, res) => {
-    const data = req.body;
-    const formName = data.formName;
-    const {taskId, processInstanceId} = req.query;
-    const kauth = req.kauth;
-    if (data.dataContext) {
-        const form = await dataResolvedForm({formName, taskId, processInstanceId, kauth}, data.dataContext);
-        responseHandler.res(null, {formName, form}, res);
-    } else {
-        logger.error("No data context defined for POST");
-        responseHandler.res({code: 400, message: 'No data context provided to perform data resolution'}, {formName}, res);
-    }
-};
-
-
-const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, customDataContext) => {
-    const form = await getForm(formName);
-    if (!form) {
-        return null;
-    }
-    const keycloakContext = new KeycloakContext(kauth);
-    const headers = createHeader(keycloakContext);
-
-    const email = keycloakContext.email;
-    const staffDetails = await getStaffDetails(email);
-    const shiftDetails = await getShiftDetails(email);
-
-    const staffDetailsContext = new StaffDetailsContext(staffDetails);
-    const environmentContext = new EnvironmentContext(process.env);
-    let shiftDetailsContext = null;
-
-    if (shiftDetails) {
-        const location = await getLocation(shiftDetails.currentlocationid);
-        let locationType = null;
-        if (location.bflocationtypeid !== null) {
-            locationType = await getLocationType(location.bflocationtypeid);
-        }
-        shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
-    }
-
-    let contextData;
-    if (taskId && processInstanceId) {
-        const taskData = await getTaskData(taskId, headers);
-        const processData = await getProcessVariables(processInstanceId, headers);
-        const taskVariables  =  await getTaskVariables(taskId, headers);
-        contextData = new DataResolveContext(keycloakContext, staffDetailsContext,
-            environmentContext,
-            new ProcessContext(processData),
-            new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext);
-
-    } else {
-        contextData = new DataResolveContext(keycloakContext,
-            staffDetailsContext, environmentContext, null, null,
-            customDataContext, shiftDetailsContext);
-    }
-    return applyFormResolution(contextData, form);
-};
-
 const getFormSchema = async (req, res) => {
     const {formName} = req.params;
     const {taskId, processInstanceId} = req.query;
@@ -82,13 +23,6 @@ const getFormSchema = async (req, res) => {
     responseHandler.res(null, {formName, form}, res)
 };
 
-const createHeader = (keycloakContext) => {
-    return {
-        'Authorization': `Bearer ${keycloakContext.accessToken}`,
-        'Content-Type': 'application/json',
-        'Accept-Type': 'application/json'
-    };
-};
 const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
         if (regExp.test(value)) {
@@ -163,13 +97,71 @@ const applyFormResolution = (dataContext, form) => {
 };
 
 
+const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, customDataContext) => {
+    const form = await getForm(formName);
+    if (!form) {
+        return null;
+    }
+    const keycloakContext = new KeycloakContext(kauth);
+    const headers = createHeader(keycloakContext);
+
+    const email = keycloakContext.email;
+    const staffDetails = await getStaffDetails(email);
+    const shiftDetails = await getShiftDetails(email);
+
+    const staffDetailsContext = new StaffDetailsContext(staffDetails);
+    const environmentContext = new EnvironmentContext(process.env);
+    let shiftDetailsContext = null;
+
+    if (shiftDetails) {
+        const location = await getLocation(shiftDetails.currentlocationid);
+        let locationType = null;
+        if (location.bflocationtypeid !== null) {
+            locationType = await getLocationType(location.bflocationtypeid);
+        }
+        shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
+    }
+
+    let contextData;
+    if (taskId && processInstanceId) {
+        const taskData = await getTaskData(taskId, headers);
+        const processData = await getProcessVariables(processInstanceId, headers);
+        const taskVariables  =  await getTaskVariables(taskId, headers);
+        contextData = new DataResolveContext(keycloakContext, staffDetailsContext,
+            environmentContext,
+            new ProcessContext(processData),
+            new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext);
+
+    } else {
+        contextData = new DataResolveContext(keycloakContext,
+            staffDetailsContext, environmentContext, null, null,
+            customDataContext, shiftDetailsContext);
+    }
+    return applyFormResolution(contextData, form);
+};
 
 
+const getFormSchemaForContext = async (req, res) => {
+    const data = req.body;
+    const formName = data.formName;
+    const {taskId, processInstanceId} = req.query;
+    const kauth = req.kauth;
+    if (data.dataContext) {
+        const form = await dataResolvedForm({formName, taskId, processInstanceId, kauth}, data.dataContext);
+        responseHandler.res(null, {formName, form}, res);
+    } else {
+        logger.error("No data context defined for POST");
+        responseHandler.res({code: 400, message: 'No data context provided to perform data resolution'}, {formName}, res);
+    }
+};
 
-
-
-
-
+const createHeader = (keycloakContext) => {
+    return {
+        'Authorization': `Bearer ${keycloakContext.accessToken}`,
+        'Content-Type': 'application/json',
+        'Accept-Type': 'application/json'
+    };
+};
 
 export default {
     getFormSchema,
