@@ -123,7 +123,6 @@ const handleDefaultValueExpressions = (component, dataResolveContext) => {
     }
 };
 
-
 const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
         if (regExp.test(value)) {
