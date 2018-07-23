@@ -15,13 +15,14 @@ import ShiftDetailsContext from "../models/ShiftDetailsContext";
 
 const regExp = new RegExp('\\{(.+?)\\}');
 
-const getFormSchema = async (req, res) => {
-    const {formName} = req.params;
-    const {taskId, processInstanceId} = req.query;
-    const kauth = req.kauth;
-    const form = await dataResolvedForm({formName, taskId, processInstanceId, kauth}, null);
-    responseHandler.res(null, {formName, form}, res)
+const createHeader = (keycloakContext) => {
+    return {
+        'Authorization': `Bearer ${keycloakContext.accessToken}`,
+        'Content-Type': 'application/json',
+        'Accept-Type': 'application/json'
+    };
 };
+
 
 const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
@@ -92,9 +93,9 @@ const applyFormResolution = (dataContext, form) => {
     });
 
     handleNestedForms(form);
-
     return form;
 };
+
 
 
 const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, customDataContext) => {
@@ -140,6 +141,13 @@ const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, cu
     return applyFormResolution(contextData, form);
 };
 
+const getFormSchema = async (req, res) => {
+    const {formName} = req.params;
+    const {taskId, processInstanceId} = req.query;
+    const kauth = req.kauth;
+    const form = await dataResolvedForm({formName, taskId, processInstanceId, kauth}, null);
+    responseHandler.res(null, {formName, form}, res)
+};
 
 const getFormSchemaForContext = async (req, res) => {
     const data = req.body;
@@ -155,13 +163,7 @@ const getFormSchemaForContext = async (req, res) => {
     }
 };
 
-const createHeader = (keycloakContext) => {
-    return {
-        'Authorization': `Bearer ${keycloakContext.accessToken}`,
-        'Content-Type': 'application/json',
-        'Accept-Type': 'application/json'
-    };
-};
+
 
 export default {
     getFormSchema,
