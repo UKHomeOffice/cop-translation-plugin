@@ -6,7 +6,7 @@ import * as logger from 'winston';
 const getStaffDetails = async (email) => {
     try {
         const response = await axios({
-            url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${email}`,
+            url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${encodeURIComponent(email)}`,
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ const getLocationType = async(bflocationtypeid) => {
 const getShiftDetails = async (email) => {
     try {
         const response = await axios({
-            url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/shift?email=eq.${email}`,
+            url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/shift?email=eq.${encodeURIComponent(email)}`,
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
