@@ -69,7 +69,7 @@ const handleNestedForms = (form) => {
     form.components.forEach((c) => {
         if (c.components) {
             c.components.forEach((comForm) => {
-                if (comForm.type === 'form' && comForm.tags && comForm.tags.indexOf('disabled') >= 0 ) {
+                if (comForm.tags && comForm.tags.indexOf('disabled') >= 0 ) {
                     FormioUtils.eachComponent(comForm.components, (nested) => {
                         nested.disabled = true
                     })
