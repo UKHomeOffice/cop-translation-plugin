@@ -12,6 +12,7 @@ pipeline:
         event:
         - push
         - pull_request
+        - tag
 
   sonar-scanner:
     image: quay.io/ukhomeofficedigital/sonar-scanner:v3.0.1
@@ -22,6 +23,7 @@ pipeline:
       event:
         - push
         - pull_request
+        - tag
 
   build:
     image: docker:17.09.1
@@ -35,6 +37,7 @@ pipeline:
       event:
         - push
         - pull_request
+        - tag
 
   image_to_quay:
     image: docker:17.09.1
@@ -51,7 +54,6 @@ pipeline:
     - docker tag $${DOCKER_NAME} $${DOCKER_SERVER}/$${DOCKER_GROUP}/$${DOCKER_NAME}:latest
     - docker push $${DOCKER_SERVER}/$${DOCKER_GROUP}/$${DOCKER_NAME}:latest
     when:
-      branch: master
       event: push
 
   tag_image_to_quay:
@@ -69,5 +71,4 @@ pipeline:
     - docker tag $${DOCKER_NAME} $${DOCKER_SERVER}/$${DOCKER_GROUP}/$${DOCKER_NAME}:$${DRONE_COMMIT_SHA}
     - docker push $${DOCKER_SERVER}/$${DOCKER_GROUP}/$${DOCKER_NAME}:$${DRONE_COMMIT_SHA}
     when:
-      branch: master
       event: tag
