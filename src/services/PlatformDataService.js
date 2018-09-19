@@ -38,7 +38,7 @@ const getLocation = async (locationid) => {
 
 const getLocationType = async(bflocationtypeid) => {
     const locationType = await axios({
-        url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rf_bflocationtype/${bflocationtypeid}`,
+        url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rf_bflocationtype?bflocationtypeid=eq.${bflocationtypeid}`,
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

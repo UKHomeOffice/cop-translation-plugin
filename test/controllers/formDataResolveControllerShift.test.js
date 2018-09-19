@@ -38,7 +38,7 @@ describe('Form Data Resolve Controller', () => {
 
                 }]);
             nock('http://localhost:9001')
-                .get('/api/platform-data/rf_bflocationtype/bflocationtypeid')
+                .get('/api/platform-data/rf_bflocationtype?bflocationtypeid=eq.bflocationtypeid')
                 .reply(200, {
                     bflocationtypeid: 'bflocationtypeid',
                     seaport: true,
