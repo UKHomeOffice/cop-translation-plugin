@@ -12,6 +12,7 @@ import StaffDetailsContext from "../models/StaffDetailsContext";
 import {getLocation, getLocationType, getShiftDetails, getStaffDetails} from "../services/PlatformDataService";
 import {getForm} from "../services/FormEngineService";
 import ShiftDetailsContext from "../models/ShiftDetailsContext";
+import moment from "moment";
 
 const regExp = new RegExp('\\{(.+?)\\}');
 
@@ -27,7 +28,6 @@ const createHeader = (keycloakContext) => {
 const performJsonPathResolution = (key, value, dataResolveContext) => {
     try {
         if (regExp.test(value)) {
-
             String.prototype.replaceAll = function (search, replacement) {
                 const target = this;
                 return target.replace(new RegExp(search, 'g'), replacement);
@@ -46,10 +46,40 @@ const performJsonPathResolution = (key, value, dataResolveContext) => {
     }
 };
 
+const performJsonPathResolutionOnComponent = (component, dataResolveContext) => {
+    const key = component.key;
+    const value = component.defaultValue;
+    try {
+        if (regExp.test(value)) {
+            String.prototype.replaceAll = function (search, replacement) {
+                const target = this;
+                return target.replace(new RegExp(search, 'g'), replacement);
+            };
+            const updatedValue = value.replaceAll(regExp, (match, capture) => {
+                let val = JSONPath.value(dataResolveContext, capture);
+                if (component.properties['date-format']) {
+                    const format = component.properties['date-format'];
+                    logger.info(format);
+                    val = moment(val).format(format);
+                    logger.info(`Date format property detected....${val}`);
+                }
+                logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
+                return val;
+            });
+            return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;
+        }
+        return value;
+    } catch (e) {
+        logger.error("Error occurred while trying to resolve defaultValue %s...error message %s", value, e);
+        return value;
+    }
+};
+
 
 const handleUrlComponents = (component, dataResolveContext) => {
     if (component.data && component.dataSrc === 'url') {
         component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
+        handleDefaultValueExpressions(component, dataResolveContext);
         const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
         const header = component.data.headers.find(h => h.key === 'Authorization');
         if (component.data.tags && !component.data.tags.contains('platform-read-data')) {
@@ -69,7 +99,7 @@ const handleNestedForms = (form) => {
     form.components.forEach((c) => {
         if (c.components) {
             c.components.forEach((comForm) => {
-                if (comForm.tags && comForm.tags.indexOf('disabled') >= 0 ) {
+                if (comForm.tags && comForm.tags.indexOf('disabled') >= 0) {
                     FormioUtils.eachComponent(comForm.components, (nested) => {
                         nested.disabled = true
                     })
@@ -81,10 +111,10 @@ const handleNestedForms = (form) => {
 
 const handleDefaultValueExpressions = (component, dataResolveContext) => {
     if (component.defaultValue) {
-        component.defaultValue = performJsonPathResolution(component.key,
-            component.defaultValue, dataResolveContext);
+        component.defaultValue = performJsonPathResolutionOnComponent(component, dataResolveContext);
     }
 };
+
 
 const applyFormResolution = (dataContext, form) => {
     FormioUtils.eachComponent(form.components, (component) => {
@@ -95,7 +125,6 @@ const applyFormResolution = (dataContext, form) => {
     handleNestedForms(form);
     return form;
 };
-
 
 
 const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, customDataContext) => {
@@ -127,7 +156,7 @@ const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, cu
     if (taskId && processInstanceId) {
         const taskData = await getTaskData(taskId, headers);
         const processData = await getProcessVariables(processInstanceId, headers);
-        const taskVariables  =  await getTaskVariables(taskId, headers);
+        const taskVariables = await getTaskVariables(taskId, headers);
         contextData = new DataResolveContext(keycloakContext, staffDetailsContext,
             environmentContext,
             new ProcessContext(processData),
@@ -159,10 +188,12 @@ const getFormSchemaForContext = async (req, res) => {
         responseHandler.res(null, {formName, form}, res);
     } else {
         logger.error("No data context defined for POST");
-        responseHandler.res({code: 400, message: 'No data context provided to perform data resolution'}, {formName}, res);
+        responseHandler.res({
+            code: 400,
+            message: 'No data context provided to perform data resolution'
+        }, {formName}, res);
     }
 };
-
 
 
 export default {
