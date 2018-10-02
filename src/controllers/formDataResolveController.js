@@ -57,7 +57,7 @@ const performJsonPathResolutionOnComponent = (component, dataResolveContext) => 
             };
             const updatedValue = value.replaceAll(regExp, (match, capture) => {
                 let val = JSONPath.value(dataResolveContext, capture);
-                if (component.properties['date-format']) {
+                if (component.properties && component.properties['date-format']) {
                     const format = component.properties['date-format'];
                     logger.info(format);
                     val = moment(val).format(format);
