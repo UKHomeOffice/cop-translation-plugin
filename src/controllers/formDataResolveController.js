@@ -82,15 +82,13 @@ const handleUrlComponents = (component, dataResolveContext) => {
         handleDefaultValueExpressions(component, dataResolveContext);
         const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
         const header = component.data.headers.find(h => h.key === 'Authorization');
-        if (component.data.tags && !component.data.tags.contains('platform-read-data')) {
-            if (header) {
-                header.value = bearerValue;
-            } else {
-                component.data.headers.push({
-                    "key": "Authorization",
-                    "value": bearerValue
-                });
-            }
+        if (header) {
+            header.value = bearerValue;
+        } else {
+            component.data.headers.push({
+                "key": "Authorization",
+                "value": bearerValue
+            });
         }
     }
 };
