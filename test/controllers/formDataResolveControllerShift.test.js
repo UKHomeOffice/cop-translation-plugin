@@ -39,7 +39,7 @@ describe('Form Data Resolve Controller', () => {
                 }]);
             nock('http://localhost:9001')
                 .get('/api/platform-data/rf_bflocationtype?bflocationtypeid=eq.bflocationtypeid')
-                .reply(200, {
+                .reply(200, [{
                     bflocationtypeid: 'bflocationtypeid',
                     seaport: true,
                     railterminal: false,
@@ -48,7 +48,7 @@ describe('Form Data Resolve Controller', () => {
                     fixedtransport: false,
                     bordercrossing: false,
                     roadterminal: false
-                });
+                }]);
         });
         it('it should return an updated form schema for keycloakContext', (done) => {
             const request = httpMocks.createRequest({

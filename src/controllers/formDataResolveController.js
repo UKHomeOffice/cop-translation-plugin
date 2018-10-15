@@ -134,18 +134,18 @@ const dataResolvedForm = async ({formName, processInstanceId, taskId, kauth}, cu
     const headers = createHeader(keycloakContext);
 
     const email = keycloakContext.email;
-    const staffDetails = await getStaffDetails(email);
-    const shiftDetails = await getShiftDetails(email);
+    const staffDetails = await getStaffDetails(email, headers);
+    const shiftDetails = await getShiftDetails(email, headers);
 
     const staffDetailsContext = new StaffDetailsContext(staffDetails);
     const environmentContext = new EnvironmentContext(process.env);
     let shiftDetailsContext = null;
 
     if (shiftDetails) {
-        const location = await getLocation(shiftDetails.currentlocationid);
+        const location = await getLocation(shiftDetails.currentlocationid, headers);
         let locationType = null;
         if (location.bflocationtypeid !== null) {
-            locationType = await getLocationType(location.bflocationtypeid);
+            locationType = await getLocationType(location.bflocationtypeid, headers);
         }
         shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
     }
