@@ -25,7 +25,7 @@ const createHeader = (keycloakContext) => {
 };
 
 
-const performJsonPathResolution = (key, value, dataResolveContext) => {
+const performJsonPathResolution = (key, value, dataResolveContext, isImage) => {
     try {
         if (regExp.test(value)) {
             String.prototype.replaceAll = function (search, replacement) {
@@ -33,7 +33,10 @@ const performJsonPathResolution = (key, value, dataResolveContext) => {
                 return target.replace(new RegExp(search, 'g'), replacement);
             };
             const updatedValue = value.replaceAll(regExp, (match, capture) => {
-                const val = JSONPath.value(dataResolveContext, capture);
+                let val = JSONPath.value(dataResolveContext, capture);
+                if (isImage) {
+                    val = `data:image/png;base64,${val}`;
+                }
                 logger.info("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
                 return val;
             });
@@ -78,7 +81,7 @@ const performJsonPathResolutionOnComponent = (component, dataResolveContext) => 
 
 const handleUrlComponents = (component, dataResolveContext) => {
     if (component.data && component.dataSrc === 'url') {
-        component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext);
+        component.data.url = performJsonPathResolution(component.key, component.data.url, dataResolveContext, false);
         handleDefaultValueExpressions(component, dataResolveContext);
         const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
         const header = component.data.headers.find(h => h.key === 'Authorization');
@@ -110,6 +113,11 @@ const handleNestedForms = (form) => {
 const handleDefaultValueExpressions = (component, dataResolveContext) => {
     if (component.defaultValue) {
         component.defaultValue = performJsonPathResolutionOnComponent(component, dataResolveContext);
+    }
+    if (component.key === 'content' && component.type === 'content') {
+        if (component.tags && component.tags.find( t => t === 'image')) {
+            component.html = performJsonPathResolution(component.key, component.html, dataResolveContext, true);
+        }
     }
 };
 
