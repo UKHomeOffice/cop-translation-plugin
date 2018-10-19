@@ -115,7 +115,7 @@ const handleDefaultValueExpressions = (component, dataResolveContext) => {
     if (component.defaultValue) {
         component.defaultValue = performJsonPathResolutionOnComponent(component, dataResolveContext);
     }
-    if (component.key === 'content' && component.type === 'content') {
+    if (component.type === 'content') {
         if (component.tags && component.tags.find( t => t === 'image')) {
             component.html = performJsonPathResolution(component.key, component.html, dataResolveContext, true);
         }
