@@ -155,3 +155,4 @@ Add the following to your Extrac Mocha Options:
 ```text
 --require babel-polyfill --require babel-register --exit --recursive --timeout 5000
 ```
+
