@@ -1,3 +1,5 @@
+import * as logger from "winston/lib/winston";
+
 class ShiftDetailsContext {
     constructor(shift, location, locationtype) {
         this.createQueryParameter = this.createQueryParameter.bind(this);
@@ -20,9 +22,14 @@ class ShiftDetailsContext {
     }
 
     createQueryParameter(locationtype) {
-        return `&seaport=eq.${locationtype.seaport}&railterminal=eq.${locationtype.railterminal}` +
+        logger.info(`locationtype ${JSON.stringify(locationtype)}`);
+        const query =  `&seaport=eq.${locationtype.seaport}&railterminal=eq.${locationtype.railterminal}` +
             `&airport=eq.${locationtype.airport}&postexchange=eq.${locationtype.postexchange}&fixedtransport=eq.${locationtype.fixedtransport}`
             + `&bordercrossing=eq.${locationtype.bordercrossing}&roadterminal=eq.${locationtype.roadterminal}`
+
+        logger.info(`query ${JSON.stringify(query)}`);
+
+        return query;
     };
 }
 
