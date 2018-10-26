@@ -8,6 +8,7 @@ const getForm = async (formName) => {
         const response = await axios.get(`${process.env.FORM_URL}/form?name=${formName}`);
         if (response && response.data) {
             const form = response.data[0];
+            logger.info(`Form found ${JSON.stringify(form)}`);
             const subFormComponents = FormioUtils.findComponents(form.components, {
                 type: 'form'
             });
