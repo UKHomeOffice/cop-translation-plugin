@@ -55,6 +55,32 @@ const imgForm = [
         ]
     }
 ];
+const jpgImgForm = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.img}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "imageType": "jpg"
+                },
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
 const shiftForm = [{
     components: [
         {
@@ -306,5 +332,6 @@ export {
     customContextForm,
     noContextData,
     shiftForm,
-    imgForm
+    imgForm,
+    jpgImgForm
 }

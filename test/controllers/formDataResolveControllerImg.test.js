@@ -23,6 +23,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:8000')
                 .get('/form?name=imgForm')
                 .reply(200, forms.imgForm);
+            nock('http://localhost:8000')
+                .get('/form?name=jpgImgForm')
+                .reply(200, forms.jpgImgForm);
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
@@ -87,6 +90,50 @@ describe('Form Data Resolve Controller', () => {
                 const img = JSONPath.value(updatedForm, "$..components[?(@.key=='content')].html");
                 expect(img).toEqual(
                 "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,image\" style=\"height: 125px; width: 100px;\" /></p>\n");
+                done();
+            });
+        });
+        it('it should jpg image source', (done) => {
+            const request = httpMocks.createRequest({
+                method: 'GET',
+                url: '/api/translation/form/jpgImgForm',
+                params: {
+                    formName: "jpgImgForm"
+                },
+                query: {
+                    taskId: "taskId",
+                    processInstanceId : 'processInstanceId'
+                },
+                kauth: {
+                    grant: {
+                        access_token: {
+                            token: "test-token",
+                            content: {
+                                session_state: "session_id",
+                                email: "email",
+                                preferred_username: "test",
+                                given_name: "testgivenname",
+                                family_name: "testfamilyname"
+                            }
+                        }
+
+                    }
+                }
+            });
+            const response = httpMocks.createResponse({
+                eventEmitter: require('events').EventEmitter
+            });
+
+            formDataController.getFormSchema(request, response);
+
+            response.on('end', () => {
+                expect(response.statusCode).toEqual(200);
+                expect(response._isEndCalled()).toBe(true);
+                const updatedForm = JSON.parse(response._getData());
+
+                const img = JSONPath.value(updatedForm, "$..components[?(@.key=='content')].html");
+                expect(img).toEqual(
+                    "<p>Image</p>\n\n<p><img src=\"data:image/jpg;base64,image\" style=\"height: 125px; width: 100px;\" /></p>\n");
                 done();
             });
         });
