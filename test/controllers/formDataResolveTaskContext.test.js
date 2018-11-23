@@ -1,3 +1,5 @@
+import FormTranslator from "../../src/services/FormTranslator";
+
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
@@ -9,12 +11,20 @@ process.env.TX_DB_NAME = "test";
 import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
-import expect from 'expect';
-import formDataController from '../../src/controllers/formDataResolveController';
+import chai from 'chai';
+import FormTranslateController from '../../src/controllers/FormTranslateController';
 import * as forms from '../forms'
 import * as tasks from '../task';
+import FormEngineService from "../../src/services/FormEngineService";
+import PlatformDataService from "../../src/services/PlatformDataService";
+import ProcessService from "../../src/services/ProcessService";
 
 describe('Form Data Resolve Controller', () => {
+    const expect = chai.expect;
+    const translator = new FormTranslator(new FormEngineService(),
+        new PlatformDataService(), new ProcessService());
+
+    const formTranslateController = new FormTranslateController(translator);
 
     describe('A call to data resolve controller for process variables context', () => {
         beforeEach(() => {
@@ -41,7 +51,7 @@ describe('Form Data Resolve Controller', () => {
 
 
         });
-        it('it should return an updated form schema for process context', (done) => {
+        it('it should return an updated form schema for process context', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/processContextForm',
@@ -68,25 +78,18 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
 
-            formDataController.getFormSchema(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
 
-                const firstName = JSONPath.value(updatedForm, "$..components[?(@.key=='firstName')].defaultValue");
-                const lastName = JSONPath.value(updatedForm, "$..components[?(@.key=='lastName')].defaultValue");
-                const sessionId = JSONPath.value(updatedForm, "$..components[?(@.key=='id')].defaultValue");
+            const response = await formTranslateController.getForm(request);
 
-                expect(firstName).toEqual("firstNameFromProcess");
-                expect(lastName).toEqual("lastNameFromProcess");
-                expect(sessionId).toEqual("idFromProcess");
-                done();
-            });
+
+            const firstName = JSONPath.value(response, "$..components[?(@.key=='firstName')].defaultValue");
+            const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
+            const sessionId = JSONPath.value(response, "$..components[?(@.key=='id')].defaultValue");
+
+            expect(firstName).to.equal("firstNameFromProcess");
+            expect(lastName).to.equal("lastNameFromProcess");
+            expect(sessionId).to.equal("idFromProcess");
         });
     });
 
@@ -112,7 +115,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
-        it('it should return an updated form schema for task context', (done) => {
+        it('it should return an updated form schema for task context', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/taskContextForm',
@@ -139,32 +142,22 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
+            const response = await formTranslateController.getForm(request);
 
-            formDataController.getFormSchema(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
+            const firstName = JSONPath.value(response, "$..components[?(@.key=='firstName')].defaultValue");
+            const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
+            const sessionId = JSONPath.value(response, "$..components[?(@.key=='id')].defaultValue");
+            const formName = JSONPath.value(response, "$..components[?(@.key=='formName')].defaultValue");
 
-                const firstName = JSONPath.value(updatedForm, "$..components[?(@.key=='firstName')].defaultValue");
-                const lastName = JSONPath.value(updatedForm, "$..components[?(@.key=='lastName')].defaultValue");
-                const sessionId = JSONPath.value(updatedForm, "$..components[?(@.key=='id')].defaultValue");
-                const formName = JSONPath.value(updatedForm, "$..components[?(@.key=='formName')].defaultValue");
+            expect(firstName).to.equal("firstNameFromProcess");
+            expect(lastName).to.equal("lastNameFromProcess");
+            expect(sessionId).to.equal("idFromProcess");
+            expect(formName).to.equal("taskName");
 
-                expect(firstName).toEqual("firstNameFromProcess");
-                expect(lastName).toEqual("lastNameFromProcess");
-                expect(sessionId).toEqual("idFromProcess");
-                expect(formName).toEqual("taskName");
-
-                done();
-            });
         });
     });
 
-    describe('A call to data resolve controller throws 400 if task context does not exist', () => {
+    describe('A call to data resolve controller returns data even if task info is null', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=taskContextForm')
@@ -186,7 +179,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
-        it('it should return an updated form without updated task/process info', (done) => {
+        it('it should return an updated form without updated task/process info', async() => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form',
@@ -213,17 +206,8 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
-
-            formDataController.getFormSchema(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-
-                done();
-            });
+            const response= await formTranslateController.getForm(request)
+            expect(response).not.null
         });
     });
 

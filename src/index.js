@@ -1,7 +1,5 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import * as logger from 'winston';
-
 import expressValidator from 'express-validator';
 import route from './routes';
 import morgan from 'morgan';
@@ -16,9 +14,10 @@ import * as axios from "axios";
 import moment from 'moment';
 import helmet from 'helmet';
 
+const winston = require('./config/winston');
 
 if (process.env.NODE_ENV === 'production') {
-    logger.info('Setting ca bundle');
+    winston.info('Setting ca bundle');
     const trustedCa = [
         '/etc/ssl/certs/ca-bundle.crt'
     ];
@@ -27,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
     for (const ca of trustedCa) {
         https.globalAgent.options.ca.push(fs.readFileSync(ca));
     }
-    logger.info('ca bundle set...');
+    winston.info('ca bundle set...');
 }
 
 const kcConfig = {
@@ -36,29 +35,6 @@ const kcConfig = {
     realm: process.env.AUTH_REALM,
     bearerOnly: true
 };
-
-axios.interceptors.request.use(
-    (config) => {
-        logger.info('Request: [%s] "%s %s"', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), config.method.toUpperCase(), config.url);
-        return config
-    },
-    (error) => {
-        return Promise.reject(error);
-    });
-
-axios.interceptors.response.use((response) => {
-    if (response) {
-        logger.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
-    }
-    return response
-}, (error) => {
-    logger.error('Error: [%s] [%s]',
-        moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'),
-        JSON.stringify(error.message)
-    );
-    return Promise.reject(error);
-});
-
 
 const app = express();
 
@@ -77,8 +53,10 @@ app.use(session({
     name: process.env.SESSION_NAME
 }));
 
+
+
 app.use(bodyParser.json());
-app.use(morgan('common'));
+app.use(morgan('combined', { stream: winston.stream }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
 app.use(helmet());
@@ -86,9 +64,30 @@ app.use(keycloak.middleware());
 
 app.use('/api/translation', route.allApiRouter(keycloak));
 
+axios.interceptors.request.use(
+    (config) => {
+        winston.info('Request: [%s] "%s %s"', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), config.method.toUpperCase(), config.url);
+        return config
+    },
+    (error) => {
+        return Promise.reject(error);
+    });
+
+axios.interceptors.response.use((response) => {
+    if (response) {
+        winston.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
+    }
+    return response
+}, (error) => {
+    winston.error('Error: [%s] [%s]',
+        moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'),
+        JSON.stringify(error.message)
+    );
+    return Promise.reject(error);
+});
 
 const server = http.createServer(app).listen(app.get('port'), function () {
-    logger.info('Listening on port %d', port);
+    winston.info('Listening on port %d', port);
 });
 
 
@@ -104,14 +103,14 @@ server.on('connection', connection => {
 });
 
 function shutDown() {
-    logger.info('Received kill signal, shutting down gracefully');
+    winston.info('Received kill signal, shutting down gracefully');
     server.close(() => {
-        logger.info('Closed out remaining connections');
+        winston.info('Closed out remaining connections');
         process.exit(0);
     });
 
     setTimeout(() => {
-        logger.error('Could not close connections in time, forcefully shutting down');
+        winston.error('Could not close connections in time, forcefully shutting down');
         process.exit(1);
     }, 10000);
 

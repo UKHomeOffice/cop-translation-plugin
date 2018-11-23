@@ -1,17 +1,25 @@
+
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
 process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
 
-
 import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import expect from 'expect';
-import formDataController from '../../src/controllers/formDataResolveController';
+import FormTranslateController from '../../src/controllers/FormTranslateController';
 import * as forms from '../forms'
+import FormTranslator from "../../src/services/FormTranslator";
+import FormEngineService from "../../src/services/FormEngineService";
+import PlatformDataService from "../../src/services/PlatformDataService";
+import ProcessService from "../../src/services/ProcessService";
 
 describe('Form Data Resolve Controller', () => {
+    const translator = new FormTranslator(new FormEngineService(),
+        new PlatformDataService(), new ProcessService());
+
+    const formTranslateController = new FormTranslateController(translator);
 
     describe('A call to data resolve controller for input type', () => {
         beforeEach(() => {
@@ -25,7 +33,8 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
-        it('it should return an updated form schema for keycloakContext', (done) => {
+
+        it('it should return an updated form schema for keycloakContext', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/testFrom',
@@ -48,26 +57,15 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
 
-            formDataController.getFormSchema(request, response);
+            const response = await formTranslateController.getForm(request);
+            const firstName = JSONPath.value(response, "$..components[?(@.key=='firstName')].defaultValue");
+            const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
+            const sessionId = JSONPath.value(response, "$..components[?(@.key=='sessionId')].defaultValue");
 
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
-
-                const firstName = JSONPath.value(updatedForm, "$..components[?(@.key=='firstName')].defaultValue");
-                const lastName = JSONPath.value(updatedForm, "$..components[?(@.key=='lastName')].defaultValue");
-                const sessionId = JSONPath.value(updatedForm, "$..components[?(@.key=='sessionId')].defaultValue");
-
-                expect(firstName).toEqual("testgivenname");
-                expect(lastName).toEqual("testfamilyname");
-                expect(sessionId).toEqual("session_id");
-                done();
-            });
+            expect(firstName).toEqual("testgivenname");
+            expect(lastName).toEqual("testfamilyname");
+            expect(sessionId).toEqual("session_id");
         });
     });
 
@@ -85,7 +83,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, []);
 
         });
-        it('it should return an updated form schema for url', (done) => {
+        it('it should return an updated form schema for url', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/dataUrlForm',
@@ -108,19 +106,11 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
 
-            formDataController.getFormSchema(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
-                const url = JSONPath.value(updatedForm, "$..components[?(@.key=='regionid')].data.url");
-                expect(url).toEqual("http://localhost:9001/region");
-                done();
-            });
+            const response = await formTranslateController.getForm(request);
+            const url = JSONPath.value(response, "$..components[?(@.key=='regionid')].data.url");
+            expect(url).toEqual("http://localhost:9001/region");
+
         });
     });
 
