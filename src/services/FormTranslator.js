@@ -115,9 +115,10 @@ export default class FormTranslator {
         const email = keycloakContext.email;
         const headers = this.createHeader(keycloakContext);
 
-        const [staffDetails, shiftDetails] = await Promise.all([this.platformDataService.getStaffDetails(email, headers),
-            this.platformDataService.getShiftDetails(email, headers)]);
-
+        const [staffDetails, shiftDetails] = await Promise.all([
+            this.platformDataService.getStaffDetails(email, headers),
+            this.platformDataService.getShiftDetails(email, headers)
+        ]);
 
 
         const staffDetailsContext = new StaffDetailsContext(staffDetails);
