@@ -24,8 +24,8 @@ const formDataResolveRouter = (keycloak) => {
                     responseHandler.res(null, {formName, form}, res);
                 }).catch((err) => {
                     responseHandler.res({
-                        code: 500,
-                        message: err.toString()
+                        code: err.code,
+                        message: err.message
                     }, {formName}, res);
                 })
 
