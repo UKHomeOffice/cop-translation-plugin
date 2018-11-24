@@ -38,7 +38,6 @@ export default class JsonPathEvaluator {
     performJsonPathResolutionOnComponent(component, dataResolveContext) {
         const key = component.key;
         const value = component.defaultValue;
-        const isEncrypted = component.tags && component.tags.find(t => t === 'encrypted');
         try {
             if (this.regExp.test(value)) {
                 String.prototype.replaceAll = function (search, replacement) {
@@ -54,11 +53,7 @@ export default class JsonPathEvaluator {
                         logger.debug(`Date format property detected....${val}`);
                     }
                     logger.debug("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
-                    if (isEncrypted) {
-                        return decrypt(val);
-                    } else {
-                        return val;
-                    }
+                    return val;
                 });
                 return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;
             }
