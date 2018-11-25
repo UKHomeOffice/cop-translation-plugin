@@ -1,3 +1,4 @@
+import * as tasks from "../task";
 
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
@@ -78,6 +79,12 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
+            nock('http://localhost:9000')
+                .get('/api/workflow/tasks/taskId/variables')
+                .reply(200, tasks.taskVariables);
+            nock('http://localhost:9000')
+                .get('/api/workflow/process-instances/processInstanceId/variables')
+                .reply(200, tasks.processVariables);
             nock('http://localhost:9001')
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
@@ -89,6 +96,9 @@ describe('Form Data Resolve Controller', () => {
                 url: '/api/translation/form/dataUrlForm',
                 params: {
                     formName: "dataUrlForm"
+                }, query: {
+                    taskId: "taskId",
+                    processInstanceId : 'processInstanceId'
                 },
                 kauth: {
                     grant: {
@@ -109,7 +119,10 @@ describe('Form Data Resolve Controller', () => {
 
             const response = await formTranslateController.getForm(request);
             const url = JSONPath.value(response, "$..components[?(@.key=='regionid')].data.url");
+            const defaultValue = JSONPath.value(response, "$..components[?(@.key=='regionid')].defaultValue");
             expect(url).toEqual("http://localhost:9001/region");
+            expect(defaultValue).toEqual("firstNameFromProcess");
+
 
         });
     });

@@ -137,7 +137,7 @@ const dataUrlForm = [
                 "authenticate": false,
                 "filter": "",
                 "refreshOn": "",
-                "defaultValue": "",
+                "defaultValue": "{$.processContext.person.firstName}",
                 "valueProperty": "regionid",
                 "dataSrc": "url",
                 "data": {
