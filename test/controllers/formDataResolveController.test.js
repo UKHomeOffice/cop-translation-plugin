@@ -15,10 +15,11 @@ import FormTranslator from "../../src/services/FormTranslator";
 import FormEngineService from "../../src/services/FormEngineService";
 import PlatformDataService from "../../src/services/PlatformDataService";
 import ProcessService from "../../src/services/ProcessService";
+import DataContextFactory from "../../src/services/DataContextFactory";
 
 describe('Form Data Resolve Controller', () => {
     const translator = new FormTranslator(new FormEngineService(),
-        new PlatformDataService(), new ProcessService());
+        new DataContextFactory(new PlatformDataService(), new ProcessService()));
 
     const formTranslateController = new FormTranslateController(translator);
 
@@ -79,6 +80,9 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')
                 .reply(200, []);
+            nock('http://localhost:9000')
+                .get('/api/workflow/tasks/taskId')
+                .reply(200, {});
             nock('http://localhost:9000')
                 .get('/api/workflow/tasks/taskId/variables')
                 .reply(200, tasks.taskVariables);

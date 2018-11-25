@@ -19,13 +19,14 @@ import ProcessService from "../../src/services/ProcessService";
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
 import TranslationServiceError from "../../src/TranslationServiceError";
+import DataContextFactory from "../../src/services/DataContextFactory";
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 describe('Form Data Resolve Controller', () => {
     const translator = new FormTranslator(new FormEngineService(),
-        new PlatformDataService(), new ProcessService());
+        new DataContextFactory(new PlatformDataService(), new ProcessService()));
 
     const formTranslateController = new formDataController(translator);
 

@@ -8,6 +8,7 @@ import FormEngineService from "../../src/services/FormEngineService";
 import PlatformDataService from "../../src/services/PlatformDataService";
 import ProcessService from "../../src/services/ProcessService";
 import FormTranslateController from "../../src/controllers/FormTranslateController";
+import DataContextFactory from "../../src/services/DataContextFactory";
 
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
@@ -18,7 +19,7 @@ process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
 const image = "image";
 describe('Form Data Resolve Controller', () => {
     const translator = new FormTranslator(new FormEngineService(),
-        new PlatformDataService(), new ProcessService());
+        new DataContextFactory(new PlatformDataService(), new ProcessService()));
 
     const formTranslateController = new FormTranslateController(translator);
 
@@ -48,6 +49,9 @@ describe('Form Data Resolve Controller', () => {
                         }
                     }
                 });
+            nock('http://localhost:9000')
+                .get('/api/workflow/tasks/taskId')
+                .reply(200, {});
 
             nock('http://localhost:9001')
                 .get('/api/platform-data/shift?email=eq.email')

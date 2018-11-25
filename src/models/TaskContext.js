@@ -2,7 +2,7 @@ class TaskContext {
 
     constructor(task, variables) {
         if (task && task.data) {
-            const taskData = task.data.task;
+            const taskData = task.data.task ? task.data.task : {};
             Object.keys(taskData).forEach(taskKey => {
                 this[taskKey] = task.data.task[taskKey];
             });

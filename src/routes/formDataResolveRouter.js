@@ -6,11 +6,12 @@ import ProcessService from "../services/ProcessService";
 import FormTranslator from "../services/FormTranslator";
 import FormEngineService from "../services/FormEngineService";
 import PlatformDataService from "../services/PlatformDataService";
+import DataContextFactory from "../services/DataContextFactory";
 
 const router = express.Router();
 
 const translator = new FormTranslator(new FormEngineService(),
-    new PlatformDataService(), new ProcessService());
+    new DataContextFactory(new PlatformDataService(), new ProcessService()));
 
 export const formTranslatorController = new FormDataResolveController(translator);
 

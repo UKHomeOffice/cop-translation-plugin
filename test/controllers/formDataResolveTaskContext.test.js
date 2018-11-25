@@ -18,11 +18,12 @@ import * as tasks from '../task';
 import FormEngineService from "../../src/services/FormEngineService";
 import PlatformDataService from "../../src/services/PlatformDataService";
 import ProcessService from "../../src/services/ProcessService";
+import DataContextFactory from "../../src/services/DataContextFactory";
 
 describe('Form Data Resolve Controller', () => {
     const expect = chai.expect;
     const translator = new FormTranslator(new FormEngineService(),
-        new PlatformDataService(), new ProcessService());
+        new DataContextFactory(new PlatformDataService(), new ProcessService()));
 
     const formTranslateController = new FormTranslateController(translator);
 

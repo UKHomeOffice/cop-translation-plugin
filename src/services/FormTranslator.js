@@ -15,10 +15,9 @@ import moment from "moment";
 
 export default class FormTranslator {
 
-    constructor(formEngineService, platformDataService, processService) {
+    constructor(formEngineService, dataContextFactory) {
         this.formEngineService = formEngineService;
-        this.platformDataService = platformDataService;
-        this.processService = processService;
+        this.dataContextFactory = dataContextFactory;
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.translate = this.translate.bind(this);
     }
@@ -31,7 +30,7 @@ export default class FormTranslator {
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
         }
-        const dataContext = await this.createDataContext(keycloakContext, {
+        const dataContext = await this.dataContextFactory.createDataContext(keycloakContext, {
             processInstanceId,
             taskId
         }, customDataContext);
@@ -96,7 +95,7 @@ export default class FormTranslator {
                             value = moment(value).format(format);
                             logger.debug(`Date format property detected....${value}`);
                         } catch (err) {
-                            logger.error(`Failed to format date ${e.toString()}`);
+                            logger.error(`Failed to format date ${err.toString()}`);
                         }
                     }
                     return value;
@@ -139,54 +138,5 @@ export default class FormTranslator {
         })
     };
 
-
-    async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
-        const email = keycloakContext.email;
-        const headers = this.createHeader(keycloakContext);
-
-        const [staffDetails, shiftDetails] = await Promise.all([
-            this.platformDataService.getStaffDetails(email, headers),
-            this.platformDataService.getShiftDetails(email, headers)
-        ]);
-
-
-        const staffDetailsContext = new StaffDetailsContext(staffDetails);
-        const environmentContext = new EnvironmentContext(process.env);
-        let shiftDetailsContext = null;
-
-        if (shiftDetails) {
-            const location = await this.platformDataService.getLocation(shiftDetails.currentlocationid, headers);
-            let locationType = null;
-            if (location.bflocationtypeid !== null) {
-                locationType = await this.platformDataService.getLocationType(location.bflocationtypeid, headers);
-            }
-            shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
-        }
-
-        if (taskId && processInstanceId) {
-            const [taskData, processData, taskVariables] = await Promise.all([
-                this.processService.getTaskData(taskId, headers),
-                this.processService.getProcessVariables(processInstanceId, headers),
-                this.processService.getTaskVariables(taskId, headers)
-            ]);
-            return new DataResolveContext(keycloakContext, staffDetailsContext,
-                environmentContext,
-                new ProcessContext(processData),
-                new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext);
-
-        } else {
-            return new DataResolveContext(keycloakContext,
-                staffDetailsContext, environmentContext, null, null,
-                customDataContext, shiftDetailsContext);
-        }
-    }
-
-    createHeader(keycloakContext) {
-        return {
-            'Authorization': `Bearer ${keycloakContext.accessToken}`,
-            'Content-Type': 'application/json',
-            'Accept-Type': 'application/json'
-        };
-    };
 
 }
