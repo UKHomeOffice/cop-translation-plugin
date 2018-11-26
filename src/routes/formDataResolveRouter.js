@@ -10,10 +10,11 @@ import DataContextFactory from "../services/DataContextFactory";
 
 const router = express.Router();
 
-const translator = new FormTranslator(new FormEngineService(),
-    new DataContextFactory(new PlatformDataService(), new ProcessService()));
+const dataContextFactory = new DataContextFactory(new PlatformDataService(), new ProcessService());
 
-export const formTranslatorController = new FormDataResolveController(translator);
+const translator = new FormTranslator(new FormEngineService(), dataContextFactory);
+
+const formTranslatorController = new FormDataResolveController(translator);
 
 const formDataResolveRouter = (keycloak) => {
 

@@ -1,11 +1,5 @@
 import {getLocation, getLocationType, getShiftDetails, getStaffDetails} from "./PlatformDataService";
-import StaffDetailsContext from "../models/StaffDetailsContext";
-import EnvironmentContext from "../models/EnvironmentContext";
-import ShiftDetailsContext from "../models/ShiftDetailsContext";
 import {getProcessVariables, getTaskData, getTaskVariables} from "./ProcessService";
-import DataResolveContext from "../models/DataResolveContext";
-import ProcessContext from "../models/ProcessContext";
-import TaskContext from "../models/TaskContext";
 import {getForm} from "./FormEngineService";
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
