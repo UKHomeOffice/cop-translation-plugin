@@ -1,14 +1,8 @@
 FROM quay.io/ukhomeofficedigital/docker-node:master
 
-ENV USER user-translation-service
-ENV GROUP group-translation-service
-ENV NAME translation-service
-
 WORKDIR /app
 
-RUN groupadd -r ${GROUP} && \
-    useradd -r -g ${GROUP} ${USER} -d /app && \
-    mkdir -p /app && \
+RUN mkdir -p /app && \
     chown -R ${USER}:${GROUP} /app
 
 ADD . /app/
