@@ -2,7 +2,7 @@ const winston = require('winston');
 
 const options = {
     console: {
-        level: process.env.LOG_LEVEL || 'info',
+        level: process.env.LOG_LEVEL || 'debug',
         handleExceptions: true,
         json: false,
         colorize: true,
