@@ -32,9 +32,11 @@ export default class ContentComponentVisitor {
                 logger.warn(`Unable to decrypt as no session key or initialisation vector specified`);
             }
             if (isImage) {
+                logger.debug(`Image before ${value}`);
                 const imageType = component.properties ?
                     (component.properties['imageType'] ? component.properties['imageType'] : 'png') : 'png';
                 value = value ? `data:image/${imageType};base64,${value}` : `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
+                logger.debug(`Image ${value}`);
             }
             return value;
         };
