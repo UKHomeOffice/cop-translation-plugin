@@ -1,9 +1,13 @@
 import crypto from 'crypto';
 import * as logger from '../config/winston';
+import TranslationServiceError from "../TranslationServiceError";
 
 export default class DataDecryptor {
     constructor(rsaKey) {
         this.rsaKey = rsaKey;
+        if (!this.rsaKey) {
+            throw new TranslationServiceError('RSA key is missing', 500);
+        }
     }
 
     decryptSessionKey(sessionKey) {

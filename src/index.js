@@ -63,12 +63,10 @@ app.use(session({
 
 const path = process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem';
 const rsaKey = fs.readFileSync(path);
-winston.info('RSA Key content resolved');
+winston.info('RSA Key content resolved', + rsaKey);
 
 const dataDecryptor = new DataDecryptor(rsaKey);
-
 const dataContextFactory = new DataContextFactory(new PlatformDataService(), new ProcessService());
-
 const translator = new FormTranslator(new FormEngineService(), dataContextFactory, dataDecryptor);
 
 app.use(bodyParser.json());
