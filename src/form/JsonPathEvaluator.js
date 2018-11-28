@@ -15,10 +15,10 @@ export default class JsonPathEvaluator {
             };
             const updatedValue = value.replaceAll(JsonPathEvaluator.regExp, (match, capture) => {
                 let val = JSONPath.value(dataContext, capture);
+                logger.debug("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
                 if (intercept) {
                     val = intercept(val);
                 }
-                logger.debug("JSON path '%s' detected for '%s' with parsed value '%s'", capture, key, (val ? val : "no match"));
                 return val;
             });
             return (updatedValue === 'null' || updatedValue === 'undefined') ? null : updatedValue;

@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 process.env.SESSION_SECRET="test";
 process.env.SESSION_NAME="test";
-
+process.env.PRIVATE_KEY_PATH="test/certs/signing1.key";
 
 import * as logger from 'winston';
 const chai = require('chai');

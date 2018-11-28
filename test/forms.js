@@ -55,6 +55,153 @@ const imgForm = [
         ]
     }
 ];
+const encryptedImgFormWithoutVector = [
+    {
+        components: [
+            {
+                type: 'textfield',
+                key: 'sessionKey',
+                label: 'sessionKey',
+                placeholder: 'sessionKey',
+                defaultValue: '{$.processContext.variable.sessionKey}',
+                input: true
+            },
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithoutSessionKey = [
+    {
+        components: [
+            {
+                type: 'textfield',
+                key: 'initialisationVector',
+                label: 'initialisationVector',
+                placeholder: 'initialisationVector',
+                defaultValue: '{$.processContext.variable.initialisationVector}',
+                input: true
+            },
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgForm = [
+    {
+        components: [
+            {
+                type: 'textfield',
+                key: 'sessionKey',
+                label: 'sessionKey',
+                placeholder: 'sessionKey',
+                defaultValue: '{$.processContext.variable.sessionKey}',
+                input: true
+            },
+            {
+                type: 'textfield',
+                key: 'initialisationVector',
+                label: 'initialisationVector',
+                placeholder: 'initialisationVector',
+                defaultValue: '{$.processContext.variable.initialisationVector}',
+                input: true
+            },
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithMissingEncryptionTag = [
+    {
+        components: [
+            {
+                type: 'textfield',
+                key: 'sessionKey',
+                label: 'sessionKey',
+                placeholder: 'sessionKey',
+                defaultValue: '{$.processContext.variable.sessionKey}',
+                input: true
+            },
+            {
+                type: 'textfield',
+                key: 'initialisationVector',
+                label: 'initialisationVector',
+                placeholder: 'initialisationVector',
+                defaultValue: '{$.processContext.variable.initialisationVector}',
+                input: true
+            },
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
 const jpgImgForm = [
     {
         components: [
@@ -333,5 +480,9 @@ export {
     noContextData,
     shiftForm,
     imgForm,
-    jpgImgForm
+    jpgImgForm,
+    encryptedImgForm,
+    encryptedImgFormWithoutSessionKey,
+    encryptedImgFormWithoutVector,
+    encryptedImgFormWithMissingEncryptionTag
 }

@@ -1,4 +1,4 @@
-import JsonPathEvaluator from "../../src/services/JsonPathEvaluator";
+import JsonPathEvaluator from "../../src/form/JsonPathEvaluator";
 import chai from 'chai';
 
 describe('JSON Path Evaluator', () => {

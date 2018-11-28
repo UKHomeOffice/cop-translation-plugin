@@ -1,6 +1,3 @@
-import {getLocation, getLocationType, getShiftDetails, getStaffDetails} from "./PlatformDataService";
-import {getProcessVariables, getTaskData, getTaskVariables} from "./ProcessService";
-import {getForm} from "./FormEngineService";
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
 import TranslationServiceError from "../TranslationServiceError";
@@ -10,10 +7,11 @@ import FormComponentVisitor from "./FormComponentVisitor";
 
 export default class FormTranslator {
 
-    constructor(formEngineService, dataContextFactory) {
+    constructor(formEngineService, dataContextFactory, dataDecryptor) {
         this.formEngineService = formEngineService;
         this.dataContextFactory = dataContextFactory;
-        this.formComponentVisitor = new FormComponentVisitor(new JsonPathEvaluator());
+        this.dataDecryptor = dataDecryptor;
+        this.formComponentVisitor = new FormComponentVisitor(new JsonPathEvaluator(), dataDecryptor);
         this.translate = this.translate.bind(this);
     }
 
@@ -34,8 +32,14 @@ export default class FormTranslator {
     }
 
     applyFormResolution(dataContext, form) {
-        FormioUtils.eachComponent(form.components, (component) => {
-            const formComponent = new FormComponent(component, dataContext);
+        const components = form.components;
+        const sessionKeyComponent = FormioUtils.getComponent(components, "sessionKey");
+
+        const initializationVectorComponent = FormioUtils.getComponent(components,"initialisationVector");
+
+        FormioUtils.eachComponent(components, (component) => {
+            const formComponent = new FormComponent(component, dataContext, {sessionKeyComponent,
+                initializationVectorComponent});
             formComponent.accept(this.formComponentVisitor);
         });
 

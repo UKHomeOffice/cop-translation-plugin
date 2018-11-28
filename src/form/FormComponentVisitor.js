@@ -3,8 +3,8 @@ import SelectComponentVisitor from "./SelectComponentVisitor";
 import DefaultValueComponentVisitor from "./DefaultValueComponentVisitor";
 
 export default class FormComponentVisitor {
-    constructor(jsonPathEvaluator) {
-        this.contentComponentVisitor = new ContentComponentVisitor(jsonPathEvaluator);
+    constructor(jsonPathEvaluator, dataDecryptor) {
+        this.contentComponentVisitor = new ContentComponentVisitor(jsonPathEvaluator, dataDecryptor);
         this.selectComponentVisitor = new SelectComponentVisitor(jsonPathEvaluator);
         this.defaultValueVisitor = new DefaultValueComponentVisitor(jsonPathEvaluator);
     }
