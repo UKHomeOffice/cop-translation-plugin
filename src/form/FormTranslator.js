@@ -34,7 +34,6 @@ export default class FormTranslator {
     applyFormResolution(dataContext, form) {
         const components = form.components;
         const sessionKeyComponent = FormioUtils.getComponent(components, "sessionKey");
-
         const initializationVectorComponent = FormioUtils.getComponent(components,"initialisationVector");
 
         FormioUtils.eachComponent(components, (component) => {

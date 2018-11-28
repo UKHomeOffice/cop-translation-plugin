@@ -35,7 +35,7 @@ export default class ContentComponentVisitor {
                 logger.debug(`Image before ${value}`);
                 const imageType = component.properties ?
                     (component.properties['imageType'] ? component.properties['imageType'] : 'png') : 'png';
-                value = value ? `data:image/${imageType};base64,${value}` : `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
+                value = value ? `data:image/${imageType};base64,${value.toString('base64')}` : `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
                 logger.debug(`Image ${value}`);
             }
             return value;
