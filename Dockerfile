@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/nodejs-base:v8.11.1
+FROM quay.io/ukhomeofficedigital/docker-node:master
 
 ENV USER user-translation-service
 ENV GROUP group-translation-service
