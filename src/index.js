@@ -13,6 +13,13 @@ import Keycloak from 'keycloak-connect';
 import * as axios from "axios";
 import moment from 'moment';
 import helmet from 'helmet';
+import DataDecryptor from "./services/DataDecryptor";
+import DataContextFactory from "./services/DataContextFactory";
+import PlatformDataService from "./services/PlatformDataService";
+import ProcessService from "./services/ProcessService";
+import FormTranslator from "./form/FormTranslator";
+import FormEngineService from "./services/FormEngineService";
+import FormDataResolveController from "./controllers/FormTranslateController";
 
 const winston = require('./config/winston');
 
@@ -54,6 +61,15 @@ app.use(session({
 }));
 
 
+const path = process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem';
+const rsaKey = fs.readFileSync(path);
+winston.info('RSA Key content resolved');
+
+const dataDecryptor = new DataDecryptor(rsaKey);
+
+const dataContextFactory = new DataContextFactory(new PlatformDataService(), new ProcessService());
+
+const translator = new FormTranslator(new FormEngineService(), dataContextFactory, dataDecryptor);
 
 app.use(bodyParser.json());
 app.use(morgan('combined', { stream: winston.stream }));
@@ -62,7 +78,7 @@ app.use(expressValidator());
 app.use(helmet());
 app.use(keycloak.middleware());
 
-app.use('/api/translation', route.allApiRouter(keycloak));
+app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
 
 axios.interceptors.request.use(
     (config) => {

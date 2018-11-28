@@ -1,29 +1,9 @@
 import express from 'express';
-
-import FormDataResolveController from '../controllers/FormTranslateController';
 import responseHandler from "../utilities/handlers/responseHandler";
-import ProcessService from "../services/ProcessService";
-import FormTranslator from "../form/FormTranslator";
-import FormEngineService from "../services/FormEngineService";
-import PlatformDataService from "../services/PlatformDataService";
-import DataContextFactory from "../services/DataContextFactory";
-import DataDecryptor from "../services/DataDecryptor";
-import fs from "fs";
 
 const router = express.Router();
 
-const path = process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem';
-const rsaKey = fs.readFileSync(path);
-
-const dataDecryptor = new DataDecryptor(rsaKey);
-
-const dataContextFactory = new DataContextFactory(new PlatformDataService(), new ProcessService());
-
-const translator = new FormTranslator(new FormEngineService(), dataContextFactory, dataDecryptor);
-
-const formTranslatorController = new FormDataResolveController(translator);
-
-const formDataResolveRouter = (keycloak) => {
+const formDataResolveRouter = (keycloak, formTranslatorController) => {
 
     router
         .get('/form/:formName',

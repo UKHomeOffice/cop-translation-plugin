@@ -1,12 +1,4 @@
 import FormTranslator from "../../src/form/FormTranslator";
-
-process.env.NODE_ENV = 'test';
-process.env.FORM_URL = 'http://localhost:8000';
-process.env.WORKFLOW_URL = 'http://localhost:9000';
-process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
-process.env.TX_DB_NAME = "test";
-
-
 import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
@@ -18,10 +10,16 @@ import ProcessService from "../../src/services/ProcessService";
 
 import chaiAsPromised from 'chai-as-promised';
 import chai from 'chai';
-import TranslationServiceError from "../../src/TranslationServiceError";
 import DataContextFactory from "../../src/services/DataContextFactory";
 import fs from "fs";
 import DataDecryptor from "../../src/services/DataDecryptor";
+
+process.env.NODE_ENV = 'test';
+process.env.FORM_URL = 'http://localhost:8000';
+process.env.WORKFLOW_URL = 'http://localhost:9000';
+process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
+process.env.TX_DB_NAME = "test";
+
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;

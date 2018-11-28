@@ -4,9 +4,9 @@ import formDataResolveRouter from './formDataResolveRouter';
 
 const router = express.Router();
 
-const allApiRouter = (keycloak) => {
+const allApiRouter = (keycloak, formTranslateController) => {
      router.use(heathRouter);
-     router.use(formDataResolveRouter(keycloak));
+     router.use(formDataResolveRouter(keycloak, formTranslateController));
      return router;
 
 };
