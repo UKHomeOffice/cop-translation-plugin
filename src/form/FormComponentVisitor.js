@@ -1,10 +1,10 @@
 import ContentComponentVisitor from "./ContentComponentVisitor";
 import SelectComponentVisitor from "./SelectComponentVisitor";
 import DefaultValueComponentVisitor from "./DefaultValueComponentVisitor";
-import FormComponent from "../models/FormComponent";
 
 export default class FormComponentVisitor {
     constructor(jsonPathEvaluator, dataDecryptor) {
+        this.jsonPathEvaluator = jsonPathEvaluator;
         this.contentComponentVisitor = new ContentComponentVisitor(jsonPathEvaluator, dataDecryptor);
         this.selectComponentVisitor = new SelectComponentVisitor(jsonPathEvaluator);
         this.defaultValueVisitor = new DefaultValueComponentVisitor(jsonPathEvaluator);
@@ -24,11 +24,18 @@ export default class FormComponentVisitor {
 
     processDecryptionComponents(formComponent) {
         const dataContext = formComponent.dataContext;
-        if (formComponent.sessionKeyComponent) {
-            this.defaultValueVisitor.visit(new FormComponent(formComponent.sessionKeyComponent, dataContext, {}));
+        const component = formComponent.component;
+        if (formComponent.hasSessionKey()) {
+            const key = 'sessionKey';
+            const value = component.properties[key];
+            component.properties[key] =
+                this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
         }
-        if (formComponent.initializationVectorComponent) {
-            this.defaultValueVisitor.visit(new FormComponent(formComponent.initializationVectorComponent, dataContext, {}));
+        if (formComponent.hasInitialisationVector()) {
+            const key = 'initialisationVector';
+            const value = component.properties[key];
+            component.properties[key] =
+                this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
         }
     }
 }

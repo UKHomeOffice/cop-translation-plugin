@@ -1,18 +1,22 @@
 export default class FormComponent {
-    constructor(component, dataContext, {
-        sessionKeyComponent,
-        initializationVectorComponent}) {
+    constructor(component, dataContext) {
         this.component = component;
         this.dataContext = dataContext;
-        this.sessionKeyComponent = sessionKeyComponent;
-        this.initializationVectorComponent = initializationVectorComponent;
         this.tags = this.component.tags;
+
     }
 
     hasSessionKeyAndInitialisationVector() {
-        return (this.sessionKeyComponent &&  this.sessionKeyComponent.defaultValue) &&
-            (this.initializationVectorComponent &&  this.initializationVectorComponent.defaultValue)
+        return this.hasSessionKey() && this.hasInitialisationVector();
 
+    }
+
+    hasSessionKey() {
+        return this.component.properties &&  (this.component.properties['sessionKey'] && this.component.properties['sessionKey'] !== '');
+    }
+
+    hasInitialisationVector() {
+        return this.component.properties &&  (this.component.properties['initialisationVector'] && this.component.properties['initialisationVector'] !== '');
     }
 
     isEncrypted() {

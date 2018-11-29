@@ -59,14 +59,6 @@ const encryptedImgFormWithoutVector = [
     {
         components: [
             {
-                type: 'textfield',
-                key: 'sessionKey',
-                label: 'sessionKey',
-                placeholder: 'sessionKey',
-                defaultValue: '{$.processContext.variable.sessionKey}',
-                input: true
-            },
-            {
                 "key": "content",
                 "input": false,
                 "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
@@ -80,7 +72,9 @@ const encryptedImgFormWithoutVector = [
                     "when": null,
                     "eq": ""
                 },
-                "properties": {},
+                "properties": {
+                    "initialisationVector" : '{$.processContext.variable.initialisationVector}'
+                },
                 "lockKey": true,
                 "label": "content",
                 "hideLabel": true
@@ -113,7 +107,9 @@ const encryptedImgFormWithoutSessionKey = [
                     "when": null,
                     "eq": ""
                 },
-                "properties": {},
+                "properties": {
+                    "sessionKey": '{$.processContext.variable.sessionKey}'
+                },
                 "lockKey": true,
                 "label": "content",
                 "hideLabel": true
@@ -139,48 +135,20 @@ const encryptedImgForm = [
                     "when": null,
                     "eq": ""
                 },
-                "properties": {},
+                "properties": {
+                    "sessionKey": '{$.processContext.variable.sessionKey}',
+                    "initialisationVector" : '{$.processContext.variable.initialisationVector}'
+                },
                 "lockKey": true,
                 "label": "content",
                 "hideLabel": true
-            }, {
-                type: 'textfield',
-                key: 'sessionKey',
-                label: 'sessionKey',
-                placeholder: 'sessionKey',
-                defaultValue: '{$.processContext.variable.sessionKey}',
-                input: true
             },
-            {
-                type: 'textfield',
-                key: 'initialisationVector',
-                label: 'initialisationVector',
-                placeholder: 'initialisationVector',
-                defaultValue: '{$.processContext.variable.initialisationVector}',
-                input: true
-            }
         ]
     }
 ];
 const encryptedImgFormWithMissingEncryptionTag = [
     {
         components: [
-            {
-                type: 'textfield',
-                key: 'sessionKey',
-                label: 'sessionKey',
-                placeholder: 'sessionKey',
-                defaultValue: '{$.processContext.variable.sessionKey}',
-                input: true
-            },
-            {
-                type: 'textfield',
-                key: 'initialisationVector',
-                label: 'initialisationVector',
-                placeholder: 'initialisationVector',
-                defaultValue: '{$.processContext.variable.initialisationVector}',
-                input: true
-            },
             {
                 "key": "content",
                 "input": false,
