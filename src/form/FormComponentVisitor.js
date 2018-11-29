@@ -25,17 +25,19 @@ export default class FormComponentVisitor {
     processDecryptionComponents(formComponent) {
         const dataContext = formComponent.dataContext;
         const component = formComponent.component;
-        if (formComponent.hasSessionKey()) {
-            const key = 'sessionKey';
-            const value = component.properties[key];
-            component.properties[key] =
-                this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
-        }
-        if (formComponent.hasInitialisationVector()) {
-            const key = 'initialisationVector';
-            const value = component.properties[key];
-            component.properties[key] =
-                this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
+        if (formComponent.isEncrypted()) {
+            if (formComponent.hasSessionKey()) {
+                const key = 'sessionKey';
+                const value = component.properties[key];
+                component.properties[key] =
+                    this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
+            }
+            if (formComponent.hasInitialisationVector()) {
+                const key = 'initialisationVector';
+                const value = component.properties[key];
+                component.properties[key] =
+                    this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
+            }
         }
     }
 }

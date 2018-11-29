@@ -12,7 +12,7 @@ export default class FormTranslateController  {
         const {formName} = req.params;
         const {taskId, processInstanceId} = req.query;
         const form =  await this.formTranslator.translate(formName,
-            new KeycloakContext(req.kauth),{taskId, processInstanceId}, null);
+            new KeycloakContext(req.kauth),{taskId, processInstanceId});
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
         }
@@ -24,7 +24,7 @@ export default class FormTranslateController  {
         if (data.dataContext) {
             const formName = data.formName;
             const {taskId, processInstanceId} = req.query;
-            return  await this.formTranslator.translate(formName,
+            return await this.formTranslator.translate(formName,
                 new KeycloakContext(req.kauth), {taskId, processInstanceId}, data.dataContext);
         } else {
             throw new TranslationServiceError('No data context provided', 400);
