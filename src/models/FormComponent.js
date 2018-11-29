@@ -1,3 +1,5 @@
+import JsonPathEvaluator from "../form/JsonPathEvaluator";
+
 export default class FormComponent {
     constructor(component, dataContext) {
         this.component = component;
@@ -12,11 +14,15 @@ export default class FormComponent {
     }
 
     hasSessionKey() {
-        return this.component.properties &&  (this.component.properties['sessionKey'] && this.component.properties['sessionKey'] !== '');
+        return this.component.properties &&
+            (this.component.properties['sessionKey']
+                && this.component.properties['sessionKey'] !== '');
     }
 
     hasInitialisationVector() {
-        return this.component.properties &&  (this.component.properties['initialisationVector'] && this.component.properties['initialisationVector'] !== '');
+        return this.component.properties
+            &&  (this.component.properties['initialisationVector']
+                && this.component.properties[''] !== '');
     }
 
     isEncrypted() {

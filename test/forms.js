@@ -55,6 +55,29 @@ const imgForm = [
         ]
     }
 ];
+const iframeForm = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Iframe</p>\n\n<p><iframe src=\"{$.environmentContext.platformDataUrl}/some?access_token={$.keycloakContext.accessToken}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
 const encryptedImgFormWithoutVector = [
     {
         components: [
@@ -445,5 +468,6 @@ export {
     encryptedImgForm,
     encryptedImgFormWithoutSessionKey,
     encryptedImgFormWithoutVector,
-    encryptedImgFormWithMissingEncryptionTag
+    encryptedImgFormWithMissingEncryptionTag,
+    iframeForm
 }

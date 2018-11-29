@@ -13,11 +13,11 @@ export default class ContentComponentVisitor {
         const value = component.html;
         const key = component.key;
         const processContent = (value) => {
-            if (formComponent.isEncrypted() && formComponent.hasSessionKeyAndInitialisationVector()) {
+            if (formComponent.isEncrypted()
+                && formComponent.hasSessionKeyAndInitialisationVector()) {
                 const properties = component.properties;
                 const sessionKey = properties.sessionKey;
                 const initialisationVector = properties.initialisationVector;
-
                 logger.info(`Encrypted field detected ${key}`);
                 try {
                     const decryptedSessionKey = this.dataDecryptor.decryptSessionKey(sessionKey);

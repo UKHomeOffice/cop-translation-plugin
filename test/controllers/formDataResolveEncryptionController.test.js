@@ -94,6 +94,8 @@ describe('Form Data Controller', () => {
 
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
+        const initialisationVector = JSONPath.value(response, "$..components..properties.initialisationVector");
+        expect(initialisationVector).toEqual('W25/yzadEQNeV7jnZ3dnbA==');
         expect(img).toEqual(
             "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,REFU\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
