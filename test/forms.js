@@ -124,22 +124,7 @@ const encryptedImgFormWithoutSessionKey = [
 const encryptedImgForm = [
     {
         components: [
-            {
-                type: 'textfield',
-                key: 'sessionKey',
-                label: 'sessionKey',
-                placeholder: 'sessionKey',
-                defaultValue: '{$.processContext.variable.sessionKey}',
-                input: true
-            },
-            {
-                type: 'textfield',
-                key: 'initialisationVector',
-                label: 'initialisationVector',
-                placeholder: 'initialisationVector',
-                defaultValue: '{$.processContext.variable.initialisationVector}',
-                input: true
-            },
+
             {
                 "key": "content",
                 "input": false,
@@ -158,7 +143,22 @@ const encryptedImgForm = [
                 "lockKey": true,
                 "label": "content",
                 "hideLabel": true
+            }, {
+                type: 'textfield',
+                key: 'sessionKey',
+                label: 'sessionKey',
+                placeholder: 'sessionKey',
+                defaultValue: '{$.processContext.variable.sessionKey}',
+                input: true
             },
+            {
+                type: 'textfield',
+                key: 'initialisationVector',
+                label: 'initialisationVector',
+                placeholder: 'initialisationVector',
+                defaultValue: '{$.processContext.variable.initialisationVector}',
+                input: true
+            }
         ]
     }
 ];
@@ -254,7 +254,6 @@ const shiftForm = [{
         }
     ]
 }];
-
 const dataUrlForm = [
     {
         components: [
@@ -312,7 +311,6 @@ const dataUrlForm = [
         ]
     }
 ];
-
 const processContextForm = [{
     components: [
         {
@@ -346,7 +344,6 @@ const processContextForm = [{
         }
     ]
 }];
-
 const taskContextForm = [{
     components: [
         {
@@ -387,7 +384,6 @@ const taskContextForm = [{
         }
     ]
 }];
-
 const userDetailsContextForm = [{
     components: [
         {
@@ -414,8 +410,6 @@ const userDetailsContextForm = [{
         }
     ]
 }];
-
-
 const customContextForm = [{
     components: [
         {
@@ -442,7 +436,6 @@ const customContextForm = [{
         }
     ]
 }];
-
 const noContextData = [{
     components: [
         {

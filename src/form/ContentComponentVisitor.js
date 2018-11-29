@@ -10,41 +10,33 @@ export default class ContentComponentVisitor {
     visit(formComponent) {
         const component = formComponent.component;
         const dataResolveContext = formComponent.dataContext;
-        const isImage = component.tags && component.tags.find(t => t === 'image');
         const value = component.html;
         const key = component.key;
 
         const processContent = (value) => {
-            const tags = component.tags;
-            const isEncrypted = tags && tags.find(t => t === 'encrypted');
-            if (isEncrypted
-                && formComponent.hasSessionKeyAndInitialisationVector()) {
+            if (formComponent.isEncrypted() && formComponent.hasSessionKeyAndInitialisationVector()) {
                 logger.info(`Encrypted field detected ${key}`);
                 try {
                     const sessionKey = this.dataDecryptor.decryptSessionKey(formComponent.sessionKeyComponent.defaultValue);
-                    value = this.dataDecryptor.decrypt(sessionKey, new Buffer(value, 'base64'),
-                        new Buffer(formComponent.initializationVectorComponent.defaultValue, 'base64'));
+                    value = this.dataDecryptor.decrypt(sessionKey, Buffer.from(value, 'base64'),
+                        Buffer.from(formComponent.initializationVectorComponent.defaultValue, 'base64'));
                 } catch (err) {
-                    logger.error(`Failed to decrypt value  ${err.toString()}...returning`);
+                    logger.error(`Failed to decrypt value  ${err.toString()}...returning encrypted value`);
                 }
-
             } else {
-                logger.warn(`Unable to decrypt as no session key or initialisation vector specified`);
+                logger.warn(`Unable to decrypt ${key} as no session key or initialisation vector specified`);
             }
-            if (isImage) {
-                logger.debug(`Image before ${value}`);
-                const imageType = component.properties ?
-                    (component.properties['imageType'] ? component.properties['imageType'] : 'png') : 'png';
-                value = value ? `data:image/${imageType};base64,${value.toString('base64')}` : `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
-                logger.debug(`Image ${value}`);
+            if (formComponent.isImage()) {
+                value = value ?
+                    `data:image/${formComponent.imageType()};base64,${value.toString('base64')}` :
+                    `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
             }
-            return value;
+            return value.toString('base64');
         };
 
-        component.html = this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataResolveContext,
-            (value) => {
-                return processContent.call(this, value);
-            });
+        component.html = this.jsonPathEvaluator.performJsonPathEvaluation({key, value},
+            dataResolveContext,
+            processContent);
     }
 }
 

@@ -15,10 +15,10 @@ describe('DataDecryptor', () => {
     it('can decrypt value with session key and iv', () => {
 
         const sessionKey = dataDecryptor.decryptSessionKey(key);
-        const value = new Buffer('zp+whBVVWiNmNVlLtw2qUTCqDQ==', 'base64');
-        const iv = new Buffer('W25/yzadEQNeV7jnZ3dnbA==', 'base64');
+        const value = Buffer.from('zp+whBVVWiNmNVlLtw2qUTCqDQ==', 'base64');
+        const iv = Buffer.from('W25/yzadEQNeV7jnZ3dnbA==', 'base64');
 
         const result = dataDecryptor.decrypt(sessionKey, value, iv);
-        expect(result.toString()).to.equal('DAT');
+        expect(result.toString("base64")).to.equal('REFU');
     })
 });

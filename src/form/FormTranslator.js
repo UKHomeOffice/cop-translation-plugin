@@ -35,7 +35,6 @@ export default class FormTranslator {
         const components = form.components;
         const sessionKeyComponent = FormioUtils.getComponent(components, "sessionKey");
         const initializationVectorComponent = FormioUtils.getComponent(components,"initialisationVector");
-
         FormioUtils.eachComponent(components, (component) => {
             const formComponent = new FormComponent(component, dataContext, {sessionKeyComponent,
                 initializationVectorComponent});

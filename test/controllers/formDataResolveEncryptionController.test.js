@@ -95,7 +95,7 @@ describe('Form Data Controller', () => {
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
         expect(img).toEqual(
-            "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,DAT\" style=\"height: 125px; width: 100px;\" /></p>\n");
+            "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,REFU\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
     });
     it('returns encrypted value if sessionKey is missing', async() => {

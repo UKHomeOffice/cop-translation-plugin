@@ -6,6 +6,7 @@ export default class FormComponent {
         this.dataContext = dataContext;
         this.sessionKeyComponent = sessionKeyComponent;
         this.initializationVectorComponent = initializationVectorComponent;
+        this.tags = this.component.tags;
     }
 
     hasSessionKeyAndInitialisationVector() {
@@ -13,7 +14,23 @@ export default class FormComponent {
             (this.initializationVectorComponent &&  this.initializationVectorComponent.defaultValue)
 
     }
+
+    isEncrypted() {
+        return this.tags && this.tags.find(t => t === 'encrypted')
+    }
+
+    isImage() {
+        return this.tags && this.tags.find(t => t === 'image')
+    }
+
+    imageType() {
+        return this.component.properties ?
+            (this.component.properties['imageType'] ? this.component.properties['imageType'] : 'png') : 'png';
+    }
+
     accept(visitor) {
         visitor.visit(this);
     }
+
+
 }

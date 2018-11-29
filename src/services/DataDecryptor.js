@@ -14,7 +14,7 @@ export default class DataDecryptor {
         logger.info(`Decrypting session key`);
         return crypto.privateDecrypt({
             key: this.rsaKey,
-        }, new Buffer(sessionKey, 'base64'));
+        }, Buffer.from(sessionKey, 'base64'));
     }
 
 
@@ -24,9 +24,7 @@ export default class DataDecryptor {
         const tag = val.slice(val.length - 16, val.length);
         const data = val.slice(0, val.length - 16);
         decipher.setAuthTag(tag);
-        let plainText = decipher.update(data);
-        plainText += decipher.final();
-        return plainText;
+        return Buffer.concat([decipher.update(data), decipher.final()]);
     }
 }
 

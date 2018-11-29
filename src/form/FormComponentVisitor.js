@@ -1,6 +1,7 @@
 import ContentComponentVisitor from "./ContentComponentVisitor";
 import SelectComponentVisitor from "./SelectComponentVisitor";
 import DefaultValueComponentVisitor from "./DefaultValueComponentVisitor";
+import FormComponent from "../models/FormComponent";
 
 export default class FormComponentVisitor {
     constructor(jsonPathEvaluator, dataDecryptor) {
@@ -11,6 +12,7 @@ export default class FormComponentVisitor {
 
     visit(formComponent) {
         const component = formComponent.component;
+        this.processDecryptionComponents(formComponent);
         this.defaultValueVisitor.visit(formComponent);
         if (component.type === 'content') {
             this.contentComponentVisitor.visit(formComponent);
@@ -20,4 +22,13 @@ export default class FormComponentVisitor {
         }
     }
 
+    processDecryptionComponents(formComponent) {
+        const dataContext = formComponent.dataContext;
+        if (formComponent.sessionKeyComponent) {
+            this.defaultValueVisitor.visit(new FormComponent(formComponent.sessionKeyComponent, dataContext, {}));
+        }
+        if (formComponent.initializationVectorComponent) {
+            this.defaultValueVisitor.visit(new FormComponent(formComponent.initializationVectorComponent, dataContext, {}));
+        }
+    }
 }
