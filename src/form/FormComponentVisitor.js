@@ -13,13 +13,13 @@ export default class FormComponentVisitor {
 
     visit(formComponent) {
         const component = formComponent.component;
-        this.propertiesVisitor.visit(formComponent);
-        this.defaultValueVisitor.visit(formComponent);
+        formComponent.accept(this.propertiesVisitor);
+        formComponent.accept(this.defaultValueVisitor);
         if (component.type === 'content') {
-            this.contentComponentVisitor.visit(formComponent);
+            formComponent.accept(this.contentComponentVisitor);
         }
         if (component.data && component.dataSrc === 'url') {
-            this.selectComponentVisitor.visit(formComponent);
+            formComponent.accept(this.selectComponentVisitor);
         }
     }
 

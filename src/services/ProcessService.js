@@ -17,7 +17,7 @@ export default class ProcessService {
                 headers: headers
             });
         } catch (err) {
-            logger.error(`Failed to get data from ${url} due to ${err.toString}`);
+            logger.error(`Failed to get data from ${url} due to ${err}`);
             return null;
         }
 

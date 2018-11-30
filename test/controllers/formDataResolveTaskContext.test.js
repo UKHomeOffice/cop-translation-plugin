@@ -3,7 +3,7 @@ import FormTranslator from "../../src/form/FormTranslator";
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
-process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
+process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
 process.env.TX_DB_NAME = "test";
 
 
@@ -175,8 +175,8 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/workflow/tasks/taskId/variables')
                 .reply(404, {});
             nock('http://localhost:9000')
-                .get('/api/workflow/process-instance/processInstanceId/variables')
-                .reply(404, { message: "process does not exist"});
+                .get('/api/workflow/process-instances/processInstanceId/variables')
+                .reply(404, {});
 
             nock('http://localhost:9001')
                 .get('/api/platform-data/staffview?email=eq.email')

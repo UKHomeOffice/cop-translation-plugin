@@ -336,6 +336,7 @@ const processContextForm = [{
     ]
 }];
 const taskContextForm = [{
+    name: 'taskContextForm',
     components: [
         {
             type: 'textfield',
@@ -428,6 +429,7 @@ const customContextForm = [{
     ]
 }];
 const noContextData = [{
+    name: "noContextData",
     components: [
         {
             type: 'textfield',

@@ -4,7 +4,6 @@ process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
 process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
-process.env.TX_DB_NAME = "test";
 
 
 
@@ -20,6 +19,8 @@ import FormTranslateController from "../../src/controllers/FormTranslateControll
 import DataContextFactory from "../../src/services/DataContextFactory";
 import fs from "fs";
 import DataDecryptor from "../../src/services/DataDecryptor";
+import chai from "chai";
+import chaiAsPromised from "chai-as-promised";
 
 describe('Form Data Resolve Controller', () => {
     const rsaKey = fs.readFileSync('test/certs/signing1.key');
@@ -30,24 +31,50 @@ describe('Form Data Resolve Controller', () => {
 
     const formTranslateController = new FormTranslateController(translator);
 
-    describe('A call to data resolve controller with simple form', () => {
+    chai.use(chaiAsPromised);
+    const expect = chai.expect;
+
+    describe('A call to data resolve controller for user details  context', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
-                .get('/form?name=noContextData')
-                .reply(200, forms.noContextData);
+                .get('/form?name=userDetailsContextForm')
+                .reply(500, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.email')
-                .reply(200, []);
+                .get('/api/platform-data/staffview?email=eq.emailTest123')
+                .reply(200,
+
+                    [
+                        {
+                            "phone": "phone",
+                            "email": "emailTest123",
+                            "gradetypeid": "gradetypeid",
+                            "firstname": "firstname",
+                            "surname": "surname",
+                            "qualificationtypes": [
+                                {
+                                    "qualificationname": "dummy",
+                                    "qualificationtype": "1"
+                                },
+                                {
+                                    "qualificationname": "staff",
+                                    "qualificationtype": "2"
+                                }
+                            ],
+                            "staffid": "staffid",
+                            "gradename": "grade"
+                        }
+                    ]);
+
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/api/platform-data/shift?email=eq.emailTest123')
                 .reply(200, []);
         });
-        it('it should return form without any data resolution', async () => {
+        it('it should return an updated form schema for user details context', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
-                url: '/api/translation/form',
+                url: '/api/translation/form/userDetailsContextForm',
                 params: {
-                    formName: "noContextData"
+                    formName: "userDetailsContextForm"
                 },
                 kauth: {
                     grant: {
@@ -55,24 +82,18 @@ describe('Form Data Resolve Controller', () => {
                             token: "test-token",
                             content: {
                                 session_state: "session_id",
-                                email: "email",
+                                email: "emailTest123",
                                 preferred_username: "test",
-                                given_name: "testgivenname",
-                                family_name: "testfamilyname"
+                                given_name: "firstname",
+                                family_name: "surname"
                             }
                         }
 
                     }
                 }
             });
-            const response = await formTranslateController.getForm(request);
 
-            const firstName = JSONPath.value(response, "$..components[?(@.key=='firstName')].defaultValue");
-            const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
-
-            expect(firstName).toEqual("Test");
-            expect(lastName).toEqual("Test");
-
+            await expect(formTranslateController.getForm(request)).to.eventually.be.rejectedWith(`An exception occurred while trying to get form userDetailsContextForm ... 'Error: Request failed with status code 500'`);
         });
     });
 

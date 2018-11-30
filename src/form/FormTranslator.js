@@ -19,6 +19,7 @@ export default class FormTranslator {
                     keycloakContext,
                     {processInstanceId, taskId},
                     customDataContext = {}) {
+        logger.info(`Loading form ${formName}`);
         const form = await this.formEngineService.getForm(formName);
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
