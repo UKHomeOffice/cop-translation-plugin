@@ -42,11 +42,64 @@ Using the logged in user's credentials the service will create a data context wh
 
 1. Keycloak
 2. Staff Attributes
-3. Teams
-4. Reference data
-5. Environment contexts (URL resolutions)
-6. Process and task variables
+3. Shift details
+4. Environment urls
+5. Process variables
+6. Task details and variables
 
+#### KeyCloak Data Context
+```json
+
+{$.keycloakContext.accessToken}
+{$.keycloakContext.sessionId}
+{$.keycloakContext.email}
+{$.keycloakContext.userName}
+{$.keycloakContext.givenName}
+{$.keycloakContext.familyName}
+
+```
+
+#### Staff Data Context
+
+```json
+{$.staffDetailsDataContext.email}
+{$.staffDetailsDataContext.gradeId}
+{$.staffDetailsDataContext.staffId}
+{$.staffDetailsDataContext.gradeName}
+{$.staffDetailsDataContext.qualificationTypes}
+
+```
+
+#### Shift Data Context
+```json
+
+```
+
+#### Environment urls
+```json
+{$.environmentContext.platformDataUrl}
+{$.environmentContext.workflowUrl}
+```
+
+#### Process Variables Data Context
+If you have a process instance with variables you wish to access within your forms then you would need to use the processContext to access them.
+```json
+{$.processContext.myProcessVariableName.attribute}
+```
+
+##### Decrypted content (Currently images supported)
+
+In order to decrypt image content you will need to tag the form component with 'encrypted' and provide the following 2 properties:
+
+1. sessionKey
+2. initialisationVector
+
+These properties can have data context references for example (assuming your session key and initialisationVector is inside your process variable):
+
+```json
+sessionKey: {$.processContext.myVariable.metadata.sessionKey}
+initialisationVector: {$.processContext.myVariable.metadata.initialisationVector}
+```
 
 **_All endpoints are protected using Keycloak_**
 

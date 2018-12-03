@@ -1,4 +1,4 @@
-import * as logger from "winston/lib/winston";
+import * as logger from "../config/winston";
 
 class ShiftDetailsContext {
     constructor(shift, location, locationtype) {

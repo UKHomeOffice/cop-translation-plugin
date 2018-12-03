@@ -1,15 +1,9 @@
-FROM quay.io/ukhomeofficedigital/nodejs-base:v8.11.1
-
-ENV USER user-translation-service
-ENV GROUP group-translation-service
-ENV NAME translation-service
+FROM quay.io/ukhomeofficedigital/docker-node:master
 
 WORKDIR /app
 
-RUN groupadd -r ${GROUP} && \
-    useradd -r -g ${GROUP} ${USER} -d /app && \
-    mkdir -p /app && \
-    chown -R ${USER}:${GROUP} /app
+RUN mkdir -p /app && \
+    chown -R node:node /app
 
 ADD . /app/
 
@@ -17,7 +11,7 @@ RUN npm install && npm run build
 
 ENV NODE_ENV='production'
 
-USER ${USER}
+USER 1000
 
 EXPOSE 8080
 

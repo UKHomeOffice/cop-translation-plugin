@@ -1,3 +1,5 @@
+import FormTranslator from "../../src/form/FormTranslator";
+
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
@@ -9,10 +11,25 @@ import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import expect from 'expect';
-import formDataController from '../../src/controllers/formDataResolveController';
 import * as forms from '../forms'
+import FormEngineService from "../../src/services/FormEngineService";
+import PlatformDataService from "../../src/services/PlatformDataService";
+import ProcessService from "../../src/services/ProcessService";
+import FormTranslateController from "../../src/controllers/FormTranslateController";
+import DataContextFactory from "../../src/services/DataContextFactory";
+import fs from "fs";
+import DataDecryptor from "../../src/services/DataDecryptor";
 
 describe('Form Data Resolve Controller', () => {
+    const rsaKey = fs.readFileSync('test/certs/signing1.key');
+    const dataDecryptor = new DataDecryptor(rsaKey);
+
+    const translator = new FormTranslator(new FormEngineService(),
+        new DataContextFactory(new PlatformDataService(), new ProcessService()), dataDecryptor);
+
+    const formTranslateController = new FormTranslateController(translator);
+
+
     describe('A call to data resolve controller for user details  context', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
@@ -48,7 +65,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.emailTest123')
                 .reply(200, []);
         });
-        it('it should return an updated form schema for user details context', (done) => {
+        it('it should return an updated form schema for user details context', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/userDetailsContextForm',
@@ -71,24 +88,13 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
+            const response = await formTranslateController.getForm(request);
 
-            formDataController.getFormSchema(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
+            const grade = JSONPath.value(response, "$..components[?(@.key=='grade')].defaultValue");
+            const personId = JSONPath.value(response, "$..components[?(@.key=='personid')].defaultValue");
 
-                const grade = JSONPath.value(updatedForm, "$..components[?(@.key=='grade')].defaultValue");
-                const personId = JSONPath.value(updatedForm, "$..components[?(@.key=='personid')].defaultValue");
-
-                expect(grade).toEqual("gradetypeid");
-                expect(personId).toEqual("staffid");
-
-                done();
-            });
+            expect(grade).toEqual("gradetypeid");
+            expect(personId).toEqual("staffid");
         });
     });
 
@@ -106,7 +112,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.noEmail')
                 .reply(200, []);
         });
-        it('it should return an updated form schema with null values', (done) => {
+        it('it should return an updated form schema with null values', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/userDetailsContextForm',
@@ -129,21 +135,11 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
+            const response = await formTranslateController.getForm(request);
 
-            formDataController.getFormSchema(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
-                const grade = JSONPath.value(updatedForm, "$..components[?(@.key=='grade')].defaultValue");
+            const grade = JSONPath.value(response, "$..components[?(@.key=='grade')].defaultValue");
 
-                expect(grade).toEqual(null);
-
-                done();
-            });
+            expect(grade).toEqual(null);
         });
     });
 });

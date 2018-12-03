@@ -1,3 +1,19 @@
+import FormTranslator from "../../src/form/FormTranslator";
+import JSONPath from "jsonpath";
+import nock from 'nock';
+import httpMocks from 'node-mocks-http';
+import formDataController from '../../src/controllers/FormTranslateController';
+import * as forms from '../forms'
+import FormEngineService from "../../src/services/FormEngineService";
+import PlatformDataService from "../../src/services/PlatformDataService";
+import ProcessService from "../../src/services/ProcessService";
+
+import chaiAsPromised from 'chai-as-promised';
+import chai from 'chai';
+import DataContextFactory from "../../src/services/DataContextFactory";
+import fs from "fs";
+import DataDecryptor from "../../src/services/DataDecryptor";
+
 process.env.NODE_ENV = 'test';
 process.env.FORM_URL = 'http://localhost:8000';
 process.env.WORKFLOW_URL = 'http://localhost:9000';
@@ -5,15 +21,17 @@ process.env.REFERENCE_DATA_URL = 'http://localhost:9001';
 process.env.TX_DB_NAME = "test";
 
 
-
-import JSONPath from "jsonpath";
-import nock from 'nock';
-import httpMocks from 'node-mocks-http';
-import expect from 'expect';
-import formDataController from '../../src/controllers/formDataResolveController';
-import * as forms from '../forms'
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe('Form Data Resolve Controller', () => {
+    const rsaKey = fs.readFileSync('test/certs/signing1.key');
+    const dataDecryptor = new DataDecryptor(rsaKey);
+
+    const translator = new FormTranslator(new FormEngineService(),
+        new DataContextFactory(new PlatformDataService(), new ProcessService()), dataDecryptor);
+
+    const formTranslateController = new formDataController(translator);
 
     describe('A call to data resolve controller custom context', () => {
         beforeEach(() => {
@@ -27,7 +45,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
-        it('it should return an updated form schema for custom context', (done) => {
+        it('it should return an updated form schema for custom context', async () => {
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form',
@@ -56,23 +74,15 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
 
-            const formSchemaForContext = formDataController.getFormSchemaForContext(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(200);
-                expect(response._isEndCalled()).toBe(true);
-                const updatedForm = JSON.parse(response._getData());
+            const response = await formTranslateController.getFormWithContext(request);
 
-                const firstName = JSONPath.value(updatedForm, "$..components[?(@.key=='firstName')].defaultValue");
-                const lastName = JSONPath.value(updatedForm, "$..components[?(@.key=='lastName')].defaultValue");
+            const firstName = JSONPath.value(response, "$..components[?(@.key=='firstName')].defaultValue");
+            const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
 
-                expect(firstName).toEqual("customFirstName");
-                expect(lastName).toEqual("customLastName");
-                done();
-            });
+            expect(firstName).to.equal("customFirstName");
+            expect(lastName).to.equal("customLastName");
+
         });
     });
 
@@ -88,7 +98,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
         });
-        it('it should return 404 status', (done) => {
+        it('it should return 404 status', async () => {
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form',
@@ -117,16 +127,7 @@ describe('Form Data Resolve Controller', () => {
                     }
                 }
             });
-            const response = httpMocks.createResponse({
-                eventEmitter: require('events').EventEmitter
-            });
-
-            formDataController.getFormSchemaForContext(request, response);
-            response.on('end', () => {
-                expect(response.statusCode).toEqual(404);
-                expect(response._isEndCalled()).toBe(true);
-                done();
-            });
+            await expect(formTranslateController.getFormWithContext(request)).to.eventually.be.rejectedWith('Form randomForm could not be found');
         });
     });
 

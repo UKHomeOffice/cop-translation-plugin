@@ -55,6 +55,170 @@ const imgForm = [
         ]
     }
 ];
+const iframeForm = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Iframe</p>\n\n<p><iframe src=\"{$.environmentContext.platformDataUrl}/some?access_token={$.keycloakContext.accessToken}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithoutVector = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "initialisationVector" : '{$.processContext.variable.initialisationVector}'
+                },
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithoutSessionKey = [
+    {
+        components: [
+            {
+                type: 'textfield',
+                key: 'initialisationVector',
+                label: 'initialisationVector',
+                placeholder: 'initialisationVector',
+                defaultValue: '{$.processContext.variable.initialisationVector}',
+                input: true
+            },
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "sessionKey": '{$.processContext.variable.sessionKey}'
+                },
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgForm = [
+    {
+        components: [
+
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "sessionKey": '{$.processContext.variable.sessionKey}',
+                    "initialisationVector" : '{$.processContext.variable.initialisationVector}'
+                },
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithMissingEncryptionTag = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const jpgImgForm = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.img}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "imageType": "jpg"
+                },
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
 const shiftForm = [{
     components: [
         {
@@ -81,7 +245,6 @@ const shiftForm = [{
         }
     ]
 }];
-
 const dataUrlForm = [
     {
         components: [
@@ -111,7 +274,7 @@ const dataUrlForm = [
                 "authenticate": false,
                 "filter": "",
                 "refreshOn": "",
-                "defaultValue": "",
+                "defaultValue": "{$.processContext.person.firstName}",
                 "valueProperty": "regionid",
                 "dataSrc": "url",
                 "data": {
@@ -139,7 +302,6 @@ const dataUrlForm = [
         ]
     }
 ];
-
 const processContextForm = [{
     components: [
         {
@@ -173,8 +335,8 @@ const processContextForm = [{
         }
     ]
 }];
-
 const taskContextForm = [{
+    name: 'taskContextForm',
     components: [
         {
             type: 'textfield',
@@ -214,7 +376,6 @@ const taskContextForm = [{
         }
     ]
 }];
-
 const userDetailsContextForm = [{
     components: [
         {
@@ -241,8 +402,6 @@ const userDetailsContextForm = [{
         }
     ]
 }];
-
-
 const customContextForm = [{
     components: [
         {
@@ -269,8 +428,8 @@ const customContextForm = [{
         }
     ]
 }];
-
 const noContextData = [{
+    name: "noContextData",
     components: [
         {
             type: 'textfield',
@@ -306,5 +465,11 @@ export {
     customContextForm,
     noContextData,
     shiftForm,
-    imgForm
+    imgForm,
+    jpgImgForm,
+    encryptedImgForm,
+    encryptedImgFormWithoutSessionKey,
+    encryptedImgFormWithoutVector,
+    encryptedImgFormWithMissingEncryptionTag,
+    iframeForm
 }

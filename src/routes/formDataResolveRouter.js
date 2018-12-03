@@ -1,17 +1,35 @@
 import express from 'express';
-
-import formDataResolveController from '../controllers/formDataResolveController';
+import responseHandler from "../utilities/handlers/responseHandler";
 
 const router = express.Router();
 
-const wrap = fn => (...args) => fn(...args).catch(args[2]);
+const formDataResolveRouter = (keycloak, formTranslatorController) => {
 
-const formDataResolveRouter = (keycloak) => {
     router
         .get('/form/:formName',
-            [keycloak.protect(), wrap(formDataResolveController.getFormSchema)]);
+            [keycloak.protect(), (req, res) => {
+                const {formName} = req.params;
+                formTranslatorController.getForm(req).then((form) => {
+                    responseHandler.res(null, {formName, form}, res);
+                }).catch((err) => {
+                    responseHandler.res({
+                        code: err.code,
+                        message: err.message
+                    }, {formName}, res);
+                })
+
+            }]);
     router
-        .post('/form', [keycloak.protect(), wrap(formDataResolveController.getFormSchemaForContext)]);
+        .post('/form', [keycloak.protect(), (req, res) => {
+            formTranslatorController.getFormWithContext(req).then((form) => {
+                responseHandler.res(null, {form}, res);
+            }).catch((err) => {
+                responseHandler.res({
+                    code: err.code,
+                    message: err.toString()
+                }, {}, res);
+            });
+        }]);
     return router;
 };
 
