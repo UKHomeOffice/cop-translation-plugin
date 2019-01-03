@@ -383,7 +383,7 @@ const userDetailsContextForm = [{
             key: 'grade',
             label: 'Grade',
             placeholder: 'Enter your first name.',
-            defaultValue: '{$.staffDetailsDataContext.gradeId}',
+            defaultValue: '{$.staffDetailsDataContext.gradetypeid}',
             input: true
         },
         {
@@ -391,7 +391,7 @@ const userDetailsContextForm = [{
             key: 'personid',
             label: 'personid',
             placeholder: 'Enter your first name.',
-            defaultValue: '{$.staffDetailsDataContext.staffId}',
+            defaultValue: '{$.staffDetailsDataContext.staffid}',
             input: true
         },
         {

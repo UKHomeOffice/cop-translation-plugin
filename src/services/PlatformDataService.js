@@ -13,7 +13,10 @@ export default class PlatformDataService {
     async getStaffDetails(email, headers) {
         try {
             const response = await axios({
-                url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rpc/staffdetails?email=eq.${encodeURIComponent(email)}`,
+                url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rpc/staffdetails`,
+                data: {
+                  'argstaffemail': encodeURIComponent(email)
+                },
                 method: 'POST',
                 headers: headers
             });

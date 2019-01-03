@@ -36,7 +36,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.emailTest123')
+                .post('/api/platform-data/rpc/staffdetails', {'argstaffemail' : 'emailTest123'})
                 .reply(200,
 
                     [
