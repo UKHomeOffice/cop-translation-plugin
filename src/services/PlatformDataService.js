@@ -13,8 +13,8 @@ export default class PlatformDataService {
     async getStaffDetails(email, headers) {
         try {
             const response = await axios({
-                url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/staffview?email=eq.${encodeURIComponent(email)}`,
-                method: 'GET',
+                url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rpc/staffdetails?email=eq.${encodeURIComponent(email)}`,
+                method: 'POST',
                 headers: headers
             });
             const details = response.data ? response.data[0] : null;
