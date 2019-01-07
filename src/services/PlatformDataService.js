@@ -15,7 +15,7 @@ export default class PlatformDataService {
             const response = await axios({
                 url: `${process.env.PLATFORM_DATA_URL}/api/platform-data/rpc/staffdetails`,
                 data: {
-                  'argstaffemail': encodeURIComponent(email)
+                  'argstaffemail': email
                 },
                 method: 'POST',
                 headers: headers

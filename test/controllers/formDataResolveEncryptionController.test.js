@@ -46,15 +46,20 @@ describe('Form Data Controller', () => {
             .reply(200, tasks.processVariablesWithEncryptedFields);
 
         nock('http://localhost:9001')
-            .get('/api/platform-data/staffview?email=eq.email')
+            .post('/api/platform-data/rpc/staffdetails', {
+                "argstaffemail": "email"
+            })
             .reply(200, []);
-
         nock('http://localhost:9001')
             .get('/api/platform-data/shift?email=eq.email')
             .reply(200, []);
 
 
     });
+
+
+
+
     const rsaKey = fs.readFileSync('test/certs/signing1.key');
     const dataDecryptor = new DataDecryptor(rsaKey);
 

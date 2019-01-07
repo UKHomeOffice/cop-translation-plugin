@@ -106,7 +106,9 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .log(console.log)
-                .get('/api/platform-data/staffview?email=eq.noEmail')
+                .post('/api/platform-data/rpc/staffdetails', {
+                    "argstaffemail" : "noEmail"
+                })
                 .reply(200, []);
             nock('http://localhost:9001')
                 .get('/api/platform-data/shift?email=eq.noEmail')
