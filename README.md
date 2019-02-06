@@ -88,7 +88,7 @@ Using the logged in user's credentials the service will create a data context wh
 {$.shiftDetailsDataContext.startdatetime}
 {$.shiftDetailsDataContext.staffid}
 {$.shiftDetailsDataContext.teamid}
-{$.shiftDetailsDataContext.locatiionid}
+{$.shiftDetailsDataContext.locationid}
 {$.shiftDetailsDataContext.shifthistoryid}
 {$.shiftDetailsDataContext.phone}
 {$.shiftDetailsDataContext.roles}
