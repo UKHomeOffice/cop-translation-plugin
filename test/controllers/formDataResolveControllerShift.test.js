@@ -35,13 +35,14 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=shiftForm')
                 .reply(200, forms.shiftForm);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.email')
+                .post('/api/platform-data/rpc/staffdetails', {
+                    "argstaffemail": "email"
+                })
                 .reply(200, []);
             nock('http://localhost:9001')
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, [{
-                    currentlocationid: 'currentlocationid',
-                    locationid: 'locationid',
+                    locationid: 'currentlocationid',
                     teamid: 'teamid',
                     email: 'email'
                 }]);

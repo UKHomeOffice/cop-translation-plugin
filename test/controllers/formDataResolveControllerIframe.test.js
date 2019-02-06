@@ -34,7 +34,9 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=iframeForm')
                 .reply(200, forms.iframeForm);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.email')
+                .post('/api/platform-data/rpc/staffdetails', {
+                    "argstaffemail" : "email"
+                })
                 .reply(200, []);
             nock('http://localhost:9000')
                 .get('/api/workflow/tasks/taskId/variables')

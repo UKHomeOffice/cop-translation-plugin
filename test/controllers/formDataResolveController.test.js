@@ -35,8 +35,9 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=testForm')
                 .reply(200, forms.simpleForm);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.email')
-                .reply(200, []);
+                .post('/api/platform-data/rpc/staffdetails', {
+                    "argstaffemail" : "email"
+                }).reply(200, []);
             nock('http://localhost:9001')
                 .get('/api/platform-data/shift?email=eq.email')
                 .reply(200, []);
@@ -84,8 +85,9 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=dataUrlForm')
                 .reply(200, forms.dataUrlForm);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.email')
-                .reply(200, []);
+                .post('/api/platform-data/rpc/staffdetails', {
+                    "argstaffemail" : "email"
+                }).reply(200, []);
             nock('http://localhost:9000')
                 .get('/api/workflow/tasks/taskId')
                 .reply(200, {});

@@ -62,16 +62,36 @@ Using the logged in user's credentials the service will create a data context wh
 #### Staff Data Context
 
 ```json
+{$.staffDetailsDataContext.phone}
 {$.staffDetailsDataContext.email}
-{$.staffDetailsDataContext.gradeId}
-{$.staffDetailsDataContext.staffId}
-{$.staffDetailsDataContext.gradeName}
+{$.staffDetailsDataContext.gradetypeid}
+{$.staffDetailsDataContext.identityid}
+{$.staffDetailsDataContext.firstname}
+{$.staffDetailsDataContext.surname}
+{$.staffDetailsDataContext.adelphi}
+{$.staffDetailsDataContext.linemanagerid}
+{$.staffDetailsDataContext.mandeclastupdate}
+{$.staffDetailsDataContext.staffid}
+{$.staffDetailsDataContext.defaultteamid}
+{$.staffDetailsDataContext.roles}
 {$.staffDetailsDataContext.qualificationTypes}
 
 ```
 
 #### Shift Data Context
 ```json
+{$.shiftDetailsDataContext.shiftid}
+{$.shiftDetailsDataContext.email}
+{$.shiftDetailsDataContext.enddatetime}
+{$.shiftDetailsDataContext.shifthours}
+{$.shiftDetailsDataContext.shiftminutes}
+{$.shiftDetailsDataContext.startdatetime}
+{$.shiftDetailsDataContext.staffid}
+{$.shiftDetailsDataContext.teamid}
+{$.shiftDetailsDataContext.locationid}
+{$.shiftDetailsDataContext.shifthistoryid}
+{$.shiftDetailsDataContext.phone}
+{$.shiftDetailsDataContext.roles}
 
 ```
 
