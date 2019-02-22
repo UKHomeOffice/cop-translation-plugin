@@ -3,13 +3,12 @@ import * as logger from "../config/winston";
 
 
 export default class ProcessService {
-    constructor() {
-        this.getTaskData = this.getTaskData.bind(this);
-        this.getTaskVariables = this.getTaskVariables.bind(this);
-        this.getProcessVariables = this.getProcessVariables.bind(this);
+
+    constructor(config) {
+        this.config = config;
     }
 
-     async getApiCall (url, headers) {
+    async getApiCall(url, headers) {
         try {
             return await axios({
                 url: `${url}`,
@@ -23,14 +22,15 @@ export default class ProcessService {
 
     };
 
-    async getTaskData(taskId, headers){
-        return this.getApiCall(`${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}`, headers);
+    async getTaskData(taskId, headers) {
+        return this.getApiCall(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}`, headers);
     };
 
-    async getTaskVariables  (taskId, headers)  {
-        return this.getApiCall(`${process.env.WORKFLOW_URL}/api/workflow/tasks/${taskId}/variables`, headers);
+    async getTaskVariables(taskId, headers) {
+        return this.getApiCall(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}/variables`, headers);
     };
-    async getProcessVariables (processInstanceId, headers) {
-        return await this.getApiCall(`${process.env.WORKFLOW_URL}/api/workflow/process-instances/${processInstanceId}/variables`, headers);
+
+    async getProcessVariables(processInstanceId, headers) {
+        return await this.getApiCall(`${this.config.services.workflow.url}/api/workflow/process-instances/${processInstanceId}/variables`, headers);
     };
 }

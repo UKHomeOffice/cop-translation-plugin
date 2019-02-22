@@ -22,6 +22,23 @@ describe('JSON Path Evaluator', () => {
         expect(result).to.equal('hello with name');
 
     });
+    it ('can process multiple expression in one field', () => {
+        const key = 'fieldA';
+        const value = '{$.processContext.myVariable.name} {$.processContext.anotherVariable.value}';
+        const dataContext = {
+            processContext: {
+                myVariable: {
+                    name: 'hello'
+                },
+                anotherVariable: {
+                    value: 'goodbye'
+                }
+            }
+        };
+        const result = jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
+        expect(result).to.equal('hello goodbye');
+
+    });
     it('can process value with no intercept function', () => {
 
         const key = 'fieldA';

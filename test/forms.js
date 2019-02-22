@@ -252,7 +252,6 @@ const dataUrlForm = [
                 "errorLabel": "Region selection required to filter location",
                 "tooltip": "Selecting a region will filter the location drop down list",
                 "customClass": "",
-                "properties": {},
                 "conditional": {
                     "show": "",
                     "when": null,
@@ -297,7 +296,11 @@ const dataUrlForm = [
                 "tableView": true,
                 "input": true,
                 "lockKey": true,
-                "hideLabel": false
+                "hideLabel": false,
+                "properties": {
+                    "widget" : "html5",
+                    "lazyLoad": true
+                }
             }
         ]
     }

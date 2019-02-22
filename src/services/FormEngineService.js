@@ -7,13 +7,13 @@ import TranslationServiceError from "../TranslationServiceError";
 
 export default class FormEngineService {
 
-    constructor() {
-       this.getForm = this.getForm.bind(this);
+    constructor(config) {
+        this.config = config;
     }
 
     async getForm (formName) {
         try {
-            const response = await axios.get(`${process.env.FORM_URL}/form?name=${formName}`);
+            const response = await axios.get(`${this.config.services.formio.url}/form?name=${formName}`);
             if (response && response.data) {
                 const form = response.data[0];
                 if (form) {

@@ -9,7 +9,6 @@ export default class DataContextFactory {
     constructor(platformDataService, processService) {
         this.platformDataService = platformDataService;
         this.processService = processService;
-        this.createDataContext = this.createDataContext.bind(this);
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
