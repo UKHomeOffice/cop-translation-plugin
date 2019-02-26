@@ -3,6 +3,7 @@ import express from 'express';
 import expressValidator from 'express-validator';
 import route from './routes';
 import morgan from 'morgan';
+import appConfig from './config/appConfig'
 
 const http = require('http');
 const https = require('https');
@@ -61,14 +62,15 @@ app.use(session({
 }));
 
 
-const path = process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem';
+const path = appConfig.privateKey.path;
+
 winston.info('Private key path = ' + path);
 const rsaKey = fs.readFileSync(path);
 winston.info('RSA Key content resolved');
 
 const dataDecryptor = new DataDecryptor(rsaKey);
-const dataContextFactory = new DataContextFactory(new PlatformDataService(), new ProcessService());
-const translator = new FormTranslator(new FormEngineService(), dataContextFactory, dataDecryptor);
+const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig));
+const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
 
 app.use(bodyParser.json());
 app.use(morgan('combined', { stream: winston.stream }));

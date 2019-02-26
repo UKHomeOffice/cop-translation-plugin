@@ -1,3 +1,4 @@
+import * as logger from "../config/winston";
 export default class SelectComponentVisitor {
 
     constructor(jsonPathEvaluator) {
@@ -14,6 +15,15 @@ export default class SelectComponentVisitor {
                 dataResolveContext);
             const bearerValue = `Bearer ${dataResolveContext.keycloakContext.accessToken}`;
             const header = component.data.headers.find(h => h.key === 'Authorization');
+            if (component.properties) {
+                logger.info(`Applying custom properties to component`)
+                Object.keys(component.properties).forEach((key) => {
+                    const propertyValue = component.properties[key];
+                    logger.debug(`Adding '${key}' with value '${propertyValue}' to select component`);
+                    component[key] = propertyValue;
+                });
+
+            }
             if (header) {
                 header.value = bearerValue;
             } else {

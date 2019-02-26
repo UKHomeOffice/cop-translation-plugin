@@ -2,22 +2,8 @@ import nock from "nock";
 import * as forms from "../forms";
 import * as tasks from "../task";
 import JSONPath from "jsonpath";
-import expect from "expect";
-import fs from "fs";
-import DataDecryptor from "../../src/services/DataDecryptor";
-import FormTranslator from "../../src/form/FormTranslator";
-import FormEngineService from "../../src/services/FormEngineService";
-import DataContextFactory from "../../src/services/DataContextFactory";
-import PlatformDataService from "../../src/services/PlatformDataService";
-import ProcessService from "../../src/services/ProcessService";
-import FormTranslateController from "../../src/controllers/FormTranslateController";
 import httpMocks from "node-mocks-http";
-
-process.env.NODE_ENV = 'test';
-process.env.FORM_URL = 'http://localhost:8000';
-process.env.WORKFLOW_URL = 'http://localhost:9000';
-process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
-process.env.PRIVATE_KEY_PATH="test/certs/signing1.key";
+import {expect, formTranslateController} from '../setUpTests'
 
 describe('Form Data Controller', () => {
     beforeEach(() => {
@@ -57,17 +43,6 @@ describe('Form Data Controller', () => {
 
     });
 
-
-
-
-    const rsaKey = fs.readFileSync('test/certs/signing1.key');
-    const dataDecryptor = new DataDecryptor(rsaKey);
-
-    const translator = new FormTranslator(new FormEngineService(),
-        new DataContextFactory(new PlatformDataService(), new ProcessService()), dataDecryptor);
-
-    const formTranslateController = new FormTranslateController(translator);
-
     it('can decrypt value before serving', async() => {
 
         const request = httpMocks.createRequest({
@@ -100,8 +75,8 @@ describe('Form Data Controller', () => {
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
         const initialisationVector = JSONPath.value(response, "$..components..properties.initialisationVector");
-        expect(initialisationVector).toEqual('W25/yzadEQNeV7jnZ3dnbA==');
-        expect(img).toEqual(
+        expect(initialisationVector).to.equal('W25/yzadEQNeV7jnZ3dnbA==');
+        expect(img).to.equal(
             "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,REFU\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
     });
@@ -135,7 +110,7 @@ describe('Form Data Controller', () => {
 
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
-        expect(img).toEqual(
+        expect(img).to.equal(
             "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,zp+whBVVWiNmNVlLtw2qUTCqDQ==\" style=\"height: 125px; width: 100px;\" /></p>\n");
     });
     it('returns encrypted value if initialisationVector is missing', async() => {
@@ -168,7 +143,7 @@ describe('Form Data Controller', () => {
 
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
-        expect(img).toEqual(
+        expect(img).to.equal(
             "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,zp+whBVVWiNmNVlLtw2qUTCqDQ==\" style=\"height: 125px; width: 100px;\" /></p>\n");
     });
     it('returns encrypted value if encrypted tag missing', async() => {
@@ -201,7 +176,7 @@ describe('Form Data Controller', () => {
 
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
-        expect(img).toEqual(
+        expect(img).to.equal(
             "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,zp+whBVVWiNmNVlLtw2qUTCqDQ==\" style=\"height: 125px; width: 100px;\" /></p>\n");
     });
 });

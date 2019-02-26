@@ -4,8 +4,6 @@ import TranslationServiceError from "../TranslationServiceError";
 export default class FormTranslateController  {
     constructor(formTranslator) {
         this.formTranslator = formTranslator;
-        this.getForm = this.getForm.bind(this);
-        this.getFormWithContext = this.getFormWithContext.bind(this);
     }
 
     async getForm(req) {

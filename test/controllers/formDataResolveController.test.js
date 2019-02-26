@@ -1,33 +1,12 @@
+
 import * as tasks from "../task";
-
-process.env.NODE_ENV = 'test';
-process.env.FORM_URL = 'http://localhost:8000';
-process.env.WORKFLOW_URL = 'http://localhost:9000';
-process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
-process.env.PRIVATE_KEY_PATH="test/certs/signing1.key";
-
 import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
-import expect from 'expect';
-import FormTranslateController from '../../src/controllers/FormTranslateController';
 import * as forms from '../forms'
-import FormTranslator from "../../src/form/FormTranslator";
-import FormEngineService from "../../src/services/FormEngineService";
-import PlatformDataService from "../../src/services/PlatformDataService";
-import ProcessService from "../../src/services/ProcessService";
-import DataContextFactory from "../../src/services/DataContextFactory";
-import fs from "fs";
-import DataDecryptor from "../../src/services/DataDecryptor";
+import {expect, formTranslateController} from '../setUpTests'
 
 describe('Form Data Resolve Controller', () => {
-    const rsaKey = fs.readFileSync('test/certs/signing1.key');
-    const dataDecryptor = new DataDecryptor(rsaKey);
-
-    const translator = new FormTranslator(new FormEngineService(),
-        new DataContextFactory(new PlatformDataService(), new ProcessService()), dataDecryptor);
-
-    const formTranslateController = new FormTranslateController(translator);
 
     describe('A call to data resolve controller for input type', () => {
         beforeEach(() => {
@@ -72,9 +51,9 @@ describe('Form Data Resolve Controller', () => {
             const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
             const sessionId = JSONPath.value(response, "$..components[?(@.key=='sessionId')].defaultValue");
 
-            expect(firstName).toEqual("testgivenname");
-            expect(lastName).toEqual("testfamilyname");
-            expect(sessionId).toEqual("session_id");
+            expect(firstName).to.equal("testgivenname");
+            expect(lastName).to.equal("testfamilyname");
+            expect(sessionId).to.equal("session_id");
         });
     });
 
@@ -132,9 +111,14 @@ describe('Form Data Resolve Controller', () => {
             const response = await formTranslateController.getForm(request);
             const url = JSONPath.value(response, "$..components[?(@.key=='regionid')].data.url");
             const defaultValue = JSONPath.value(response, "$..components[?(@.key=='regionid')].defaultValue");
-            expect(url).toEqual("http://localhost:9001/region");
-            expect(defaultValue).toEqual("firstNameFromProcess");
+            expect(url).to.equal("http://localhost:9001/region");
+            expect(defaultValue).to.equal("firstNameFromProcess");
 
+            const lazyLoad =  JSONPath.value(response, "$..components[?(@.key=='regionid')].lazyLoad");
+            expect(lazyLoad).to.equal(true);
+
+            const widget = JSONPath.value(response, "$..components[?(@.key=='regionid')].widget");
+            expect(widget).to.equal('html5');
 
         });
     });
