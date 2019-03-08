@@ -50,17 +50,7 @@ const port = process.env.PORT || 8080;
 
 app.set('port', port);
 
-const memoryStore = new session.MemoryStore();
-const keycloak = new Keycloak({store: memoryStore}, kcConfig);
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: memoryStore,
-    name: process.env.SESSION_NAME
-}));
-
+const keycloak = new Keycloak({}, kcConfig);
 
 const path = appConfig.privateKey.path;
 
