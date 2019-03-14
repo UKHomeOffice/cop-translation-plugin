@@ -18,9 +18,11 @@ export default class FormComponentVisitor {
         if (component.type === 'content') {
             formComponent.accept(this.contentComponentVisitor);
         }
-        if (component.data && component.dataSrc === 'url') {
+        if (component.data && component.dataSrc) {
             formComponent.accept(this.selectComponentVisitor);
-        }
+
+
+       }
     }
 
 }

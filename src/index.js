@@ -6,10 +6,8 @@ import morgan from 'morgan';
 import appConfig from './config/appConfig'
 
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 
-import session from 'express-session';
 import Keycloak from 'keycloak-connect';
 import * as axios from "axios";
 import moment from 'moment';
@@ -23,19 +21,6 @@ import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
 
 const winston = require('./config/winston');
-
-if (process.env.NODE_ENV === 'production') {
-    winston.info('Setting ca bundle');
-    const trustedCa = [
-        '/etc/ssl/certs/ca-bundle.crt'
-    ];
-
-    https.globalAgent.options.ca = [];
-    for (const ca of trustedCa) {
-        https.globalAgent.options.ca.push(fs.readFileSync(ca));
-    }
-    winston.info('ca bundle set...');
-}
 
 const kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
