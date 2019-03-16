@@ -22,6 +22,18 @@ import FormDataResolveController from "./controllers/FormTranslateController";
 
 const winston = require('./config/winston');
 
+if (process.env.NODE_ENV === 'production') {
+    winston.info('Setting ca bundle');
+    const trustedCa = [
+        '/etc/ssl/certs/ca-bundle.crt'
+    ];
+
+    https.globalAgent.options.ca = [];
+    for (const ca of trustedCa) {
+        https.globalAgent.options.ca.push(fs.readFileSync(ca));
+    }
+    winston.info('ca bundle set...');
+}
 const kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
     serverUrl: process.env.AUTH_URL,
