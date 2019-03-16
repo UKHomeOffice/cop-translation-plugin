@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import appConfig from './config/appConfig'
 
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 
 import Keycloak from 'keycloak-connect';
@@ -19,6 +20,7 @@ import ProcessService from "./services/ProcessService";
 import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
+
 
 const winston = require('./config/winston');
 
