@@ -9,7 +9,6 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
-import session from 'express-session';
 import Keycloak from 'keycloak-connect';
 import * as axios from "axios";
 import moment from 'moment';
@@ -21,6 +20,7 @@ import ProcessService from "./services/ProcessService";
 import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
+
 
 const winston = require('./config/winston');
 
@@ -36,7 +36,6 @@ if (process.env.NODE_ENV === 'production') {
     }
     winston.info('ca bundle set...');
 }
-
 const kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
     serverUrl: process.env.AUTH_URL,
@@ -50,17 +49,7 @@ const port = process.env.PORT || 8080;
 
 app.set('port', port);
 
-const memoryStore = new session.MemoryStore();
-const keycloak = new Keycloak({store: memoryStore}, kcConfig);
-
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    store: memoryStore,
-    name: process.env.SESSION_NAME
-}));
-
+const keycloak = new Keycloak({}, kcConfig);
 
 const path = appConfig.privateKey.path;
 
