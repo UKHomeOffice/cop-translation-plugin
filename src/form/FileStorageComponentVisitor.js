@@ -5,8 +5,9 @@ export default class FileStorageComponentVisitor {
     visit(formComponent) {
         const component = formComponent.component;
         const dataResolveContext = formComponent.dataContext;
-        component.options = {
+        component.options = JSON.stringify({
+            "withCredentials" : true,
             "Authorization" : `Bearer ${dataResolveContext.keycloakContext.accessToken}`
-        }
+        });
     }
 }
