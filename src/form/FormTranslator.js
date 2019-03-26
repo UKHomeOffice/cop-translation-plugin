@@ -1,7 +1,7 @@
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
 import TranslationServiceError from "../TranslationServiceError";
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
 import FormComponentVisitor from "./FormComponentVisitor";
 

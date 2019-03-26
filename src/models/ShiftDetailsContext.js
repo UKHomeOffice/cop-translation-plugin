@@ -1,4 +1,4 @@
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 
 class ShiftDetailsContext {
     constructor(shift, location, locationtype) {
@@ -22,12 +22,11 @@ class ShiftDetailsContext {
     }
 
     createQueryParameter(locationtype) {
-        logger.info(`locationtype ${JSON.stringify(locationtype)}`);
         const query =  `&seaport=eq.${locationtype.seaport}&railterminal=eq.${locationtype.railterminal}` +
             `&airport=eq.${locationtype.airport}&postexchange=eq.${locationtype.postexchange}&fixedtransport=eq.${locationtype.fixedtransport}`
-            + `&bordercrossing=eq.${locationtype.bordercrossing}&roadterminal=eq.${locationtype.roadterminal}`
+            + `&bordercrossing=eq.${locationtype.bordercrossing}&roadterminal=eq.${locationtype.roadterminal}`;
 
-        logger.info(`query ${JSON.stringify(query)}`);
+        logger.info(`query create for location type`, {query: query});
 
         return query;
     };

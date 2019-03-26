@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import * as logger from '../config/winston';
+import logger from '../config/winston';
 import TranslationServiceError from "../TranslationServiceError";
 
 export default class DataDecryptor {

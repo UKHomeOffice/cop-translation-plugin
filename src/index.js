@@ -21,11 +21,10 @@ import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
 
-
-const winston = require('./config/winston');
+import logger from './config/winston';
 
 if (process.env.NODE_ENV === 'production') {
-    winston.info('Setting ca bundle');
+    logger.info('Setting ca bundle');
     const trustedCa = [
         '/etc/ssl/certs/ca-bundle.crt'
     ];
@@ -34,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
     for (const ca of trustedCa) {
         https.globalAgent.options.ca.push(fs.readFileSync(ca));
     }
-    winston.info('ca bundle set...');
+    logger.info('ca bundle set...');
 }
 const kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
@@ -53,16 +52,15 @@ const keycloak = new Keycloak({}, kcConfig);
 
 const path = appConfig.privateKey.path;
 
-winston.info('Private key path = ' + path);
+logger.info('Private key path = ' + path);
 const rsaKey = fs.readFileSync(path);
-winston.info('RSA Key content resolved');
+logger.info('RSA Key content resolved');
 
 const dataDecryptor = new DataDecryptor(rsaKey);
 const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig));
 const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
 
 app.use(bodyParser.json());
-app.use(morgan('combined', { stream: winston.stream }));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
 app.use(helmet());
@@ -72,7 +70,7 @@ app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveCont
 
 axios.interceptors.request.use(
     (config) => {
-        winston.info('Request: [%s] "%s %s"', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), config.method.toUpperCase(), config.url);
+        logger.info('Request: [%s] "%s %s"', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), config.method.toUpperCase(), config.url);
         return config
     },
     (error) => {
@@ -81,11 +79,11 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use((response) => {
     if (response) {
-        winston.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
+        logger.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
     }
     return response
 }, (error) => {
-    winston.error('Error: [%s] [%s]',
+    logger.error('Error: [%s] [%s]',
         moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'),
         JSON.stringify(error.message)
     );
@@ -93,7 +91,7 @@ axios.interceptors.response.use((response) => {
 });
 
 const server = http.createServer(app).listen(app.get('port'), function () {
-    winston.info('Listening on port %d', port);
+    logger.info('Listening on port %d', port);
 });
 
 
@@ -109,14 +107,14 @@ server.on('connection', connection => {
 });
 
 function shutDown() {
-    winston.info('Received kill signal, shutting down gracefully');
+    logger.info('Received kill signal, shutting down gracefully');
     server.close(() => {
-        winston.info('Closed out remaining connections');
+        logger.info('Closed out remaining connections');
         process.exit(0);
     });
 
     setTimeout(() => {
-        winston.error('Could not close connections in time, forcefully shutting down');
+        logger.error('Could not close connections in time, forcefully shutting down');
         process.exit(1);
     }, 10000);
 

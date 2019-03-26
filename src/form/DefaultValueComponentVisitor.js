@@ -1,4 +1,4 @@
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 import moment from "moment";
 
 export default class DefaultValueComponentVisitor {

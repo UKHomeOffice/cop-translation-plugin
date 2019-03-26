@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 
 export default class PlatformDataService {
 
@@ -22,11 +22,11 @@ export default class PlatformDataService {
             });
             const details = response.data ? response.data[0] : null;
             if (details) {
-                logger.info(`Staff details found... ${JSON.stringify(details)}`);
+                logger.info(`Staff details found`, details);
             }
             return details
         } catch (err) {
-            logger.error(`Failed to get staff details ${err.toString()}`);
+            logger.error(`Failed to get staff details`, err);
             return null;
         }
 
@@ -60,10 +60,10 @@ export default class PlatformDataService {
                 headers: headers
             });
             const shiftDetails = response.data ? response.data[0] : null;
-            logger.info(`Shift details ${JSON.stringify(shiftDetails)}`);
+            logger.info(`Shift details found`, shiftDetails);
             return shiftDetails;
         } catch (err) {
-            logger.error(`Failed to get shift details ${err.toString()}`);
+            logger.error(`Failed to get shift details `, err);
             return null;
         }
 
