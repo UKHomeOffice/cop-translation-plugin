@@ -28,7 +28,6 @@ pipeline:
     secrets:
       - DOCKER_USERNAME
       - DOCKER_PASSWORD
-      - STORAGE_KEY
     registry: quay.io
     repo: quay.io/ukhomeofficedigital/cop-private-translation-service
     tags:
