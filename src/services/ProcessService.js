@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 
 
 export default class ProcessService {

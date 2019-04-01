@@ -1,5 +1,5 @@
 import responseHandler from "../utilities/handlers/responseHandler";
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 
 const healthCheck = (req, res) => {
     logger.info("Health check initiated");

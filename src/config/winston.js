@@ -1,25 +1,18 @@
-const winston = require('winston');
+import {createLogger, format, transports} from 'winston';
+const { combine, timestamp, json, splat, printf} = format;
 
-const options = {
-    console: {
-        level: process.env.LOG_LEVEL || 'debug',
-        handleExceptions: true,
-        json: false,
-        colorize: true,
-    },
-};
 
-const logger = new winston.Logger({
+const logger = createLogger({
+    format: combine(
+        timestamp(),
+        splat(),
+        json()
+    ),
     transports: [
-        new winston.transports.Console(options.console)
+        new transports.Console(),
     ],
     exitOnError: false,
 });
 
-logger.stream = {
-    write: function(message, encoding) {
-        logger.info(message);
-    },
-};
 
-module.exports = logger;
+export default logger;

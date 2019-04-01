@@ -1,5 +1,5 @@
 import JSONPath from 'jsonpath';
-import * as logger from "../config/winston";
+import  logger from "../config/winston";
 
 export default class JsonPathEvaluator {
 
