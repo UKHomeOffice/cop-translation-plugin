@@ -54,9 +54,12 @@ pipeline:
       - DEV_NO_LOGGING_RESPONSE
       - DEV_KEYCLOAK_URL
       - DEV_KEYCLOAK_REALM
-
-      - PRIVATE_UI_NAME
-
+      - DEV_KEYCLOAK_SECRET
+      - DEV_PLATFORM_DATA_URL
+      - DEV_PRIVATE_FORM_URL
+      - DEV_PRIVATE_WORKFLOW_ENGINE_URL
+      - DEV_SESSION_NAME
+      - DEV_SESSION_SECRET
     commands:
       - export NAME=$${DEV_NAME}
       - export KUBE_NAMESPACE=$${DEV_KUBE_NAMESPACE}
@@ -68,12 +71,17 @@ pipeline:
       - export NO_LOGGING_RESPONSE=$${DEV_NO_LOGGING_RESPONSE}
       - export KEYCLOAK_URL=$${DEV_KEYCLOAK_URL}
       - export KEYCLOAK_REALM=$${DEV_KEYCLOAK_REALM}
+      - export KEYCLOAK_SECRET=$${DEV_KEYCLOAK_SECRET}
+      - export PLATFORM_DATA_URL=$$DEV_PLATFORM_DATA_URL}
+      - export PRIVATE_FORM_URL=$${DEV_PRIVATE_FORM_URL}
+      - export PRIVATE_WORKFLOW_ENGINE_URL=$${DEV_PRIVATE_WORKFLOW_ENGINE_URL}
+      - export SESSION_NAME=$${DEV_SESSION_NAME}
+      - export SESSION_SECRET=$${DEV_SESSION_SECRET}
       - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
-      - kd --insecure-skip-tls-verify -f kube/nginx-configmap.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/service.yml
       - kd --insecure-skip-tls-verify -f kube/deployment.yml
-      - kd --insecure-skip-tls-verify -f kube/ingress.yml
     when:
       branch:
         - master
