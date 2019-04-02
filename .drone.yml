@@ -1,7 +1,3 @@
-workspace:
-  base: /build
-  path: src/github.com/ukhomeoffice/cop-private-translation-service
-
 pipeline:
   test:
     image: node:8
@@ -92,4 +88,111 @@ pipeline:
         - master
       event:
         - push
+        - deployment
+
+  deploy_to_test:
+    image: quay.io/ukhomeofficedigital/kd
+    secrets:
+      - TEST_NAME
+      - TEST_KUBE_NAMESPACE
+      - TEST_KUBE_SERVER
+      - TEST_KUBE_TOKEN
+      - TEST_INTERNAL_CA_URL
+      - TEST_NO_LOGGING_URL_PARAMS
+      - TEST_NO_LOGGING_BODY
+      - TEST_NO_LOGGING_RESPONSE
+      - TEST_KEYCLOAK_URL
+      - TEST_KEYCLOAK_REALM
+      - TEST_KEYCLOAK_SECRET
+      - TEST_PRIVATE_FORM_NAME
+      - TEST_PRIVATE_WORKFLOW_ENGINE_NAME
+      - TEST_PRIVATE_UI_NAME
+      - TEST_INT_DOMAIN
+      - TEST_EXT_DOMAIN
+      - TEST_PROTOCOL
+      - TEST_SESSION_NAME
+      - TEST_SESSION_SECRET
+    commands:
+      - export NAME=$${TEST_NAME}
+      - export KUBE_NAMESPACE=$${TEST_KUBE_NAMESPACE}
+      - export KUBE_SERVER=$${TEST_KUBE_SERVER}
+      - export KUBE_TOKEN=$${TEST_KUBE_TOKEN}
+      - export INTERNAL_CA_URL=$${TEST_INTERNAL_CA_URL}
+      - export NO_LOGGING_URL_PARAMS=$${TEST_NO_LOGGING_URL_PARAMS}
+      - export NO_LOGGING_BODY=$${TEST_NO_LOGGING_BODY}
+      - export NO_LOGGING_RESPONSE=$${TEST_NO_LOGGING_RESPONSE}
+      - export KEYCLOAK_URL=$${TEST_KEYCLOAK_URL}
+      - export KEYCLOAK_REALM=$${TEST_KEYCLOAK_REALM}
+      - export KEYCLOAK_SECRET=$${TEST_KEYCLOAK_SECRET}
+      - export INT_DOMAIN=$${TEST_INT_DOMAIN}
+      - export EXT_DOMAIN=$${TEST_EXT_DOMAIN}
+      - export PROTOCOL=$${TEST_PROTOCOL}
+      - export PRIVATE_FORM_NAME=$${TEST_PRIVATE_FORM_NAME}
+      - export PRIVATE_WORKFLOW_ENGINE_NAME=$${TEST_PRIVATE_WORKFLOW_ENGINE_NAME}
+      - export PRIVATE_UI_NAME=$${TEST_PRIVATE_UI_NAME}
+      - export SESSION_NAME=$${TEST_SESSION_NAME}
+      - export SESSION_SECRET=$${TEST_SESSION_SECRET}
+      - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
+      - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
+      - kd --insecure-skip-tls-verify -f kube/service.yml
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml
+    when:
+      branch:
+        - master
+      event:
+        - push
+        - deployment
+
+  deploy_to_demo:
+    image: quay.io/ukhomeofficedigital/kd
+    secrets:
+      - DEMO_NAME
+      - DEMO_KUBE_NAMESPACE
+      - DEMO_KUBE_SERVER
+      - DEMO_KUBE_TOKEN
+      - DEMO_INTERNAL_CA_URL
+      - DEMO_NO_LOGGING_URL_PARAMS
+      - DEMO_NO_LOGGING_BODY
+      - DEMO_NO_LOGGING_RESPONSE
+      - DEMO_KEYCLOAK_URL
+      - DEMO_KEYCLOAK_REALM
+      - DEMO_KEYCLOAK_SECRET
+      - DEMO_PRIVATE_FORM_NAME
+      - DEMO_PRIVATE_WORKFLOW_ENGINE_NAME
+      - DEMO_PRIVATE_UI_NAME
+      - DEMO_INT_DOMAIN
+      - DEMO_EXT_DOMAIN
+      - DEMO_PROTOCOL
+      - DEMO_SESSION_NAME
+      - DEMO_SESSION_SECRET
+    commands:
+      - export NAME=$${DEMO_NAME}
+      - export KUBE_NAMESPACE=$${DEMO_KUBE_NAMESPACE}
+      - export KUBE_SERVER=$${DEMO_KUBE_SERVER}
+      - export KUBE_TOKEN=$${DEMO_KUBE_TOKEN}
+      - export INTERNAL_CA_URL=$${DEMO_INTERNAL_CA_URL}
+      - export NO_LOGGING_URL_PARAMS=$${DEMO_NO_LOGGING_URL_PARAMS}
+      - export NO_LOGGING_BODY=$${DEMO_NO_LOGGING_BODY}
+      - export NO_LOGGING_RESPONSE=$${DEMO_NO_LOGGING_RESPONSE}
+      - export KEYCLOAK_URL=$${DEMO_KEYCLOAK_URL}
+      - export KEYCLOAK_REALM=$${DEMO_KEYCLOAK_REALM}
+      - export KEYCLOAK_SECRET=$${DEMO_KEYCLOAK_SECRET}
+      - export INT_DOMAIN=$${DEMO_INT_DOMAIN}
+      - export EXT_DOMAIN=$${DEMO_EXT_DOMAIN}
+      - export PROTOCOL=$${DEMO_PROTOCOL}
+      - export PRIVATE_FORM_NAME=$${DEMO_PRIVATE_FORM_NAME}
+      - export PRIVATE_WORKFLOW_ENGINE_NAME=$${DEMO_PRIVATE_WORKFLOW_ENGINE_NAME}
+      - export PRIVATE_UI_NAME=$${DEMO_PRIVATE_UI_NAME}
+      - export SESSION_NAME=$${DEMO_SESSION_NAME}
+      - export SESSION_SECRET=$${DEMO_SESSION_SECRET}
+      - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
+      - kd --insecure-skip-tls-verify -f kube/network-policy.yml
+      - kd --insecure-skip-tls-verify -f kube/secret.yml
+      - kd --insecure-skip-tls-verify -f kube/service.yml
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml
+    when:
+      branch:
+        - master
+      event:
         - deployment
