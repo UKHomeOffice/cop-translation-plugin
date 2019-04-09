@@ -78,11 +78,11 @@ pipeline:
       - export PRIVATE_UI_NAME=$${DEV_PRIVATE_UI_NAME}
       - export SESSION_NAME=$${DEV_SESSION_NAME}
       - export SESSION_SECRET=$${DEV_SESSION_SECRET}
-      - export IMAGE_TAG=${IMAGE_TAG}
+      - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/service.yml
-      - kd --insecure-skip-tls-verify -f kube/deployment.yml --timeout=6m --debug-templates
+      - kd --insecure-skip-tls-verify -f kube/deployment.yml --timeout=6m
     when:
       branch:
         - master
@@ -184,7 +184,7 @@ pipeline:
       - export PRIVATE_UI_NAME=$${DEMO_PRIVATE_UI_NAME}
       - export SESSION_NAME=$${DEMO_SESSION_NAME}
       - export SESSION_SECRET=$${DEMO_SESSION_SECRET}
-      - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
+      - export IMAGE_TAG=${IMAGE_TAG}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/service.yml
