@@ -22,6 +22,7 @@ import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
 
 import logger from './config/winston';
+import Tracing from "./utilities/tracing";
 
 if (process.env.NODE_ENV === 'production') {
     logger.info('Setting ca bundle');
@@ -65,6 +66,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator());
 app.use(helmet());
 app.use(keycloak.middleware());
+app.use(Tracing.middleware);
+
 
 app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
 
