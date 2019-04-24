@@ -1,9 +1,7 @@
-import axios from "axios";
+import axios from "../utilities/axios";
 import  logger from "../config/winston";
 import FormioUtils from 'formiojs/utils';
 import TranslationServiceError from "../TranslationServiceError";
-
-
 
 export default class FormEngineService {
 
