@@ -10,8 +10,6 @@ const https = require('https');
 const fs = require('fs');
 
 import Keycloak from 'keycloak-connect';
-import * as axios from "axios";
-import moment from 'moment';
 import helmet from 'helmet';
 import DataDecryptor from "./services/DataDecryptor";
 import DataContextFactory from "./services/DataContextFactory";
@@ -71,32 +69,9 @@ app.use(Tracing.middleware);
 
 app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
 
-axios.interceptors.request.use(
-    (config) => {
-        logger.info('Request: [%s] "%s %s"', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), config.method.toUpperCase(), config.url);
-        return config
-    },
-    (error) => {
-        return Promise.reject(error);
-    });
-
-axios.interceptors.response.use((response) => {
-    if (response) {
-        logger.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
-    }
-    return response
-}, (error) => {
-    logger.error('Error: [%s] [%s]',
-        moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'),
-        JSON.stringify(error.message)
-    );
-    return Promise.reject(error);
-});
-
 const server = http.createServer(app).listen(app.get('port'), function () {
     logger.info('Listening on port %d', port);
 });
-
 
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);
