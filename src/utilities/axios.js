@@ -33,4 +33,5 @@ axios.interceptors.response.use((response) => {
     return Promise.reject(error);
 });
 
+axios.defaults.timeout = 1000;
 export default axios;
