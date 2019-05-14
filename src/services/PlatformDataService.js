@@ -13,7 +13,7 @@ export default class PlatformDataService {
     async getStaffDetails(email, headers) {
         try {
             const response = await axios({
-                url: `${this.config.services.platformData.url}/api/platform-data/rpc/staffdetails`,
+                url: `${this.config.services.operationalData.url}/rpc/staffdetails`,
                 data: {
                   'argstaffemail': email
                 },
@@ -34,7 +34,7 @@ export default class PlatformDataService {
 
     async getLocation (locationid, headers)  {
         const locationDetails = await axios({
-            url: `${this.config.services.platformData.url}/api/platform-data/rf_location?locationid=eq.${locationid}`,
+            url: `${this.config.services.referenceData.url}/rf_location?locationid=eq.${locationid}`,
             method: 'GET',
             headers: headers
         });
@@ -44,7 +44,7 @@ export default class PlatformDataService {
 
     async getLocationType (bflocationtypeid, headers) {
         const locationType = await axios({
-            url: `${this.config.services.platformData.url}/api/platform-data/rf_bflocationtype?bflocationtypeid=eq.${bflocationtypeid}`,
+            url: `${this.config.services.referenceData.url}/rf_bflocationtype?bflocationtypeid=eq.${bflocationtypeid}`,
             method: 'GET',
             headers: headers
         });
@@ -55,7 +55,7 @@ export default class PlatformDataService {
     async getShiftDetails (email, headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.platformData.url}/api/platform-data/shift?email=eq.${encodeURIComponent(email)}`,
+                url: `${this.config.services.operationalData.url}/shift?email=eq.${encodeURIComponent(email)}`,
                 method: 'GET',
                 headers: headers
             });
