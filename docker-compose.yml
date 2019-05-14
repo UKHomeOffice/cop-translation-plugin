@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  translation:
+    image: quay.io/ukhomeofficedigital/cop-private-translation-service:latest
+    build: .
+    restart: on-failure
+    container_name: translation
+    environment:
+      FORM_URL: "${SCHEME}://formio.${DOMAINNAME}"
+      PLATFORM_DATA_URL: "${SCHEME}://postgrest_operational.${DOMAINNAME}"
+      WORKFLOW_URL: "${SCHEME}://workflow.${DOMAINNAME}"
+      AUTH_CLIENT_ID: "translation"
+      AUTH_REALM: "dev"
+      AUTH_URL: "${SCHEME}://keycloak.${DOMAINNAME}/auth"
+    volumes:
+      - ${PWD}/platform/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt
+      - ${PWD}/platform/mobileid-key.pem:/enccerts/mobileid-key.pem
+    networks:
+      - web
+    labels:
+      - "traefik.enable=false"
+
+networks:
+  db:
+    external:
+      name: db
+  web:
+    external:
+      name: web
