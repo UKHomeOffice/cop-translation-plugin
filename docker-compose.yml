@@ -6,9 +6,6 @@ services:
     restart: on-failure
     container_name: translation
     environment:
-      FORM_URL: "${SCHEME}://formio.${DOMAINNAME}"
-      PLATFORM_DATA_URL: "${SCHEME}://postgrest_operational.${DOMAINNAME}"
-      WORKFLOW_URL: "${SCHEME}://workflow.${DOMAINNAME}"
       AUTH_CLIENT_ID: "translation"
       AUTH_REALM: "dev"
       AUTH_URL: "${SCHEME}://keycloak.${DOMAINNAME}/auth"

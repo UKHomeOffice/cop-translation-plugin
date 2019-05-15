@@ -4,6 +4,7 @@ import ShiftDetailsContext from "../models/ShiftDetailsContext";
 import DataResolveContext from "../models/DataResolveContext";
 import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
+import appConfig from "../config/appConfig";
 
 export default class DataContextFactory {
     constructor(platformDataService, processService) {
@@ -22,7 +23,7 @@ export default class DataContextFactory {
 
 
         const staffDetailsContext = new StaffDetailsContext(staffDetails);
-        const environmentContext = new EnvironmentContext(process.env);
+        const environmentContext = new EnvironmentContext(appConfig);
         let shiftDetailsContext = null;
 
         if (shiftDetails) {

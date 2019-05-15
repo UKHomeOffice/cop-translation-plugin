@@ -1,9 +1,5 @@
 
 process.env.NODE_ENV = 'test';
-process.env.FORM_URL = 'http://localhost:8000';
-process.env.WORKFLOW_URL = 'http://localhost:9000';
-process.env.PLATFORM_DATA_URL = 'http://localhost:9001';
-process.env.PRIVATE_KEY_PATH='test/certs/signing1.key';
 
 import FormTranslator from "../src/form/FormTranslator";
 import FormEngineService from "../src/services/FormEngineService";
@@ -16,6 +12,11 @@ import DataDecryptor from "../src/services/DataDecryptor";
 import Tracing from "../src/utilities/tracing";
 
 const appConfig = require('../src/config/appConfig');
+
+appConfig.services.operationalData.url = 'http://localhost:9001'
+appConfig.services.workflow.url = 'http://localhost:9000'
+appConfig.services.form.url = 'http://localhost:8000';
+appConfig.privateKey.path ='test/certs/signing1.key';
 
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
