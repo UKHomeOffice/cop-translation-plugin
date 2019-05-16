@@ -25,6 +25,9 @@ const appConfig = {
         report: {
             url: `${PROTOCOL}${REPORTING_SERVER_NAME}.${INT_DOMAIN}`,
         },
+        referenceData: {
+            url: ''
+        }
     },
     privateKey: {
        path: process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem'

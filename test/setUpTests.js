@@ -16,6 +16,7 @@ const appConfig = require('../src/config/appConfig');
 appConfig.services.operationalData.url = 'http://localhost:9001'
 appConfig.services.workflow.url = 'http://localhost:9000'
 appConfig.services.form.url = 'http://localhost:8000';
+appConfig.services.referenceData.url = 'http://localhost:9001';
 appConfig.privateKey.path ='test/certs/signing1.key';
 
 import chai from "chai";

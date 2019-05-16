@@ -32,12 +32,12 @@ describe('Form Data Controller', () => {
             .reply(200, tasks.processVariablesWithEncryptedFields);
 
         nock('http://localhost:9001')
-            .post('/api/platform-data/rpc/staffdetails', {
+            .post('/rpc/staffdetails', {
                 "argstaffemail": "email"
             })
             .reply(200, []);
         nock('http://localhost:9001')
-            .get('/api/platform-data/shift?email=eq.email')
+            .get('/shift?email=eq.email')
             .reply(200, []);
 
 

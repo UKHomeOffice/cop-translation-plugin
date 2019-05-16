@@ -1,5 +1,4 @@
 import {expect, formTranslateController} from '../setUpTests'
-
 import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
@@ -24,12 +23,12 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, tasks.processVariables);
 
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
 
 
@@ -92,12 +91,12 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, tasks.processVariables);
 
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for task context', async () => {
@@ -158,12 +157,12 @@ describe('Form Data Resolve Controller', () => {
                 .reply(404, {});
 
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return an updated form without updated task/process info', async() => {

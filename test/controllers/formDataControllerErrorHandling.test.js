@@ -11,7 +11,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(500, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/staffview?email=eq.emailTest123')
+                .get('/staffview?email=eq.emailTest123')
                 .reply(200,
 
                     [
@@ -37,7 +37,7 @@ describe('Form Data Resolve Controller', () => {
                     ]);
 
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.emailTest123')
+                .get('/shift?email=eq.emailTest123')
                 .reply(200, []);
         });
         it('it should return an updated form schema for user details context', async () => {

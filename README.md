@@ -97,7 +97,7 @@ Using the logged in user's credentials the service will create a data context wh
 
 #### Environment urls
 ```json
-{$.environmentContext.platformDataUrl}
+{$.environmentContext.operationalDataUrl}
 {$.environmentContext.workflowUrl}
 ```
 
