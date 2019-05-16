@@ -9,6 +9,13 @@ services:
       AUTH_CLIENT_ID: "translation"
       AUTH_REALM: "dev"
       AUTH_URL: "${SCHEME}://keycloak.${DOMAINNAME}/auth"
+      PROTOCOL: ${PROTOCOL}
+      INT_DOMAIN: ${INT_DOMAIN}
+      FORMIO_SERVER_NAME: ${FORMIO_SERVER_NAME}
+      OPERATIONAL_POSTGREST_NAME: ${OPERATIONAL_POSTGREST_NAME}
+      REPORTING_SERVER_NAME: ${REPORTING_SERVER_NAME}
+      TRANSLATION_SERVER_NAME: ${TRANSLATION_SERVER_NAME}
+      WORKFLOW_SERVER_NAME: ${WORKFLOW_SERVER_NAME}
     volumes:
       - ${PWD}/platform/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt
       - ${PWD}/platform/mobileid-key.pem:/enccerts/mobileid-key.pem
