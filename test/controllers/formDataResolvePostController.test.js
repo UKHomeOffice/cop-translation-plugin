@@ -14,12 +14,12 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=customContextForm')
                 .reply(200, forms.customContextForm);
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return an updated form schema for custom context', async () => {
@@ -69,12 +69,12 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=randomForm')
                 .reply(200, []);
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return 404 status', async () => {

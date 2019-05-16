@@ -125,12 +125,6 @@ spec:
           - name: enccerts
             mountPath: /enccerts
         env:
-        - name: FORM_URL
-          value: {{.PROTOCOL}}{{.PRIVATE_FORM_NAME}}.{{.INT_DOMAIN}}
-        - name: PLATFORM_DATA_URL
-          value: {{.PROTOCOL}}{{.PRIVATE_UI_NAME}}.{{.EXT_DOMAIN}}
-        - name: WORKFLOW_URL
-          value: {{.PROTOCOL}}{{.PRIVATE_WORKFLOW_ENGINE_NAME}}.{{.INT_DOMAIN}}
         - name: AUTH_CLIENT_ID
           value: {{.NAME}}
         - name: AUTH_CLIENT_SECRET
@@ -152,6 +146,20 @@ spec:
             secretKeyRef:
               name: {{.NAME}}
               key: sessionName
+        - name: PROTOCOL
+          value: {{.PROTOCOL}}
+        - name: INT_DOMAIN
+          value: {{.INT_DOMAIN}}
+        - name: FORMIO_SERVER_NAME
+          value: {{.FORMIO_SERVER_NAME}}
+        - name: OPERATIONAL_POSTGREST_NAME
+          value: {{.OPERATIONAL_POSTGREST_NAME}}
+        - name: REPORTING_SERVER_NAME
+          value: {{.REPORTING_SERVER_NAME}}
+        - name: TRANSLATION_SERVER_NAME
+          value: {{.TRANSLATION_SERVER_NAME}}
+        - name: WORKFLOW_SERVER_NAME
+          value: {{.WORKFLOW_SERVER_NAME}}
       volumes:
       - name: bundle
         configMap:

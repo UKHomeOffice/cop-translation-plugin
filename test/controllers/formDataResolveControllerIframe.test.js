@@ -14,7 +14,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=iframeForm')
                 .reply(200, forms.iframeForm);
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail" : "email"
                 })
                 .reply(200, []);
@@ -38,7 +38,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, {});
 
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should resolve iframe content', async () => {

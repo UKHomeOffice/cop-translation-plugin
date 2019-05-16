@@ -97,7 +97,7 @@ Using the logged in user's credentials the service will create a data context wh
 
 #### Environment urls
 ```json
-{$.environmentContext.platformDataUrl}
+{$.environmentContext.operationalDataUrl}
 {$.environmentContext.workflowUrl}
 ```
 
@@ -129,9 +129,11 @@ The following environment variables are required:
 2. AUTH_URL
 3. AUTH_REALM
 4. SESSION_SECRET
-5. WORKFLOW_URL
-6. PLATFORM_DATA_URL
-7. SESSION_NAME
+5. SESSION_NAME
+6. PROTOCOL
+7. OPERATIONAL_POSTGREST_NAME
+8. WORKFLOW_SERVER_NAME
+9. EXT_DOMAIN
 
 
 #### Methods

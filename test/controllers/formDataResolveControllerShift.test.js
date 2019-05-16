@@ -13,19 +13,19 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=shiftForm')
                 .reply(200, forms.shiftForm);
             nock('http://localhost:9001')
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, [{
                     locationid: 'currentlocationid',
                     teamid: 'teamid',
                     email: 'email'
                 }]);
             nock('http://localhost:9001')
-                .get('/api/platform-data/rf_location?locationid=eq.currentlocationid')
+                .get('/location?locationid=eq.currentlocationid')
                 .reply(200, [{
                     locationname: 'Current',
                     locationid: 'currentlocationid',
@@ -33,7 +33,7 @@ describe('Form Data Resolve Controller', () => {
 
                 }]);
             nock('http://localhost:9001')
-                .get('/api/platform-data/rf_bflocationtype?bflocationtypeid=eq.bflocationtypeid')
+                .get('/bflocationtype?bflocationtypeid=eq.bflocationtypeid')
                 .reply(200, [{
                     bflocationtypeid: 'bflocationtypeid',
                     seaport: true,

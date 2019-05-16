@@ -34,7 +34,7 @@ export default class PlatformDataService {
 
     async getLocation (locationid, headers)  {
         const locationDetails = await axios({
-            url: `${this.config.services.referenceData.url}/rf_location?locationid=eq.${locationid}`,
+            url: `${this.config.services.referenceData.url}/location?locationid=eq.${locationid}`,
             method: 'GET',
             headers: headers
         });
@@ -44,7 +44,7 @@ export default class PlatformDataService {
 
     async getLocationType (bflocationtypeid, headers) {
         const locationType = await axios({
-            url: `${this.config.services.referenceData.url}/rf_bflocationtype?bflocationtypeid=eq.${bflocationtypeid}`,
+            url: `${this.config.services.referenceData.url}/bflocationtype?bflocationtypeid=eq.${bflocationtypeid}`,
             method: 'GET',
             headers: headers
         });

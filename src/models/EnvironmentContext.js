@@ -1,9 +1,10 @@
 class EnvironmentContext {
 
-    constructor(env) {
-        this.operationalDataUrl = env.PLATFORM_DATA_URL;
-        this.referenceData = env.PLATFORM_DATA_URL;
-        this.workflowUrl = env.WORKFLOW_URL;
+    constructor(config) {
+        this.operationalDataUrl = config.services.operationalData.url;
+        this.referenceData = config.services.operationalData.url;
+        this.workflowUrl = config.services.workflow.url;
+        this.referenceDataUrl = config.services.referenceData.url;
     }
 }
 

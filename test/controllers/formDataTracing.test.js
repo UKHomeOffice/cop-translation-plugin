@@ -28,12 +28,12 @@ describe('Form Data Resolve Controller Tracing', () => {
                 }
             })
                 .log(console.log)
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "noEmail"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/api/platform-data/shift?email=eq.noEmail')
+                .get('/shift?email=eq.noEmail')
                 .reply(200, []);
         });
            describe('A call to data resolve controller for process variables context', () => {
@@ -52,15 +52,13 @@ describe('Form Data Resolve Controller Tracing', () => {
                 .reply(200, tasks.processVariables);
 
             nock('http://localhost:9001', tracingHeader)
-                .post('/api/platform-data/rpc/staffdetails', {
+                .post('/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001', tracingHeader)
-                .get('/api/platform-data/shift?email=eq.email')
+                .get('/shift?email=eq.email')
                 .reply(200, []);
-
-
         });
         it('it should return an updated form schema for process context with tracing headers', async () => {
             const request = httpMocks.createRequest({

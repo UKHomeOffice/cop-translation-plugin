@@ -61,7 +61,7 @@ const iframeForm = [
             {
                 "key": "content",
                 "input": false,
-                "html": "<p>Iframe</p>\n\n<p><iframe src=\"{$.environmentContext.platformDataUrl}/some?access_token={$.keycloakContext.accessToken}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "html": "<p>Iframe</p>\n\n<p><iframe src=\"{$.environmentContext.operationalDataUrl}/some?access_token={$.keycloakContext.accessToken}\" style=\"height: 125px; width: 100px;\" /></p>\n",
                 "type": "content",
                 "tags": [
                 ],
@@ -285,7 +285,7 @@ const dataUrlForm = [
                         }
                     ],
                     "json": "",
-                    "url": "{$.environmentContext.platformDataUrl}/region",
+                    "url": "{$.environmentContext.referenceDataUrl}/region",
                     "resource": "",
                     "custom": "",
                     "headers": []
