@@ -146,6 +146,20 @@ spec:
             secretKeyRef:
               name: {{.NAME}}
               key: sessionName
+        - name: PROTOCOL
+          value: {{.PROTOCOL}}
+        - name: INT_DOMAIN
+          value: {{.INT_DOMAIN}}
+        - name: FORMIO_SERVER_NAME
+          value: {{.FORMIO_SERVER_NAME}}
+        - name: OPERATIONAL_POSTGREST_NAME
+          value: {{.OPERATIONAL_POSTGREST_NAME}}
+        - name: REPORTING_SERVER_NAME
+          value: {{.REPORTING_SERVER_NAME}}
+        - name: TRANSLATION_SERVER_NAME
+          value: {{.TRANSLATION_SERVER_NAME}}
+        - name: WORKFLOW_SERVER_NAME
+          value: {{.WORKFLOW_SERVER_NAME}}
       volumes:
       - name: bundle
         configMap:
