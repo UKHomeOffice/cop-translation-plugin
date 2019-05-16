@@ -4,6 +4,7 @@ class EnvironmentContext {
         this.operationalDataUrl = config.services.operationalData.url;
         this.referenceData = config.services.operationalData.url;
         this.workflowUrl = config.services.workflow.url;
+        this.referenceDataUrl = config.services.referenceData.url;
     }
 }
 

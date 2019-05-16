@@ -285,7 +285,7 @@ const dataUrlForm = [
                         }
                     ],
                     "json": "",
-                    "url": "{$.environmentContext.operationalDataUrl}/region",
+                    "url": "{$.environmentContext.referenceDataUrl}/region",
                     "resource": "",
                     "custom": "",
                     "headers": []
