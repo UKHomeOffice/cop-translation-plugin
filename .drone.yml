@@ -58,6 +58,7 @@ pipeline:
       - DEV_PROTOCOL
       - DEV_SESSION_NAME
       - DEV_SESSION_SECRET
+      - DEV_PRIVATE_POSTGREST_NAME
     commands:
       - export NAME=$${DEV_NAME}
       - export KUBE_NAMESPACE=$${DEV_KUBE_NAMESPACE}
@@ -78,6 +79,7 @@ pipeline:
       - export PRIVATE_UI_NAME=$${DEV_PRIVATE_UI_NAME}
       - export SESSION_NAME=$${DEV_SESSION_NAME}
       - export SESSION_SECRET=$${DEV_SESSION_SECRET}
+      - export PRIVATE_POSTGREST_NAME=$${DEV_PRIVATE_POSTGREST_NAME}
       - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
@@ -111,6 +113,7 @@ pipeline:
       - TEST_PROTOCOL
       - TEST_SESSION_NAME
       - TEST_SESSION_SECRET
+      - TEST_PRIVATE_POSTGREST_NAME
     commands:
       - export NAME=$${TEST_NAME}
       - export KUBE_NAMESPACE=$${TEST_KUBE_NAMESPACE}
@@ -131,6 +134,7 @@ pipeline:
       - export PRIVATE_UI_NAME=$${TEST_PRIVATE_UI_NAME}
       - export SESSION_NAME=$${TEST_SESSION_NAME}
       - export SESSION_SECRET=$${TEST_SESSION_SECRET}
+      - export PRIVATE_POSTGREST_NAME=$${TEST_PRIVATE_POSTGREST_NAME}
       - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
@@ -164,6 +168,7 @@ pipeline:
       - DEMO_PROTOCOL
       - DEMO_SESSION_NAME
       - DEMO_SESSION_SECRET
+      - DEMO_PRIVATE_POSTGREST_NAME
     commands:
       - export NAME=$${DEMO_NAME}
       - export KUBE_NAMESPACE=$${DEMO_KUBE_NAMESPACE}
@@ -184,6 +189,7 @@ pipeline:
       - export PRIVATE_UI_NAME=$${DEMO_PRIVATE_UI_NAME}
       - export SESSION_NAME=$${DEMO_SESSION_NAME}
       - export SESSION_SECRET=$${DEMO_SESSION_SECRET}
+      - export PRIVATE_POSTGREST_NAME=$${DEMO_PRIVATE_POSTGREST_NAME}
       - export IMAGE_TAG=$${IMAGE_TAG}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml

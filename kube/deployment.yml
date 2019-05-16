@@ -150,16 +150,12 @@ spec:
           value: {{.PROTOCOL}}
         - name: INT_DOMAIN
           value: {{.INT_DOMAIN}}
-        - name: FORMIO_SERVER_NAME
-          value: {{.FORMIO_SERVER_NAME}}
-        - name: OPERATIONAL_POSTGREST_NAME
-          value: {{.OPERATIONAL_POSTGREST_NAME}}
-        - name: REPORTING_SERVER_NAME
-          value: {{.REPORTING_SERVER_NAME}}
-        - name: TRANSLATION_SERVER_NAME
-          value: {{.TRANSLATION_SERVER_NAME}}
-        - name: WORKFLOW_SERVER_NAME
-          value: {{.WORKFLOW_SERVER_NAME}}
+        - name: PRIVATE_FORM_NAME
+          value: {{.PRIVATE_FORM_NAME}}
+        - name: PRIVATE_POSTGREST_NAME
+          value: {{.PRIVATE_POSTGREST_NAME}}
+        - name: PRIVATE_WORKFLOW_ENGINE_NAME
+          value: {{.PRIVATE_WORKFLOW_ENGINE_NAME}}
       volumes:
       - name: bundle
         configMap:
