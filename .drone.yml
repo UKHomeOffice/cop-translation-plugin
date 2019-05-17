@@ -59,6 +59,7 @@ pipeline:
       - DEV_SESSION_NAME
       - DEV_SESSION_SECRET
       - DEV_PRIVATE_POSTGREST_NAME
+      - DEV_WHITELIST
     commands:
       - export NAME=$${DEV_NAME}
       - export KUBE_NAMESPACE=$${DEV_KUBE_NAMESPACE}
@@ -80,6 +81,7 @@ pipeline:
       - export SESSION_NAME=$${DEV_SESSION_NAME}
       - export SESSION_SECRET=$${DEV_SESSION_SECRET}
       - export PRIVATE_POSTGREST_NAME=$${DEV_PRIVATE_POSTGREST_NAME}
+      - export WHITELIST=$${DEV_WHITELIST}
       - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
