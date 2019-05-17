@@ -87,6 +87,7 @@ pipeline:
       - kd --insecure-skip-tls-verify -f kube/secret.yml
       - kd --insecure-skip-tls-verify -f kube/service.yml
       - kd --insecure-skip-tls-verify -f kube/deployment.yml --timeout=6m
+      - kd --insecure-skip-tls-verify -f kube/ingress.yml
     when:
       branch:
         - master
