@@ -1,5 +1,6 @@
 import express from 'express';
 import responseHandler from "../utilities/handlers/responseHandler";
+import appConfig from '../config/appConfig';
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             [keycloak.protect(), (req, res) => {
                 const {formName} = req.params;
                 formTranslatorController.getForm(req).then((form) => {
+                    res.setHeader('Access-Control-Allow-Origin', appConfig.services.privateUi)
                     responseHandler.res(null, {formName, form}, res);
                 }).catch((err) => {
                     responseHandler.res({

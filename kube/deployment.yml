@@ -156,6 +156,10 @@ spec:
           value: {{.PRIVATE_POSTGREST_NAME}}
         - name: PRIVATE_WORKFLOW_ENGINE_NAME
           value: {{.PRIVATE_WORKFLOW_ENGINE_NAME}}
+        - name: PRIVATE_UI_NAME
+          value: {{.PRIVATE_UI_NAME}}
+        - name: EXT_DOMAIN
+          value: {{.EXT_DOMAIN}}
       volumes:
       - name: bundle
         configMap:
