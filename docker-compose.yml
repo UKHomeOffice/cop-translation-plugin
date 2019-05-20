@@ -11,8 +11,10 @@ services:
       AUTH_URL: "${SCHEME}://keycloak.${DOMAINNAME}/auth"
       PROTOCOL: ${PROTOCOL}
       INT_DOMAIN: ${INT_DOMAIN}
+      EXT_DOMAIN: ${EXT_DOMAIN}
       PRIVATE_FORM_NAME: ${PRIVATE_FORM_NAME}
       PRIVATE_POSTGREST_NAME: ${PRIVATE_POSTGREST_NAME}
+      PRIVATE_REFDATA_NAME: ${PRIVATE_REFDATA_NAME}
       PRIVATE_WORKFLOW_ENGINE_NAME: ${PRIVATE_WORKFLOW_ENGINE_NAME}
     volumes:
       - ${PWD}/platform/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt

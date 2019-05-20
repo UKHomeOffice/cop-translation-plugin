@@ -3,6 +3,7 @@ const {
     INT_DOMAIN,
     PRIVATE_FORM_NAME,
     PRIVATE_POSTGREST_NAME,
+    PRIVATE_REFDATA_NAME,
     PRIVATE_WORKFLOW_ENGINE_NAME,
 } = process.env;
 
@@ -18,7 +19,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${INT_DOMAIN}`,
         },
         referenceData: {
-            url: ''
+            url: `${PROTOCOL}${PRIVATE_REFDATA_NAME}.${INT_DOMAIN}`,
         }
     },
     privateKey: {
