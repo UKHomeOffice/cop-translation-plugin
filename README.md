@@ -99,6 +99,7 @@ Using the logged in user's credentials the service will create a data context wh
 ```json
 {$.environmentContext.operationalDataUrl}
 {$.environmentContext.workflowUrl}
+{$.environmentContext.referenceDataUrl}
 ```
 
 #### Process Variables Data Context
