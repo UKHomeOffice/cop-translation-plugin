@@ -5,6 +5,8 @@ const {
     PRIVATE_POSTGREST_NAME,
     PRIVATE_REFDATA_NAME,
     PRIVATE_WORKFLOW_ENGINE_NAME,
+    PRIVATE_UI_NAME,
+    EXT_DOMAIN,
 } = process.env;
 
 const appConfig = {
@@ -20,6 +22,9 @@ const appConfig = {
         },
         referenceData: {
             url: `${PROTOCOL}${PRIVATE_REFDATA_NAME}.${INT_DOMAIN}`,
+        },
+        privateUi: {
+            url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
         }
     },
     privateKey: {

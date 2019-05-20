@@ -16,6 +16,8 @@ services:
       PRIVATE_POSTGREST_NAME: ${PRIVATE_POSTGREST_NAME}
       PRIVATE_REFDATA_NAME: ${PRIVATE_REFDATA_NAME}
       PRIVATE_WORKFLOW_ENGINE_NAME: ${PRIVATE_WORKFLOW_ENGINE_NAME}
+      PRIVATE_UI_NAME: ${PRIVATE_UI_NAME}
+      EXT_DOMAIN: ${EXT_DOMAIN}
     volumes:
       - ${PWD}/platform/ca-bundle.crt:/etc/ssl/certs/ca-bundle.crt
       - ${PWD}/platform/mobileid-key.pem:/enccerts/mobileid-key.pem
