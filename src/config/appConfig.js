@@ -11,8 +11,11 @@ const {
 
 const appConfig = {
     services: {
-        operationalData: {
+        operationalDataInternal: {
             url: `${PROTOCOL}${PRIVATE_POSTGREST_NAME}.${INT_DOMAIN}`,
+        },
+        operationalDataExternal: {
+            url: `${PROTOCOL}${PRIVATE_POSTGREST_NAME}.${EXT_DOMAIN}`,
         },
         workflow: {
             url: `${PROTOCOL}${PRIVATE_WORKFLOW_ENGINE_NAME}.${INT_DOMAIN}`,
