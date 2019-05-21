@@ -21,7 +21,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${INT_DOMAIN}`,
         },
         referenceData: {
-            url: `${PROTOCOL}${PRIVATE_REFDATA_NAME}.${INT_DOMAIN}`,
+            url: `${PROTOCOL}${PRIVATE_REFDATA_NAME}.${EXT_DOMAIN}`,
         },
         privateUi: {
             url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
