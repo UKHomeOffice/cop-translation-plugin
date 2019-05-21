@@ -3,7 +3,7 @@ const {
     INT_DOMAIN,
     PRIVATE_FORM_NAME,
     PRIVATE_POSTGREST_NAME,
-    PRIVATE_REFDATA_NAME,
+    PRIVATE_REFDATA_URL,
     PRIVATE_WORKFLOW_ENGINE_NAME,
     PRIVATE_UI_NAME,
     EXT_DOMAIN,
@@ -21,7 +21,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${INT_DOMAIN}`,
         },
         referenceData: {
-            url: `${PROTOCOL}${PRIVATE_REFDATA_NAME}.${EXT_DOMAIN}`,
+            url: `${PRIVATE_REFDATA_URL}`,
         },
         privateUi: {
             url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
