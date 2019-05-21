@@ -150,6 +150,8 @@ spec:
           value: {{.PROTOCOL}}
         - name: INT_DOMAIN
           value: {{.INT_DOMAIN}}
+        - name: PRIVATE_REFDATA_NAME
+          value: {{.PRIVATE_REFDATA_NAME}}
         - name: PRIVATE_FORM_NAME
           value: {{.PRIVATE_FORM_NAME}}
         - name: PRIVATE_POSTGREST_NAME
