@@ -1,18 +1,12 @@
 import express from 'express';
 import responseHandler from "../utilities/handlers/responseHandler";
-import appConfig from '../config/appConfig';
-import cors from 'cors';
 
 const router = express.Router();
-const corsOptions = {
-  origin: appConfig.services.privateUi
-};
 
 const formDataResolveRouter = (keycloak, formTranslatorController) => {
 
     router
         .get('/form/:formName',
-            cors(corsOptions),
             [keycloak.protect(), (req, res) => {
                 const {formName} = req.params;
                 formTranslatorController.getForm(req).then((form) => {

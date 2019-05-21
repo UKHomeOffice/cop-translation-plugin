@@ -21,6 +21,7 @@ import FormDataResolveController from "./controllers/FormTranslateController";
 
 import logger from './config/winston';
 import Tracing from "./utilities/tracing";
+import cors from 'cors';
 
 if (process.env.NODE_ENV === 'production') {
     logger.info('Setting ca bundle');
@@ -66,6 +67,10 @@ app.use(helmet());
 app.use(keycloak.middleware());
 app.use(Tracing.middleware);
 
+app.use(cors({
+    origin: appConfig.services.privateUi,
+    optionsSuccessStatus: 200
+}));
 
 app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
 
