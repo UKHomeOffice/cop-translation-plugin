@@ -68,7 +68,7 @@ app.use(keycloak.middleware());
 app.use(Tracing.middleware);
 
 app.use(cors({
-    origin: appConfig.services.privateUi,
+    origin: appConfig.services.privateUi.url,
     optionsSuccessStatus: 200
 }));
 
