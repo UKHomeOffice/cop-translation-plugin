@@ -64,7 +64,7 @@ Using the logged in user's credentials the service will create a data context wh
 ```json
 {$.staffDetailsDataContext.phone}
 {$.staffDetailsDataContext.email}
-{$.staffDetailsDataContext.gradetypeid}
+{$.staffDetailsDataContext.gradeid}
 {$.staffDetailsDataContext.identityid}
 {$.staffDetailsDataContext.firstname}
 {$.staffDetailsDataContext.surname}

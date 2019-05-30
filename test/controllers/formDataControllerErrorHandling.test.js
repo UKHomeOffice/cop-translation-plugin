@@ -18,7 +18,7 @@ describe('Form Data Resolve Controller', () => {
                         {
                             "phone": "phone",
                             "email": "emailTest123",
-                            "gradetypeid": "gradetypeid",
+                            "gradeid": "gradeid",
                             "firstname": "firstname",
                             "surname": "surname",
                             "qualificationtypes": [

@@ -18,7 +18,7 @@ describe('Form Data Resolve Controller', () => {
                         {
                             "phone": "phone",
                             "email": "emailTest123",
-                            "gradetypeid": "gradetypeid",
+                            "gradeid": "gradeid",
                             "firstname": "firstname",
                             "surname": "surname",
                             "qualificationtypes": [
@@ -68,7 +68,7 @@ describe('Form Data Resolve Controller', () => {
             const grade = JSONPath.value(response, "$..components[?(@.key=='grade')].defaultValue");
             const personId = JSONPath.value(response, "$..components[?(@.key=='personid')].defaultValue");
 
-            expect(grade).to.equal("gradetypeid");
+            expect(grade).to.equal("gradeid");
             expect(personId).to.equal("staffid");
         });
     });

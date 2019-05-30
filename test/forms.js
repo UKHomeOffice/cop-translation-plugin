@@ -386,7 +386,7 @@ const userDetailsContextForm = [{
             key: 'grade',
             label: 'Grade',
             placeholder: 'Enter your first name.',
-            defaultValue: '{$.staffDetailsDataContext.gradetypeid}',
+            defaultValue: '{$.staffDetailsDataContext.gradeid}',
             input: true
         },
         {
