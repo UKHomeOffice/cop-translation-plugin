@@ -1,5 +1,6 @@
 import express from 'express';
 import responseHandler from "../utilities/handlers/responseHandler";
+import logger from "../config/winston";
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             [keycloak.protect(), (req, res) => {
                 const {formName} = req.params;
                 formTranslatorController.getForm(req).then((form) => {
+                    logger.info(`Sending form ${form.name} to responseHandler`);
                     responseHandler.res(null, {formName, form}, res);
                 }).catch((err) => {
                     responseHandler.res({

@@ -29,7 +29,10 @@ export default class FormTranslator {
             processInstanceId,
             taskId
         }, customDataContext);
-        return this.applyFormResolution(dataContext, form);
+        logger.info(`Got dataContext for ${form.name}`);
+        const resolvedForm = this.applyFormResolution(dataContext, form);
+        logger.info(`Done applyFormResolution for ${form.name}`);
+        return resolvedForm;
     }
 
     applyFormResolution(dataContext, form) {
