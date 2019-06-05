@@ -21,9 +21,11 @@ axios.interceptors.request.use(
     });
 
 axios.interceptors.response.use((response) => {
-    // if (response) {
+    logger.info(`Response for ${response.config.url}`);
+    logger.info(response);
+    if (response) {
         logger.info('Response: [%s] "%s %s" %s', moment().utc().format('D/MMM/YYYY:HH:mm:ss ZZ'), response.config.method.toUpperCase(), response.config.url, response.status);
-    // }
+    }
     return response
 }, (error) => {
     logger.error('Error: [%s] [%s]',
