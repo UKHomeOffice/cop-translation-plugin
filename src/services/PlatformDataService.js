@@ -40,6 +40,7 @@ export default class PlatformDataService {
         });
         logger.info('Response from getLocation');
         logger.info(locationDetails);
+        logger.info('--------------------');
         return locationDetails ? locationDetails.data[0] : null;
     };
 

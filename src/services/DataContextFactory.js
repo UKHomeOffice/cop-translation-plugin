@@ -31,6 +31,7 @@ export default class DataContextFactory {
             const location = await this.platformDataService.getLocation(shiftDetails.locationid, headers);
             logger.info('Location in createDataContext');
             logger.info(location);
+            logger.info('--------------------');
             let locationType = null;
             if (location.bflocationtypeid !== null) {
                 locationType = await this.platformDataService.getLocationType(location.bflocationtypeid, headers);
