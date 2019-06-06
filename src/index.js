@@ -67,10 +67,12 @@ app.use(helmet());
 app.use(keycloak.middleware());
 app.use(Tracing.middleware);
 
-app.use(cors({
-    origin: appConfig.services.privateUi.url,
-    optionsSuccessStatus: 200
-}));
+if (appConfig.cors.origin) {
+    app.use(cors({
+        origin: JSON.parse(appConfig.cors.origin),
+        optionsSuccessStatus: 200
+    }));
+}
 
 app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
 
