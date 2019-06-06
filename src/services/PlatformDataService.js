@@ -38,10 +38,20 @@ export default class PlatformDataService {
             method: 'GET',
             headers: headers
         });
-        logger.info('Response from getLocation');
-        logger.info(locationDetails);
+        const returnValue = locationDetails ? locationDetails.data.data[0] : null;
+        logger.info('locationDetails.data');
+        logger.info(locationDetails.data);
         logger.info('--------------------');
-        return locationDetails ? locationDetails.data[0] : null;
+        logger.info('locationDetails.data.data');
+        logger.info(locationDetails.data.data);
+        logger.info('--------------------');
+        logger.info('locationDetails.data.data[0]');
+        logger.info(locationDetails.data.data[0]);
+        logger.info('--------------------');
+        logger.info('returnValue');
+        logger.info(returnValue);
+        logger.info('--------------------');
+        return returnValue;
     };
 
 
