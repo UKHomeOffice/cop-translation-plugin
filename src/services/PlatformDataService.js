@@ -38,6 +38,8 @@ export default class PlatformDataService {
             method: 'GET',
             headers: headers
         });
+        logger.info('Response from getLocation');
+        logger.info(locationDetails);
         return locationDetails ? locationDetails.data[0] : null;
     };
 

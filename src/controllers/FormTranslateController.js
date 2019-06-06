@@ -15,8 +15,8 @@ export default class FormTranslateController  {
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
         }
-        logger.info(`Got form ${form.name} with data...`);
-        logger.info(form);
+        // logger.info(`Got form ${form.name} with data...`);
+        // logger.info(form);
         return form;
     }
 
