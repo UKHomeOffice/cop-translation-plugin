@@ -5,6 +5,7 @@ import DataResolveContext from "../models/DataResolveContext";
 import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import appConfig from "../config/appConfig";
+import logger from "../config/winston";
 
 export default class DataContextFactory {
     constructor(platformDataService, processService) {
@@ -28,6 +29,8 @@ export default class DataContextFactory {
 
         if (shiftDetails) {
             const location = await this.platformDataService.getLocation(shiftDetails.locationid, headers);
+            logger.info('Location in createDataContext');
+            logger.info(location);
             let locationType = null;
             if (location.bflocationtypeid !== null) {
                 locationType = await this.platformDataService.getLocationType(location.bflocationtypeid, headers);
