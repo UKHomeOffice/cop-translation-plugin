@@ -61,7 +61,7 @@ export default class PlatformDataService {
             method: 'GET',
             headers: headers
         });
-        return locationType && locationType.data ? locationType.data[0] : null;
+        return locationType && locationType.data ? locationType.data.data[0] : null;
 
     };
 
