@@ -55,15 +55,16 @@ export default class DataContextFactory {
                 this.processService.getProcessVariables(processInstanceId, headers),
                 this.processService.getTaskVariables(taskId, headers)
             ]);
-            logger.info('taskData in createDataContext');
-            logger.info(taskData);
-            logger.info('--------------------');
-            logger.info('processData in createDataContext');
-            logger.info(processData);
-            logger.info('--------------------');
-            logger.info('taskVariables in createDataContext');
-            logger.info(taskVariables);
-            logger.info('--------------------');
+            logger.info('got taskData, processData and taskVariables');
+            // logger.info('taskData in createDataContext');
+            // logger.info(taskData);
+            // logger.info('--------------------');
+            // logger.info('processData in createDataContext');
+            // logger.info(processData);
+            // logger.info('--------------------');
+            // logger.info('taskVariables in createDataContext');
+            // logger.info(taskVariables);
+            // logger.info('--------------------');
             return new DataResolveContext(keycloakContext, staffDetailsContext,
                 environmentContext,
                 new ProcessContext(processData),
