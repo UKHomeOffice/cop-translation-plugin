@@ -38,20 +38,7 @@ export default class PlatformDataService {
             method: 'GET',
             headers: headers
         });
-        const returnValue = locationDetails ? locationDetails.data.data[0] : null;
-        logger.info('locationDetails.data');
-        logger.info(locationDetails.data);
-        logger.info('--------------------');
-        logger.info('locationDetails.data.data');
-        logger.info(locationDetails.data.data);
-        logger.info('--------------------');
-        logger.info('locationDetails.data.data[0]');
-        logger.info(locationDetails.data.data[0]);
-        logger.info('--------------------');
-        logger.info('returnValue');
-        logger.info(returnValue);
-        logger.info('--------------------');
-        return returnValue;
+        return locationDetails ? locationDetails.data.data[0] : null;
     };
 
 
@@ -61,8 +48,20 @@ export default class PlatformDataService {
             method: 'GET',
             headers: headers
         });
-        return locationType && locationType.data ? locationType.data.data[0] : null;
-
+        logger.info('locationType.data');
+        logger.info(locationType.data);
+        logger.info('--------------------');
+        logger.info('locationType.data.data');
+        logger.info(locationType.data.data);
+        logger.info('--------------------');
+        logger.info('locationType.data.data[0]');
+        logger.info(locationType.data.data[0]);
+        logger.info('--------------------');
+        const returnValue = locationType && locationType.data ? locationType.data.data[0] : null;
+        logger.info('returnValue');
+        logger.info(returnValue);
+        logger.info('--------------------');
+        return returnValue;
     };
 
     async getShiftDetails (email, headers)  {
