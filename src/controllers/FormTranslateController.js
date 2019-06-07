@@ -10,6 +10,8 @@ export default class FormTranslateController  {
     async getForm(req) {
         const {formName} = req.params;
         const {taskId, processInstanceId} = req.query;
+        logger.info(`taskId in FormTranslateController = ${taskId}`);
+        logger.info(`processInstanceId in FormTranslateController = ${processInstanceId}`);
         const form =  await this.formTranslator.translate(formName,
             new KeycloakContext(req.kauth),{taskId, processInstanceId});
         if (!form) {
