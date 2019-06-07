@@ -10,6 +10,9 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
         .get('/form/:formName',
             [keycloak.protect(), (req, res) => {
                 const {formName} = req.params;
+                logger.info('req.query in formDataResolveRouter');
+                logger.info(req.query);
+                logger.info('--------------------');
                 formTranslatorController.getForm(req).then((form) => {
                     // logger.info('In formTranslatorController.getForm');
                     // logger.info(form);
