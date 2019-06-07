@@ -7,6 +7,7 @@ const {
     PRIVATE_WORKFLOW_ENGINE_NAME,
     PRIVATE_UI_NAME,
     EXT_DOMAIN,
+    CORS_ORIGIN
 } = process.env;
 
 const appConfig = {
@@ -24,7 +25,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${INT_DOMAIN}`,
         },
         referenceData: {
-            url: `${PRIVATE_REFDATA_URL}`,
+            url: `${PRIVATE_REFDATA_URL}/v1/entities`,
         },
         privateUi: {
             url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
@@ -32,6 +33,9 @@ const appConfig = {
     },
     privateKey: {
        path: process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem'
+    },
+    cors: {
+        origin: CORS_ORIGIN
     }
 };
 module.exports = appConfig;

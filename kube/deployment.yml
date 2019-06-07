@@ -162,6 +162,8 @@ spec:
           value: {{.PRIVATE_UI_NAME}}
         - name: EXT_DOMAIN
           value: {{.EXT_DOMAIN}}
+        - name: CORS_ORIGIN
+          value: {{.CORS_ORIGIN}}
       volumes:
       - name: bundle
         configMap:
