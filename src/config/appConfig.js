@@ -25,7 +25,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${INT_DOMAIN}`,
         },
         referenceData: {
-            url: `${PRIVATE_REFDATA_URL}`,
+            url: `${PRIVATE_REFDATA_URL}/v1/entities`,
         },
         privateUi: {
             url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
