@@ -69,7 +69,7 @@ app.use(Tracing.middleware);
 
 if (appConfig.cors.origin) {
     app.use(cors({
-        origin: JSON.parse(appConfig.cors.origin),
+        origin: appConfig.cors.origin,
         optionsSuccessStatus: 200
     }));
 }
