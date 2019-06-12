@@ -46,7 +46,7 @@ export default class FormTranslator {
 
         this.handleNestedForms(form);
         return form;
-    };
+    }
 
     handleNestedForms(form) {
         form.components.forEach((c) => {
@@ -60,7 +60,7 @@ export default class FormTranslator {
                 });
             }
         })
-    };
+    }
 
 
 }

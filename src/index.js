@@ -2,7 +2,6 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import expressValidator from 'express-validator';
 import route from './routes';
-import morgan from 'morgan';
 import appConfig from './config/appConfig'
 
 const http = require('http');

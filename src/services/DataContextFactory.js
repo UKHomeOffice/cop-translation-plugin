@@ -85,6 +85,6 @@ export default class DataContextFactory {
             'Content-Type': 'application/json',
             'Accept-Type': 'application/json'
         };
-    };
+    }
 
 }

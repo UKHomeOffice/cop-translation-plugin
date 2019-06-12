@@ -1,5 +1,3 @@
-import JsonPathEvaluator from "../form/JsonPathEvaluator";
-
 export default class FormComponent {
     constructor(component, dataContext) {
         this.component = component;
