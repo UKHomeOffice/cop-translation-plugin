@@ -29,7 +29,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, {
                     variable: {
                         type: "Object",
-                        value: `{\"img\": \"${image}\"}`,
+                        value: `{"img": "${image}"}`,
                         valueInfo: {
                             objectTypeName: "xxxx",
                             serializationDataFormat: "application/json"
