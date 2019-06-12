@@ -39,5 +39,5 @@ export default class FormEngineService {
             logger.error(errorMessage);
             throw new TranslationServiceError(errorMessage, 500);
         }
-    };
+    }
 }

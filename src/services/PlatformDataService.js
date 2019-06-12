@@ -30,7 +30,7 @@ export default class PlatformDataService {
             return null;
         }
 
-    };
+    }
 
     async getLocation (locationid, headers)  {
         const locationDetails = await axios({
@@ -39,7 +39,7 @@ export default class PlatformDataService {
             headers: headers
         });
         return locationDetails ? locationDetails.data.data[0] : null;
-    };
+    }
 
 
     async getLocationType (bflocationtypeid, headers) {
@@ -62,7 +62,7 @@ export default class PlatformDataService {
         logger.info(returnValue);
         logger.info('--------------------');
         return returnValue;
-    };
+    }
 
     async getShiftDetails (email, headers)  {
         try {
@@ -79,7 +79,7 @@ export default class PlatformDataService {
             return null;
         }
 
-    };
+    }
 
 
 }

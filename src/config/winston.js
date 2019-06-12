@@ -1,7 +1,7 @@
 import {createLogger, format, transports} from 'winston';
 import Tracing from '../utilities/tracing.js';
 
-const { combine, timestamp, json, splat, printf} = format;
+const { combine, timestamp, json, splat} = format;
 
 const addCorrelationId = format((info) => {
     info.correlationId = Tracing.correlationId();

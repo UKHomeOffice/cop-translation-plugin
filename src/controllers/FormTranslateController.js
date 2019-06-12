@@ -12,7 +12,7 @@ export default class FormTranslateController  {
         const {taskId, processInstanceId} = req.query;
         logger.info(`taskId in FormTranslateController = ${taskId}`);
         logger.info(`processInstanceId in FormTranslateController = ${processInstanceId}`);
-        const form =  await this.formTranslator.translate(formName,
+        const form = await this.formTranslator.translate(formName,
             new KeycloakContext(req.kauth),{taskId, processInstanceId});
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
