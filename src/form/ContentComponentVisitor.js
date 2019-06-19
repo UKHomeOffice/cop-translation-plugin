@@ -34,7 +34,7 @@ export default class ContentComponentVisitor {
                     `data:image/${formComponent.imageType()};base64,${value.toString('base64')}` :
                     `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
             }
-            return value.toString('base64');
+            return value ? value.toString('base64') : undefined;
         };
 
         component.html = this.jsonPathEvaluator.performJsonPathEvaluation({key, value},
