@@ -1,5 +1,6 @@
 import ContentComponentVisitor from "./ContentComponentVisitor";
 import SelectComponentVisitor from "./SelectComponentVisitor";
+import CustomPropertiesVisitor from "./CustomPropertiesVisitor";
 import DefaultValueComponentVisitor from "./DefaultValueComponentVisitor";
 import PropertiesVisitor from "./PropertiesVisitor";
 import FileStorageComponentVisitor from "./FileStorageComponentVisitor";
@@ -8,6 +9,7 @@ export default class FormComponentVisitor {
     constructor(jsonPathEvaluator, dataDecryptor) {
         this.contentComponentVisitor = new ContentComponentVisitor(jsonPathEvaluator, dataDecryptor);
         this.selectComponentVisitor = new SelectComponentVisitor(jsonPathEvaluator);
+        this.customPropertiesVisitor = new CustomPropertiesVisitor(jsonPathEvaluator);
         this.defaultValueVisitor = new DefaultValueComponentVisitor(jsonPathEvaluator);
         this.propertiesVisitor = new PropertiesVisitor(jsonPathEvaluator);
         this.fileStorageComponentVisitor = new FileStorageComponentVisitor();
@@ -17,6 +19,7 @@ export default class FormComponentVisitor {
         const component = formComponent.component;
         formComponent.accept(this.propertiesVisitor);
         formComponent.accept(this.defaultValueVisitor);
+        formComponent.accept(this.customPropertiesVisitor);
         if (component.type === 'content') {
             formComponent.accept(this.contentComponentVisitor);
         }
@@ -25,9 +28,6 @@ export default class FormComponentVisitor {
         }
         if (component.data && component.dataSrc) {
             formComponent.accept(this.selectComponentVisitor);
-
-
        }
     }
-
 }

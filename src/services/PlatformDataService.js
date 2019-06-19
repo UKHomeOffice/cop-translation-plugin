@@ -13,7 +13,7 @@ export default class PlatformDataService {
     async getStaffDetails(email, headers) {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalData.url}/rpc/staffdetails`,
+                url: `${this.config.services.operationalDataInternal.url}/rpc/staffdetails`,
                 data: {
                   'argstaffemail': email
                 },
@@ -30,32 +30,44 @@ export default class PlatformDataService {
             return null;
         }
 
-    };
+    }
 
     async getLocation (locationid, headers)  {
         const locationDetails = await axios({
-            url: `${this.config.services.referenceData.url}/location?locationid=eq.${locationid}`,
+            url: `${this.config.services.referenceData.url}/location?id=eq.${locationid}`,
             method: 'GET',
             headers: headers
         });
-        return locationDetails ? locationDetails.data[0] : null;
-    };
+        return locationDetails ? locationDetails.data.data[0] : null;
+    }
 
 
     async getLocationType (bflocationtypeid, headers) {
         const locationType = await axios({
-            url: `${this.config.services.referenceData.url}/bflocationtype?bflocationtypeid=eq.${bflocationtypeid}`,
+            url: `${this.config.services.referenceData.url}/bflocationtype?id=eq.${bflocationtypeid}`,
             method: 'GET',
             headers: headers
         });
-        return locationType && locationType.data ? locationType.data[0] : null;
-
-    };
+        logger.info('locationType.data');
+        logger.info(locationType.data);
+        logger.info('--------------------');
+        logger.info('locationType.data.data');
+        logger.info(locationType.data.data);
+        logger.info('--------------------');
+        logger.info('locationType.data.data[0]');
+        logger.info(locationType.data.data[0]);
+        logger.info('--------------------');
+        const returnValue = locationType && locationType.data ? locationType.data.data[0] : null;
+        logger.info('returnValue');
+        logger.info(returnValue);
+        logger.info('--------------------');
+        return returnValue;
+    }
 
     async getShiftDetails (email, headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalData.url}/shift?email=eq.${encodeURIComponent(email)}`,
+                url: `${this.config.services.operationalDataInternal.url}/shift?email=eq.${encodeURIComponent(email)}`,
                 method: 'GET',
                 headers: headers
             });
@@ -67,7 +79,7 @@ export default class PlatformDataService {
             return null;
         }
 
-    };
+    }
 
 
 }

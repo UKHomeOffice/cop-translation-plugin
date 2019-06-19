@@ -1,4 +1,3 @@
-import  logger from "../config/winston";
 export default class SelectComponentVisitor {
 
     constructor(jsonPathEvaluator) {
@@ -8,14 +7,6 @@ export default class SelectComponentVisitor {
     visit(formComponent) {
         const component = formComponent.component;
         const dataResolveContext = formComponent.dataContext;
-        if (component.properties) {
-            logger.info(`Applying custom properties to component`)
-            Object.keys(component.properties).forEach((key) => {
-                const propertyValue = component.properties[key];
-                logger.debug(`Adding '${key}' with value '${propertyValue}' to select component [${component.name}]`);
-                component[key] = propertyValue;
-            });
-        }
         if (component.data && component.dataSrc === 'url') {
             const key = component.key;
             const value = component.data.url;

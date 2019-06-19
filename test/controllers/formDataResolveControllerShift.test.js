@@ -25,16 +25,16 @@ describe('Form Data Resolve Controller', () => {
                     email: 'email'
                 }]);
             nock('http://localhost:9001')
-                .get('/location?locationid=eq.currentlocationid')
-                .reply(200, [{
+                .get('/location?id=eq.currentlocationid')
+                .reply(200, {data: [{
                     locationname: 'Current',
                     locationid: 'currentlocationid',
                     bflocationtypeid: 'bflocationtypeid'
 
-                }]);
+                }]});
             nock('http://localhost:9001')
-                .get('/bflocationtype?bflocationtypeid=eq.bflocationtypeid')
-                .reply(200, [{
+                .get('/bflocationtype?id=eq.bflocationtypeid')
+                .reply(200, {data: [{
                     bflocationtypeid: 'bflocationtypeid',
                     seaport: true,
                     railterminal: false,
@@ -43,7 +43,7 @@ describe('Form Data Resolve Controller', () => {
                     fixedtransport: false,
                     bordercrossing: false,
                     roadterminal: false
-                }]);
+                }]});
         });
         it('it should return an updated form schema for keycloakContext', async () => {
             const request = httpMocks.createRequest({

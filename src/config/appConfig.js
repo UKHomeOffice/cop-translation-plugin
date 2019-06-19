@@ -7,12 +7,16 @@ const {
     PRIVATE_WORKFLOW_ENGINE_NAME,
     PRIVATE_UI_NAME,
     EXT_DOMAIN,
+    CORS_ORIGIN
 } = process.env;
 
 const appConfig = {
     services: {
-        operationalData: {
+        operationalDataInternal: {
             url: `${PROTOCOL}${PRIVATE_POSTGREST_NAME}.${INT_DOMAIN}`,
+        },
+        operationalDataExternal: {
+            url: `${PROTOCOL}${PRIVATE_POSTGREST_NAME}.${EXT_DOMAIN}`,
         },
         workflow: {
             url: `${PROTOCOL}${PRIVATE_WORKFLOW_ENGINE_NAME}.${INT_DOMAIN}`,
@@ -21,7 +25,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${INT_DOMAIN}`,
         },
         referenceData: {
-            url: `${PRIVATE_REFDATA_URL}`,
+            url: PRIVATE_REFDATA_URL,
         },
         privateUi: {
             url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
@@ -29,6 +33,9 @@ const appConfig = {
     },
     privateKey: {
        path: process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem'
+    },
+    cors: {
+        origin: CORS_ORIGIN
     }
 };
 module.exports = appConfig;

@@ -8,16 +8,19 @@
     "build": "babel src -s -D -d dist --presets es2015,stage-0",
     "start": "node dist",
     "test": "node_modules/.bin/mocha --require babel-polyfill --require babel-register --exit --recursive --timeout 5000",
-    "coverage": "nyc --reporter=lcov mocha --require babel-polyfill --require babel-register --exit --recursive --timeout 5000"
+    "coverage": "nyc --reporter=lcov mocha --require babel-polyfill --require babel-register --exit --recursive --timeout 5000",
+    "linter": "eslint src test"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",
     "parserOptions": {
-      "ecmaVersion": 7,
+      "ecmaVersion": 8,
       "sourceType": "module"
     },
     "env": {
-      "node": true
+      "node": true,
+      "es6": true,
+      "mocha": true
     },
     "rules": {
       "no-console": 0,
@@ -27,7 +30,7 @@
   "dependencies": {
     "app-root-path": "^2.1.0",
     "async": "^2.6.0",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
     "body-parser": "^1.18.2",

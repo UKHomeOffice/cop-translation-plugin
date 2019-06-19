@@ -2,7 +2,6 @@ import bodyParser from 'body-parser';
 import express from 'express';
 import expressValidator from 'express-validator';
 import route from './routes';
-import morgan from 'morgan';
 import appConfig from './config/appConfig'
 
 const http = require('http');
@@ -67,10 +66,12 @@ app.use(helmet());
 app.use(keycloak.middleware());
 app.use(Tracing.middleware);
 
-app.use(cors({
-    origin: appConfig.services.privateUi.url,
-    optionsSuccessStatus: 200
-}));
+if (appConfig.cors.origin) {
+    app.use(cors({
+        origin: appConfig.cors.origin.split('|'),
+        optionsSuccessStatus: 200
+    }));
+}
 
 app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
 

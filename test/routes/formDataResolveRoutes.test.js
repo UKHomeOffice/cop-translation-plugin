@@ -6,8 +6,7 @@ process.env.PRIVATE_KEY_PATH="test/certs/signing1.key";
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../../src/index');
-const should = chai.should();
-
+chai.should();
 chai.use(chaiHttp);
 
 describe('Form Data Routes Resolution', () => {

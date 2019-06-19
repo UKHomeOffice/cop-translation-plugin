@@ -29,7 +29,7 @@ class ShiftDetailsContext {
         logger.info(`query create for location type`, {query: query});
 
         return query;
-    };
+    }
 }
 
 
