@@ -4,6 +4,7 @@ import CustomPropertiesVisitor from "./CustomPropertiesVisitor";
 import DefaultValueComponentVisitor from "./DefaultValueComponentVisitor";
 import PropertiesVisitor from "./PropertiesVisitor";
 import FileStorageComponentVisitor from "./FileStorageComponentVisitor";
+import FilterComponentVisitor from "./FilterComponentVisitor";
 
 export default class FormComponentVisitor {
     constructor(jsonPathEvaluator, dataDecryptor) {
@@ -13,6 +14,7 @@ export default class FormComponentVisitor {
         this.defaultValueVisitor = new DefaultValueComponentVisitor(jsonPathEvaluator);
         this.propertiesVisitor = new PropertiesVisitor(jsonPathEvaluator);
         this.fileStorageComponentVisitor = new FileStorageComponentVisitor();
+        this.filterComponentVisitor = new FilterComponentVisitor(jsonPathEvaluator);
     }
 
     visit(formComponent) {
@@ -20,6 +22,7 @@ export default class FormComponentVisitor {
         formComponent.accept(this.propertiesVisitor);
         formComponent.accept(this.defaultValueVisitor);
         formComponent.accept(this.customPropertiesVisitor);
+        formComponent.accept(this.filterComponentVisitor);
         if (component.type === 'content') {
             formComponent.accept(this.contentComponentVisitor);
         }
