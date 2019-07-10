@@ -98,9 +98,6 @@ spec:
           initialDelaySeconds: 60
           periodSeconds: 60
         volumeMounts:
-          - name: bundle
-            mountPath: /etc/ssl/certs
-            readOnly: true
           - name: enccerts
             mountPath: /enccerts
         env:
