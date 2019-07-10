@@ -22,6 +22,20 @@ import logger from './config/winston';
 import Tracing from "./utilities/tracing";
 import cors from 'cors';
 
+
+if (process.env.NODE_ENV === 'production') {
+    logger.info('Setting ca bundle');
+    const trustedCa = [
+        '/etc/ssl/certs/ca-certificates.crt'
+    ];
+
+    https.globalAgent.options.ca = [];
+    for (const ca of trustedCa) {
+        https.globalAgent.options.ca.push(fs.readFileSync(ca));
+    }
+    logger.info('ca bundle set...');
+}
+
 const kcConfig = {
     clientId: process.env.AUTH_CLIENT_ID,
     serverUrl: process.env.AUTH_URL,
