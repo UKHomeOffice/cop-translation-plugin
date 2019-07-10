@@ -48,19 +48,7 @@ export default class PlatformDataService {
             method: 'GET',
             headers: headers
         });
-        logger.info('locationType.data');
-        logger.info(locationType.data);
-        logger.info('--------------------');
-        logger.info('locationType.data.data');
-        logger.info(locationType.data.data);
-        logger.info('--------------------');
-        logger.info('locationType.data.data[0]');
-        logger.info(locationType.data.data[0]);
-        logger.info('--------------------');
         const returnValue = locationType && locationType.data ? locationType.data.data[0] : null;
-        logger.info('returnValue');
-        logger.info(returnValue);
-        logger.info('--------------------');
         return returnValue;
     }
 

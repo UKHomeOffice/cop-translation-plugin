@@ -20,8 +20,6 @@ export default class FormTranslator {
                     {processInstanceId, taskId},
                     customDataContext = {}) {
         logger.info(`Loading form ${formName}`);
-        logger.info(`taskId in FormTranslator = ${taskId}`);
-        logger.info(`processInstanceId in FormTranslator = ${processInstanceId}`);
         const form = await this.formEngineService.getForm(formName);
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
@@ -31,9 +29,7 @@ export default class FormTranslator {
             processInstanceId,
             taskId
         }, customDataContext);
-        logger.info(`Got dataContext for ${form.name}`);
         const resolvedForm = this.applyFormResolution(dataContext, form);
-        logger.info(`Done applyFormResolution for ${form.name}`);
         return resolvedForm;
     }
 
