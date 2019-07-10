@@ -26,7 +26,7 @@ import cors from 'cors';
 if (process.env.NODE_ENV === 'production') {
     logger.info('Setting ca bundle');
     const trustedCa = [
-        '/etc/ssl/certs/ca-certificates.crt'
+        '/etc/ssl/certs/ca-bundle.pem'
     ];
 
     https.globalAgent.options.ca = [];
