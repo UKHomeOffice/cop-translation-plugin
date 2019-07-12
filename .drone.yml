@@ -153,7 +153,7 @@ pipeline:
       - export PRIVATE_POSTGREST_NAME=$${STAGING_PRIVATE_POSTGREST_NAME}
       - export WHITELIST=$${STAGING_WHITELIST}
       - export CORS_ORIGIN=$${STAGING_CORS_ORIGIN}
-      - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
+      - export IMAGE_TAG=${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/certs-configmap.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
@@ -217,7 +217,7 @@ pipeline:
       - export PRIVATE_POSTGREST_NAME=$${PRODUCTION_PRIVATE_POSTGREST_NAME}
       - export WHITELIST=$${PRODUCTION_WHITELIST}
       - export CORS_ORIGIN=$${PRODUCTION_CORS_ORIGIN}
-      - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
+      - export IMAGE_TAG=${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/certs-configmap.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
