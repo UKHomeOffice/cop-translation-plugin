@@ -59,6 +59,7 @@ pipeline:
       - DEV_PRIVATE_POSTGREST_NAME
       - DEV_WHITELIST
       - DEV_CORS_ORIGIN
+      - DEV_ENABLE_UUID
     commands:
       - export NAME=$${DEV_NAME}
       - export KUBE_NAMESPACE=$${DEV_KUBE_NAMESPACE}
@@ -80,6 +81,7 @@ pipeline:
       - export WHITELIST=$${DEV_WHITELIST}
       - export CORS_ORIGIN=$${DEV_CORS_ORIGIN}
       - export IMAGE_TAG=${DRONE_BUILD_NUMBER}
+      - export ENABLE_UUID=$${DEV_ENABLE_UUID}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
@@ -112,6 +114,7 @@ pipeline:
       - STAGING_PRIVATE_POSTGREST_NAME
       - STAGING_WHITELIST
       - STAGING_CORS_ORIGIN
+      - STAGING_ENABLE_UUID
     commands:
       - export NAME=$${STAGING_NAME}
       - export KUBE_NAMESPACE=$${STAGING_KUBE_NAMESPACE}
@@ -133,6 +136,7 @@ pipeline:
       - export WHITELIST=$${STAGING_WHITELIST}
       - export CORS_ORIGIN=$${STAGING_CORS_ORIGIN}
       - export IMAGE_TAG=${DRONE_COMMIT_SHA}
+      - export ENABLE_UUID=$${STAGING_ENABLE_UUID}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
@@ -165,6 +169,7 @@ pipeline:
       - PRODUCTION_PRIVATE_POSTGREST_NAME
       - PRODUCTION_WHITELIST
       - PRODUCTION_CORS_ORIGIN
+      - PRODUCTION_ENABLE_UUID
     commands:
       - export NAME=$${PRODUCTION_NAME}
       - export KUBE_NAMESPACE=$${PRODUCTION_KUBE_NAMESPACE}
@@ -186,6 +191,7 @@ pipeline:
       - export WHITELIST=$${PRODUCTION_WHITELIST}
       - export CORS_ORIGIN=$${PRODUCTION_CORS_ORIGIN}
       - export IMAGE_TAG=${DRONE_COMMIT_SHA}
+      - export ENABLE_UUID=$${PRODUCTION_ENABLE_UUID}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
