@@ -26,7 +26,7 @@ spec:
         - name: PROXY_SERVICE_PORT
           value: "8080"
         - name: ENABLE_UUID_PARAM
-          value: "FALSE"
+          value: "HEADER"
         - name: LOG_FORMAT_NAME
           value: 'json'
         - name: NAXSI_USE_DEFAULT_RULES
