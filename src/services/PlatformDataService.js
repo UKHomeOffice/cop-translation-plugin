@@ -13,7 +13,7 @@ export default class PlatformDataService {
     async getStaffDetails(email, headers) {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalDataInternal.url}/rpc/staffdetails`,
+                url: `${this.config.services.operationalData.url}/rpc/staffdetails`,
                 data: {
                   'argstaffemail': email
                 },
@@ -55,7 +55,7 @@ export default class PlatformDataService {
     async getShiftDetails (email, headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalDataInternal.url}/shift?email=eq.${encodeURIComponent(email)}`,
+                url: `${this.config.services.operationalData.url}/shift?email=eq.${encodeURIComponent(email)}`,
                 method: 'GET',
                 headers: headers
             });

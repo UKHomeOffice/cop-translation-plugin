@@ -11,10 +11,7 @@ const {
 
 const appConfig = {
     services: {
-        operationalDataInternal: {
-            url: `${PRIVATE_OPERATIONAL_DATA_URL}/v1`,
-        },
-        operationalDataExternal: {
+        operationalData: {
             url: `${PRIVATE_OPERATIONAL_DATA_URL}/v1`,
         },
         workflow: {
