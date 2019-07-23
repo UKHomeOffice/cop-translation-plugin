@@ -1,7 +1,7 @@
 const {
     PROTOCOL,
     PRIVATE_FORM_NAME,
-    PRIVATE_POSTGREST_NAME,
+    PRIVATE_OPERATIONAL_DATA_URL,
     PRIVATE_REFDATA_URL,
     PRIVATE_WORKFLOW_ENGINE_NAME,
     PRIVATE_UI_NAME,
@@ -12,10 +12,10 @@ const {
 const appConfig = {
     services: {
         operationalDataInternal: {
-            url: `${PROTOCOL}${PRIVATE_POSTGREST_NAME}.${EXT_DOMAIN}`,
+            url: `${PRIVATE_OPERATIONAL_DATA_URL}/v1`,
         },
         operationalDataExternal: {
-            url: `${PROTOCOL}${PRIVATE_POSTGREST_NAME}.${EXT_DOMAIN}`,
+            url: `${PRIVATE_OPERATIONAL_DATA_URL}/v1`,
         },
         workflow: {
             url: `${PROTOCOL}${PRIVATE_WORKFLOW_ENGINE_NAME}.${EXT_DOMAIN}`,
@@ -24,7 +24,7 @@ const appConfig = {
             url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${EXT_DOMAIN}`,
         },
         referenceData: {
-            url: PRIVATE_REFDATA_URL,
+            url: `${PRIVATE_REFDATA_URL}/v1/entities`,
         },
         privateUi: {
             url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
