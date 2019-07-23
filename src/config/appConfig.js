@@ -12,7 +12,7 @@ const {
 const appConfig = {
     services: {
         operationalData: {
-            url: `${PRIVATE_OPERATIONAL_DATA_URL}/v1`,
+            url: `${PRIVATE_OPERATIONAL_DATA_URL}`,
         },
         workflow: {
             url: `${PROTOCOL}${PRIVATE_WORKFLOW_ENGINE_NAME}.${EXT_DOMAIN}`,

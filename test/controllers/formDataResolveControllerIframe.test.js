@@ -14,7 +14,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=iframeForm')
                 .reply(200, forms.iframeForm);
             nock('http://localhost:9001')
-                .post('/rpc/staffdetails', {
+                .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "email"
                 })
                 .reply(200, []);
@@ -38,7 +38,7 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, {});
 
             nock('http://localhost:9001')
-                .get('/shift?email=eq.email')
+                .get('/v1/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should resolve iframe content', async () => {
@@ -72,7 +72,7 @@ describe('Form Data Resolve Controller', () => {
             const response = await formTranslateController.getForm(request);
             const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
             expect(img).to.equal(
-                "<p>Iframe</p>\n\n<p><iframe src=\"http://localhost:9001/some?access_token=test-token\" style=\"height: 125px; width: 100px;\" /></p>\n");
+                "<p>Iframe</p>\n\n<p><iframe src=\"http://localhost:9001/v1/some?access_token=test-token\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
         });
     });
