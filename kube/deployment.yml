@@ -86,8 +86,8 @@ spec:
           value: {{.PRIVATE_REFDATA_URL}}
         - name: PRIVATE_FORM_NAME
           value: {{.PRIVATE_FORM_NAME}}
-        - name: PRIVATE_POSTGREST_NAME
-          value: {{.PRIVATE_POSTGREST_NAME}}
+        - name: PRIVATE_OPERATIONAL_DATA_URL
+          value: {{.PRIVATE_OPERATIONAL_DATA_URL}}
         - name: PRIVATE_WORKFLOW_ENGINE_NAME
           value: {{.PRIVATE_WORKFLOW_ENGINE_NAME}}
         - name: PRIVATE_UI_NAME

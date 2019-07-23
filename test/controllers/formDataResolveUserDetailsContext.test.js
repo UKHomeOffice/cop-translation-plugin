@@ -11,7 +11,7 @@ describe('Form Data Resolve Controller', () => {
                 .get('/form?name=userDetailsContextForm')
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
-                .post('/rpc/staffdetails', {'argstaffemail' : 'emailTest123'})
+                .post('/v1/rpc/staffdetails', {'argstaffemail' : 'emailTest123'})
                 .reply(200,
 
                     [
@@ -37,7 +37,7 @@ describe('Form Data Resolve Controller', () => {
                     ]);
 
             nock('http://localhost:9001')
-                .get('/shift?email=eq.emailTest123')
+                .get('/v1/shift?email=eq.emailTest123')
                 .reply(200, []);
         });
         it('it should return an updated form schema for user details context', async () => {
@@ -81,12 +81,12 @@ describe('Form Data Resolve Controller', () => {
                 .reply(200, forms.userDetailsContextForm);
             nock('http://localhost:9001')
                 .log(console.log)
-                .post('/rpc/staffdetails', {
+                .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "noEmail"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/shift?email=eq.noEmail')
+                .get('/v1/shift?email=eq.noEmail')
                 .reply(200, []);
         });
         it('it should return an updated form schema with null values', async () => {
