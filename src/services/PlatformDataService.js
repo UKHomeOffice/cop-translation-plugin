@@ -55,7 +55,7 @@ export default class PlatformDataService {
     async getShiftDetails (email, headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalData.url}/v1/shift?email=eq.${encodeURIComponent(email)}`,
+                url: `${this.config.services.operationalData.url}/v1/shift?email=eq.${email}`,
                 method: 'GET',
                 headers: headers
             });
