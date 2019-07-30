@@ -9,3 +9,4 @@ translation-service.iml
 .env
 .scannerwork
 .nyc_output
+*.swp
