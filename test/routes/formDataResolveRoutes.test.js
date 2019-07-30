@@ -1,6 +1,4 @@
 process.env.NODE_ENV = 'test';
-process.env.SESSION_SECRET="test";
-process.env.SESSION_NAME="test";
 process.env.PRIVATE_KEY_PATH="test/certs/signing1.key";
 
 const chai = require('chai');

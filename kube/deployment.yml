@@ -70,16 +70,6 @@ spec:
           value: {{.KEYCLOAK_URL}}
         - name: AUTH_REALM
           value: {{.KEYCLOAK_REALM}}
-        - name: SESSION_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{.NAME}}
-              key: sessionSecret
-        - name: SESSION_NAME
-          valueFrom:
-            secretKeyRef:
-              name: {{.NAME}}
-              key: sessionName
         - name: PROTOCOL
           value: {{.PROTOCOL}}
         - name: PRIVATE_REFDATA_URL
