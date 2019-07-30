@@ -11,7 +11,8 @@ export default class FormTranslator {
         this.formEngineService = formEngineService;
         this.dataContextFactory = dataContextFactory;
         this.dataDecryptor = dataDecryptor;
-        this.formComponentVisitor = new FormComponentVisitor(new JsonPathEvaluator(), dataDecryptor);
+        this.jsonPathEvaluator = new JsonPathEvaluator();
+        this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
         this.translate = this.translate.bind(this);
     }
 
@@ -41,8 +42,16 @@ export default class FormTranslator {
         });
 
         this.handleNestedForms(form);
+        this.applyFormElementResolution(dataContext, form);
         return form;
     }
+
+    applyFormElementResolution(dataContext, form) {
+      if (form.title) {
+        form.title = this.jsonPathEvaluator.performJsonPathEvaluation({key: "Form Title", value: form.title}, dataContext);
+      }
+    }
+
 
     handleNestedForms(form) {
         form.components.forEach((c) => {
