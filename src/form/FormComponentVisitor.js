@@ -6,6 +6,7 @@ import PropertiesVisitor from "./PropertiesVisitor";
 import FileStorageComponentVisitor from "./FileStorageComponentVisitor";
 import FilterComponentVisitor from "./FilterComponentVisitor";
 import LabelComponentVisitor from "./LabelComponentVisitor";
+import RadioComponentVisitor from "./RadioComponentVisitor";
 
 export default class FormComponentVisitor {
     constructor(jsonPathEvaluator, dataDecryptor) {
@@ -17,6 +18,7 @@ export default class FormComponentVisitor {
         this.fileStorageComponentVisitor = new FileStorageComponentVisitor();
         this.filterComponentVisitor = new FilterComponentVisitor(jsonPathEvaluator);
         this.labelComponentVisitor = new LabelComponentVisitor(jsonPathEvaluator);
+        this.radioComponentVisitor = new RadioComponentVisitor(jsonPathEvaluator);
     }
 
     visit(formComponent) {
@@ -28,6 +30,9 @@ export default class FormComponentVisitor {
         formComponent.accept(this.labelComponentVisitor);
         if (component.type === 'content') {
             formComponent.accept(this.contentComponentVisitor);
+        }
+        if (component.type === 'radio' || component.type === "selectboxes") {
+            formComponent.accept(this.radioComponentVisitor);
         }
         if (component.storage && component.storage === 'url') {
             formComponent.accept(this.fileStorageComponentVisitor);
