@@ -55,5 +55,21 @@ describe('JSON Path Evaluator', () => {
         expect(result).to.equal('hello');
 
     });
+    it('can process value with formio {{substitution}}', () => {
+
+        const key = 'fieldA';
+        const value = '{{data.value}}';
+        const dataContext = {
+            processContext: {
+                myVariable: {
+                    name: 'hello'
+                }
+            }
+        };
+
+        const result = jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataContext);
+        expect(result).to.equal('{{data.value}}');
+
+    });
 });
 
