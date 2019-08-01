@@ -25,4 +25,4 @@ String.prototype.replaceAll = function (search, replacement) {
     const target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
-JsonPathEvaluator.regExp = new RegExp('\\{(.+?)\\}');
+JsonPathEvaluator.regExp = new RegExp('\\{(\\$.+?)\\}');
