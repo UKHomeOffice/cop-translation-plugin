@@ -25,7 +25,7 @@ describe('Form Data Resolve Controller', () => {
                     email: 'email'
                 }]);
             nock('http://localhost:9001')
-                .get('/location?id=eq.currentlocationid')
+                .get('/v1/entities/location?id=eq.currentlocationid')
                 .reply(200, {data: [{
                     locationname: 'Current',
                     locationid: 'currentlocationid',
@@ -33,7 +33,7 @@ describe('Form Data Resolve Controller', () => {
 
                 }]});
             nock('http://localhost:9001')
-                .get('/bflocationtype?id=eq.bflocationtypeid')
+                .get('/v1/entities/bflocationtype?id=eq.bflocationtypeid')
                 .reply(200, {data: [{
                     bflocationtypeid: 'bflocationtypeid',
                     seaport: true,
