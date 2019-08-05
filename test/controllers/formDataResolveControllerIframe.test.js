@@ -72,7 +72,7 @@ describe('Form Data Resolve Controller', () => {
             const response = await formTranslateController.getForm(request);
             const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
             expect(img).to.equal(
-                "<p>Iframe</p>\n\n<p><iframe src=\"http://localhost:9001/v1/some?access_token=test-token\" style=\"height: 125px; width: 100px;\" /></p>\n");
+                "<p>Iframe</p>\n\n<p><iframe src=\"http://localhost:9001/some?access_token=test-token\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
         });
     });
