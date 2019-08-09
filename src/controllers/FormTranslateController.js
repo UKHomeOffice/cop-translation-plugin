@@ -1,6 +1,5 @@
 import KeycloakContext from "../models/KeycloakContext";
 import TranslationServiceError from "../TranslationServiceError";
-import logger from "../config/winston";
 
 export default class FormTranslateController  {
     constructor(formTranslator) {
@@ -22,7 +21,7 @@ export default class FormTranslateController  {
         const {formId} = req.params;
         const form = await this.formTranslator.submit(formId, req.body);
         if (!form) {
-            throw new TranslationServiceError(`Form ${formName} could not be submitted`, 500);
+            throw new TranslationServiceError(`Form ${formId} could not be submitted`, 500);
         }
         return form;
     }
