@@ -18,6 +18,15 @@ export default class FormTranslateController  {
         return form;
     }
 
+    async submitForm(req) {
+        const {formId} = req.params;
+        const form = await this.formTranslator.submit(formId, req.body);
+        if (!form) {
+            throw new TranslationServiceError(`Form ${formName} could not be submitted`, 500);
+        }
+        return form;
+    }
+
     async getFormWithContext(req) {
         const data = req.body;
         if (data.dataContext) {
