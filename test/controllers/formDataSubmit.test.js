@@ -6,8 +6,6 @@ import {expect, formTranslateController} from '../setUpTests'
 
 describe('Form Data Controller', () => {
     describe('Submitting form data to formio', () => {
-        beforeEach(() => {
-        });
         it('should submit form data to formio', async () => {
           nock('http://localhost:8000', {})
               .log(console.log)
@@ -100,6 +98,51 @@ describe('Form Data Controller', () => {
             expect(response.status).to.equal(400);
             expect(grade).to.equal("{$.staffDetailsDataContext.gradeid}");
             expect(personId).to.equal("{$.staffDetailsDataContext.staffid}");
+      });
+      it('should throw exception if 500 received from formio', async () => {
+            nock('http://localhost:8000', {})
+              .log(console.log)
+              .post('/form/formId/submission', {
+                data: {
+                  field1: "foo",
+                  field2: "bar"
+                }
+              })
+              .reply(500);
+            const request = httpMocks.createRequest({
+                method: 'POST',
+                url: '/api/translation/form/formId/submission',
+                body: {
+                  data: {
+                    field1: "foo",
+                    field2: "bar"
+                  }
+                },
+                params: {
+                  formId: "formId"
+                },
+                kauth: {
+                    grant: {
+                        access_token: {
+                            token: "test-token",
+                            content: {
+                                session_state: "session_id",
+                                email: "emailTest123",
+                                preferred_username: "test",
+                                given_name: "firstname",
+                                family_name: "surname"
+                            }
+                        }
+
+                    }
+                }
+            });
+            try {
+              await formTranslateController.submitForm(request);
+              return Promise.reject("Shouldn't get here");
+            } catch (err) {
+              // expected
+            }
         });
-    });
+      });
 });

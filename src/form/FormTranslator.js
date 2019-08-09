@@ -13,8 +13,6 @@ export default class FormTranslator {
         this.dataDecryptor = dataDecryptor;
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
-        this.translate = this.translate.bind(this);
-        this.submit = this.submit.bind(this);
     }
 
     async translate(formName,
