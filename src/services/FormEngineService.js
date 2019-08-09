@@ -36,7 +36,27 @@ export default class FormEngineService {
 
         } catch (e) {
             const errorMessage = `An exception occurred while trying to get form ${formName} ... '${e}'`;
-            logger.error(errorMessage);
+            logger.error(errorMessage, e);
+            throw new TranslationServiceError(errorMessage, 500);
+        }
+    }
+    validateStatus(status) {
+        return status < 500;
+    }
+
+    async submitForm (formId, form) {
+        try {
+            const response = await axios.post(`${this.config.services.form.url}/form/${formId}/submission`, form, { validateStatus: this.validateStatus} );
+            if (response && response.data) {
+                return {
+                  data: response.data,
+                  status: response.status
+                }
+            }
+            return null;
+        } catch (e) {
+            const errorMessage = `An exception occurred while trying to submit form ${formId} ... '${e}'`;
+            logger.error(errorMessage, e);
             throw new TranslationServiceError(errorMessage, 500);
         }
     }

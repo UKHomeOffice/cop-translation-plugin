@@ -31,6 +31,17 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
                 }, {}, res);
             });
         }]);
+    router
+        .post('/form/:formId/submission', [keycloak.protect(), (req, res) => {
+            formTranslatorController.submitForm(req).then((form) => {
+                return res.status(form.status).json(form.data);
+            }).catch((err) => {
+                responseHandler.res({
+                    code: err.code,
+                    message: err.toString()
+                }, {}, res);
+            });
+        }]);
     return router;
 };
 

@@ -13,7 +13,6 @@ export default class FormTranslator {
         this.dataDecryptor = dataDecryptor;
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
-        this.translate = this.translate.bind(this);
     }
 
     async translate(formName,
@@ -65,6 +64,10 @@ export default class FormTranslator {
                 });
             }
         })
+    }
+
+    async submit(formId, form) {
+      return this.formEngineService.submitForm(formId, form);
     }
 
 
