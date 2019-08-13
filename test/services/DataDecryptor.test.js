@@ -15,11 +15,10 @@ describe('DataDecryptor', () => {
 
     it('can decrypt value with session key and iv', () => {
 
-        const sessionKey = dataDecryptor.deriveSessionKey(key);
         const value = Buffer.from('YrKNEg44VLtfWzhlNbYb14XqgQ==', 'base64');
         const iv = Buffer.from('W25/yzadEQNeV7jnZ3dnbA==', 'base64');
 
-        const result = dataDecryptor.decrypt(sessionKey, value, iv);
+        const result = dataDecryptor.decrypt(key, value, iv);
         expect(result.toString("base64")).to.equal('REFU');
     })
 
@@ -28,8 +27,7 @@ describe('DataDecryptor', () => {
 
         const encrypted = dataDecryptor.encrypt(clearText);
 
-        const sessionKey = dataDecryptor.deriveSessionKey(encrypted.publicKey);
-        const decrypted = dataDecryptor.decrypt(sessionKey, encrypted.value, encrypted.iv);
+        const decrypted = dataDecryptor.decrypt(encrypted.publicKey, encrypted.value, encrypted.iv);
 
         expect(decrypted.toString()).to.equal(clearText);
     });

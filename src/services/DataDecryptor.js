@@ -20,7 +20,8 @@ export default class DataDecryptor {
     }
 
 
-    decrypt(sessionKey, val, initializationVector) {
+    decrypt(publicKey, val, initializationVector) {
+        const sessionKey = this.deriveSessionKey(publicKey);
         const decipher = crypto.createDecipheriv(DataDecryptor.algorithm,
             sessionKey, initializationVector);
         const tag = val.slice(val.length - 16, val.length);
