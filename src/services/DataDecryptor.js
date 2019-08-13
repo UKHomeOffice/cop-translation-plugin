@@ -3,18 +3,20 @@ import logger from '../config/winston';
 import TranslationServiceError from "../TranslationServiceError";
 
 export default class DataDecryptor {
-    constructor(rsaKey) {
-        this.rsaKey = rsaKey;
-        if (!this.rsaKey) {
-            throw new TranslationServiceError('RSA key is missing', 500);
+    constructor(ecKey) {
+        if (!ecKey) {
+            throw new TranslationServiceError('Private key is missing', 500);
         }
+        this.ecKey = crypto.createECDH('brainpoolP512t1');
+        this.ecKey.setPrivateKey(ecKey);
     }
 
-    decryptSessionKey(sessionKey) {
-        logger.info(`Decrypting session key`);
-        return crypto.privateDecrypt({
-            key: this.rsaKey,
-        }, Buffer.from(sessionKey, 'base64'));
+    decryptSessionKey(publicKey) {
+        logger.debug(`Deriving session key`);
+        const sharedSecret = this.ecKey.computeSecret(publicKey);
+        const hash = crypto.createHash('sha256');
+        hash.update(sharedSecret);
+        return hash.digest();
     }
 
 
@@ -26,6 +28,7 @@ export default class DataDecryptor {
         decipher.setAuthTag(tag);
         return Buffer.concat([decipher.update(data), decipher.final()]);
     }
+
 }
 
 DataDecryptor.algorithm = "aes-256-gcm";

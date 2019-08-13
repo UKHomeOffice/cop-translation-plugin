@@ -17,13 +17,13 @@ appConfig.services.operationalData.url = 'http://localhost:9001'
 appConfig.services.workflow.url = 'http://localhost:9000'
 appConfig.services.form.url = 'http://localhost:8000';
 appConfig.services.referenceData.url = 'http://localhost:9001';
-appConfig.privateKey.path ='test/certs/signing1.key';
+appConfig.privateKey.path ='test/certs/enc.key';
 
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
 
-const rsaKey = fs.readFileSync('test/certs/signing1.key');
-const dataDecryptor = new DataDecryptor(rsaKey);
+const ecKey = Buffer.from(fs.readFileSync('test/certs/enc.key', 'utf8'), 'hex');
+const dataDecryptor = new DataDecryptor(ecKey);
 
 const translator = new FormTranslator(new FormEngineService(appConfig),
     new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig)), dataDecryptor);
