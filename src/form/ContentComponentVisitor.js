@@ -20,8 +20,8 @@ export default class ContentComponentVisitor {
                 const initialisationVector = properties.initialisationVector;
                 logger.info(`Encrypted field detected ${key}`);
                 try {
-                    const decryptedSessionKey = this.dataDecryptor.decryptSessionKey(Buffer.from(sessionKey, 'hex'));
-                    value = this.dataDecryptor.decrypt(decryptedSessionKey, Buffer.from(value, 'base64'),
+                    const derivedSessionKey = this.dataDecryptor.deriveSessionKey(Buffer.from(sessionKey, 'hex'));
+                    value = this.dataDecryptor.decrypt(derivedSessionKey, Buffer.from(value, 'base64'),
                         Buffer.from(initialisationVector, 'base64'));
                 } catch (err) {
                     logger.error(`Failed to decrypt value  ${err.toString()}...returning encrypted value`);

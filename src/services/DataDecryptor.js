@@ -11,7 +11,7 @@ export default class DataDecryptor {
         this.ecKey.setPrivateKey(ecKey);
     }
 
-    decryptSessionKey(publicKey) {
+    deriveSessionKey(publicKey) {
         logger.debug(`Deriving session key`);
         const sharedSecret = this.ecKey.computeSecret(publicKey);
         const hash = crypto.createHash('sha256');
