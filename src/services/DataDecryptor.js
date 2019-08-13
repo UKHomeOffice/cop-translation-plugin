@@ -3,12 +3,13 @@ import logger from '../config/winston';
 import TranslationServiceError from "../TranslationServiceError";
 
 export default class DataDecryptor {
-    constructor(ecKey) {
+    constructor(ecKey, keyRepository) {
         if (!ecKey) {
             throw new TranslationServiceError('Private key is missing', 500);
         }
         this.ecKey = crypto.createECDH(DataDecryptor.curveName);
         this.ecKey.setPrivateKey(ecKey);
+        this.keyRepository = keyRepository;
     }
 
     deriveSessionKey(publicKey) {
@@ -20,27 +21,43 @@ export default class DataDecryptor {
     }
 
 
-    decrypt(publicKey, val, initializationVector) {
+    decrypt(businessKey, val) {
+        const keys = this.keyRepository.getKeys(businessKey);
+        if (!keys) {
+          logger.warn(`No encryption keys are available for business process ${businessKey}`);
+          return val;
+        }
+        const { publicKey, iv } = keys;
         const sessionKey = this.deriveSessionKey(publicKey);
-        const decipher = crypto.createDecipheriv(DataDecryptor.algorithm,
-            sessionKey, initializationVector);
+        const decipher = crypto.createDecipheriv(DataDecryptor.algorithm, sessionKey, iv);
         const tag = val.slice(val.length - 16, val.length);
         const data = val.slice(0, val.length - 16);
         decipher.setAuthTag(tag);
         return Buffer.concat([decipher.update(data), decipher.final()]);
     }
 
-    encrypt(value) {
-        const iv = crypto.randomBytes(16); // random bytes
-        const key = crypto.createECDH(DataDecryptor.curveName);
-        key.generateKeys();
-        const sessionKey = this.deriveSessionKey(key.getPublicKey());
+    encrypt(businessKey, value) {
+        const { publicKey, iv } = this.ensureKeys(businessKey);
+        const sessionKey = this.deriveSessionKey(publicKey);
 
         const enc = crypto.createCipheriv(DataDecryptor.algorithm, sessionKey, iv);
         const cipherText = Buffer.concat([enc.update(value), enc.final()]);
 
+        return Buffer.concat([cipherText, enc.getAuthTag()]);
+    }
+
+    ensureKeys(businessKey) {
+        const existing = this.keyRepository.getKeys(businessKey);
+        if (existing) {
+          return existing;
+        }
+        const iv = crypto.randomBytes(16);
+        const key = crypto.createECDH(DataDecryptor.curveName);
+        key.generateKeys();
+
+        this.keyRepository.putKeys(businessKey, key.getPublicKey(), iv);
+
         return {
-          value: Buffer.concat([cipherText, enc.getAuthTag()]),
           iv: iv,
           publicKey: key.getPublicKey()
         };

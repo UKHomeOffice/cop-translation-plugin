@@ -78,68 +78,6 @@ const iframeForm = [
         ]
     }
 ];
-const encryptedImgFormWithoutVector = [
-    {
-        components: [
-            {
-                "key": "content",
-                "input": false,
-                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
-                "type": "content",
-                "tags": [
-                    "image",
-                    "encrypted"
-                ],
-                "conditional": {
-                    "show": "",
-                    "when": null,
-                    "eq": ""
-                },
-                "properties": {
-                    "initialisationVector" : '{$.processContext.variable.initialisationVector}'
-                },
-                "lockKey": true,
-                "label": "content",
-                "hideLabel": true
-            },
-        ]
-    }
-];
-const encryptedImgFormWithoutSessionKey = [
-    {
-        components: [
-            {
-                type: 'textfield',
-                key: 'initialisationVector',
-                label: 'initialisationVector',
-                placeholder: 'initialisationVector',
-                defaultValue: '{$.processContext.variable.initialisationVector}',
-                input: true
-            },
-            {
-                "key": "content",
-                "input": false,
-                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
-                "type": "content",
-                "tags": [
-                    "image",
-                    "encrypted"
-                ],
-                "conditional": {
-                    "show": "",
-                    "when": null,
-                    "eq": ""
-                },
-                "properties": {
-                    "sessionKey": '{$.processContext.variable.sessionKey}'
-                },
-                "lockKey": true,
-                "label": "content",
-                "hideLabel": true
-            },
-        ]
-    }
-];
 const encryptedImgForm = [
     {
         components: [
@@ -151,7 +89,7 @@ const encryptedImgForm = [
                 "type": "content",
                 "tags": [
                     "image",
-                    "encrypted"
+                    "sensitive"
                 ],
                 "conditional": {
                     "show": "",
@@ -471,8 +409,6 @@ export {
     imgForm,
     jpgImgForm,
     encryptedImgForm,
-    encryptedImgFormWithoutSessionKey,
-    encryptedImgFormWithoutVector,
     encryptedImgFormWithMissingEncryptionTag,
     iframeForm
 }
