@@ -7,7 +7,7 @@ export default class DataDecryptor {
         if (!ecKey) {
             throw new TranslationServiceError('Private key is missing', 500);
         }
-        this.ecKey = crypto.createECDH('brainpoolP512t1');
+        this.ecKey = crypto.createECDH(DataDecryptor.curveName);
         this.ecKey.setPrivateKey(ecKey);
     }
 
@@ -29,6 +29,23 @@ export default class DataDecryptor {
         return Buffer.concat([decipher.update(data), decipher.final()]);
     }
 
+    encrypt(value) {
+        const iv = crypto.randomBytes(16); // random bytes
+        const key = crypto.createECDH(DataDecryptor.curveName);
+        key.generateKeys();
+        const sessionKey = this.deriveSessionKey(key.getPublicKey());
+
+        const enc = crypto.createCipheriv(DataDecryptor.algorithm, sessionKey, iv);
+        const cipherText = Buffer.concat([enc.update(value), enc.final()]);
+
+        return {
+          value: Buffer.concat([cipherText, enc.getAuthTag()]),
+          iv: iv,
+          publicKey: key.getPublicKey()
+        };
+    }
+
 }
 
 DataDecryptor.algorithm = "aes-256-gcm";
+DataDecryptor.curveName = 'brainpoolP512t1';

@@ -22,4 +22,15 @@ describe('DataDecryptor', () => {
         const result = dataDecryptor.decrypt(sessionKey, value, iv);
         expect(result.toString("base64")).to.equal('REFU');
     })
+
+    it('can encrypt and decrypt a value', () => {
+        const clearText = 'My very secret message';
+
+        const encrypted = dataDecryptor.encrypt(clearText);
+
+        const sessionKey = dataDecryptor.deriveSessionKey(encrypted.publicKey);
+        const decrypted = dataDecryptor.decrypt(sessionKey, encrypted.value, encrypted.iv);
+
+        expect(decrypted.toString()).to.equal(clearText);
+    });
 });
