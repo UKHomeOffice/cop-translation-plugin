@@ -38,7 +38,8 @@ const mockRedis = new MockRedis();
 const referenceGenerator = new BusinessKeyGenerator(mockRedis);
 
 const processService = new ProcessService(appConfig)
-const translator = new FormTranslator(new FormEngineService(appConfig),
+const formEngineService = new FormEngineService(appConfig);
+const translator = new FormTranslator(formEngineService,
     new DataContextFactory(new PlatformDataService(appConfig), processService),
         dataDecryptor, referenceGenerator);
 
@@ -52,5 +53,6 @@ const expect = chai.expect;
 export {
     formTranslateController,
     workflowTranslatorController,
+    formEngineService,
     expect
 }

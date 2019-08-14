@@ -41,6 +41,29 @@ export default class FormEngineService {
             throw new TranslationServiceError(errorMessage, 500);
         }
     }
+
+    async getFormById (formId) {
+        try {
+            const response = await axios.get(`${this.config.services.form.url}/form/${formId}?full=true`);
+            if (response && response.data) {
+                const form = response.data[0];
+                if (form) {
+                    logger.info(`Form  ${form.name} found`);
+                    return form;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+
+        } catch (e) {
+            const errorMessage = `An exception occurred while trying to get form with id ${formId} ... '${e}'`;
+            logger.error(errorMessage, e);
+            throw new TranslationServiceError(errorMessage, 500);
+        }
+    }
+
     validateStatus(status) {
         return status < 500;
     }
