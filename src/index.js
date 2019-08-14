@@ -39,7 +39,7 @@ const keycloak = new Keycloak({}, kcConfig);
 const path = appConfig.privateKey.path;
 
 logger.info('Private key path = ' + path);
-const ecKey = Buffer.from(fs.readFileSync(path, 'utf8'), 'hex');
+const ecKey = Buffer.from(fs.readFileSync(path));
 logger.info('EC Key content resolved');
 
 const dataDecryptor = new DataDecryptor(ecKey);
