@@ -13,21 +13,13 @@ export default class ContentComponentVisitor {
         const value = component.html;
         const key = component.key;
         const processContent = (value) => {
-            if (formComponent.isEncrypted()
-                && formComponent.hasSessionKeyAndInitialisationVector()) {
-                const properties = component.properties;
-                const sessionKey = properties.sessionKey;
-                const initialisationVector = properties.initialisationVector;
+            if (formComponent.isEncrypted()) {
                 logger.info(`Encrypted field detected ${key}`);
                 try {
-                    const decryptedSessionKey = this.dataDecryptor.decryptSessionKey(sessionKey);
-                    value = this.dataDecryptor.decrypt(decryptedSessionKey, Buffer.from(value, 'base64'),
-                        Buffer.from(initialisationVector, 'base64'));
+                    value = this.dataDecryptor.decrypt('hardcodedBusinessKey', Buffer.from(value, 'base64'));
                 } catch (err) {
                     logger.error(`Failed to decrypt value  ${err.toString()}...returning encrypted value`);
                 }
-            } else {
-                logger.warn(`Unable to decrypt ${key} as no session key or initialisation vector specified`);
             }
             if (formComponent.isImage()) {
                 value = value ?

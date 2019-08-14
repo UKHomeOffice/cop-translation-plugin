@@ -40,10 +40,10 @@ const keycloak = new Keycloak({}, kcConfig);
 const path = appConfig.privateKey.path;
 
 logger.info('Private key path = ' + path);
-const rsaKey = fs.readFileSync(path);
-logger.info('RSA Key content resolved');
+const ecKey = Buffer.from(fs.readFileSync(path, 'utf8'), 'hex');
+logger.info('EC Key content resolved');
 
-const dataDecryptor = new DataDecryptor(rsaKey);
+const dataDecryptor = new DataDecryptor(ecKey);
 const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig));
 const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
 

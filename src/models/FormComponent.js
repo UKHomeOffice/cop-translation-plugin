@@ -6,25 +6,8 @@ export default class FormComponent {
 
     }
 
-    hasSessionKeyAndInitialisationVector() {
-        return this.hasSessionKey() && this.hasInitialisationVector();
-
-    }
-
-    hasSessionKey() {
-        return this.component.properties &&
-            (this.component.properties['sessionKey']
-                && this.component.properties['sessionKey'] !== '');
-    }
-
-    hasInitialisationVector() {
-        return this.component.properties
-            &&  (this.component.properties['initialisationVector']
-                && this.component.properties[''] !== '');
-    }
-
     isEncrypted() {
-        return this.tags && this.tags.find(t => t === 'encrypted')
+        return this.tags && this.tags.find(t => t === 'sensitive')
     }
 
     isImage() {
