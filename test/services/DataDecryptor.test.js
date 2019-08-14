@@ -3,7 +3,6 @@ import KeyRepository from "../../src/services/KeyRepository";
 import {expect} from 'chai';
 import sinon from 'sinon';
 import fs from 'fs';
-import crypto from 'crypto';
 
 describe('DataDecryptor', () => {
     const ecKey = Buffer.from(fs.readFileSync('test/certs/enc.key', 'utf8'), 'hex');

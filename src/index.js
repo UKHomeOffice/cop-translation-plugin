@@ -5,7 +5,6 @@ import route from './routes';
 import appConfig from './config/appConfig'
 
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 
 import Keycloak from 'keycloak-connect';

@@ -1,5 +1,3 @@
-import logger from "../../config/winston";
-
 const errorStatusCode = (code) => code || 500;
 
 const res = (err, {formName, form}, res) => {
