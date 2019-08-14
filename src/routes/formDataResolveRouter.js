@@ -1,6 +1,5 @@
 import express from 'express';
 import responseHandler from "../utilities/handlers/responseHandler";
-import logger from "../config/winston";
 
 const router = express.Router();
 
