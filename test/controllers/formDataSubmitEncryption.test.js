@@ -1,4 +1,3 @@
-import JSONPath from "jsonpath";
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import * as forms from '../forms'

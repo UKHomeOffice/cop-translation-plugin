@@ -1,4 +1,3 @@
-import logger from '../config/winston';
 import EncryptionSubmissionVisitor from './EncryptionSubmissionVisitor';
 
 export default class FormSubmissionComponentVisitor {

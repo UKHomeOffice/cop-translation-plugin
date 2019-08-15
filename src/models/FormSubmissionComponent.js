@@ -16,6 +16,6 @@ export default class FormSubmissionComponent {
     }
 
     businessKey() {
-        return submissionContext.businessKey;
+        return this.submissionContext.businessKey;
     }
 }

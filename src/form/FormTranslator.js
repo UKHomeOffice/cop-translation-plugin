@@ -104,7 +104,7 @@ export default class FormTranslator {
 
           if (Array.isArray(data)) {
               data.map(item => {
-                traverseForSubmission(component.components, item);
+                this.traverseForSubmission(component.components, item);
               });
           } else {
               const setData = newValue => JSONPath.value(formData, jsonPath, newValue);
@@ -113,6 +113,6 @@ export default class FormTranslator {
               formComponent.accept(this.formSubmissionComponentVisitor);
           }
       })
-    };
+    }
 
 }

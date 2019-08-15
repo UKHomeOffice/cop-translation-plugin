@@ -1,6 +1,5 @@
 import nock from "nock";
 import * as forms from "../forms";
-import JSONPath from "jsonpath";
 import {expect, formEngineService} from '../setUpTests'
 
 describe('Form Data Controller', () => {
