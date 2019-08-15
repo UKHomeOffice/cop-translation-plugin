@@ -1,9 +1,10 @@
 export default class FormSubmissionComponent {
-    constructor(component, getData, setData) {
+    constructor(component, getData, setData, submissionContext) {
         this.component = component;
         this.tags = this.component.tags;
         this.getData = getData;
         this.setData = setData;
+        this.submissionContext = submissionContext;
     }
 
     isEncrypted() {
@@ -12,5 +13,9 @@ export default class FormSubmissionComponent {
 
     accept(visitor) {
         visitor.visit(this);
+    }
+
+    businessKey() {
+        return submissionContext.businessKey;
     }
 }

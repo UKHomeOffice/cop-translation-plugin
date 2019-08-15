@@ -59,4 +59,11 @@ export default class DataContextFactory {
             'Accept-Type': 'application/json'
         };
     }
+
+    createSubmissionContext(formData) {
+      return {
+        // should eventually be formData.data.reference
+        businessKey: "hardCodedBusinessKey"
+      };
+    }
 }

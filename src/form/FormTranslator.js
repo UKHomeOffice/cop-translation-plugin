@@ -87,12 +87,13 @@ export default class FormTranslator {
 
     async submit(formId, formData, keycloakContext) {
         const formSchema = await this.formEngineService.getFormById(formId);
-        this.traverseForSubmission(formSchema.components, formData.data);
+        const submissionContext = await this.dataContextFactory.createSubmissionContext(formData);
+        this.traverseForSubmission(formSchema.components, formData.data, submissionContext);
 
         return this.formEngineService.submitForm(formId, formData, keycloakContext);
     }
 
-    traverseForSubmission(components, formData) {
+    traverseForSubmission(components, formData, submissionContext) {
       FormioUtils.eachComponent(components, (component, path) => {
           if (!path) {
             return;
@@ -108,7 +109,7 @@ export default class FormTranslator {
           } else {
               const setData = newValue => JSONPath.value(formData, jsonPath, newValue);
               const getData = () => JSONPath.value(formData, jsonPath);
-              const formComponent = new FormSubmissionComponent(component, getData, setData);
+              const formComponent = new FormSubmissionComponent(component, getData, setData, submissionContext);
               formComponent.accept(this.formSubmissionComponentVisitor);
           }
       })
