@@ -15,12 +15,12 @@ describe('Form Data Resolve Controller', () => {
                     forms: forms.noContextData
                 });
             nock('http://localhost:9001')
-                .post('/rpc/staffdetails', {
+                .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "email"
                 })
                 .reply(200, []);
             nock('http://localhost:9001')
-                .get('/shift?email=eq.email')
+                .get('/v1/shift?email=eq.email')
                 .reply(200, []);
         });
         it('it should return form without any data resolution', async () => {

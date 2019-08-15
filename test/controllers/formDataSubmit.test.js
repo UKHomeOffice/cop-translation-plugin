@@ -16,6 +16,10 @@ describe('Form Data Controller', () => {
                 }
               })
               .reply(200, forms.userDetailsContextForm);
+          nock('http://localhost:8000', {})
+              .log(console.log)
+              .get('/form/formId?full=true')
+              .reply(200, forms.userDetailsContextForm);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
@@ -63,6 +67,10 @@ describe('Form Data Controller', () => {
                 }
               })
               .reply(400, forms.userDetailsContextForm);
+            nock('http://localhost:8000', {})
+              .log(console.log)
+              .get('/form/formId?full=true')
+              .reply(200, forms.userDetailsContextForm);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
@@ -109,6 +117,10 @@ describe('Form Data Controller', () => {
                 }
               })
               .reply(500);
+            nock('http://localhost:8000', {})
+              .log(console.log)
+              .get('/form/formId?full=true')
+              .reply(200, forms.userDetailsContextForm);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
@@ -145,4 +157,44 @@ describe('Form Data Controller', () => {
             }
         });
       });
+      it('should throw exception if form can not be loaded', async () => {
+            nock('http://localhost:8000', {})
+              .log(console.log)
+              .get('/form/formId?full=true')
+              .reply(404);
+            const request = httpMocks.createRequest({
+                method: 'POST',
+                url: '/api/translation/form/formId/submission',
+                body: {
+                  data: {
+                    field1: "foo",
+                    field2: "bar"
+                  }
+                },
+                params: {
+                  formId: "formId"
+                },
+                kauth: {
+                    grant: {
+                        access_token: {
+                            token: "test-token",
+                            content: {
+                                session_state: "session_id",
+                                email: "emailTest123",
+                                preferred_username: "test",
+                                given_name: "firstname",
+                                family_name: "surname"
+                            }
+                        }
+
+                    }
+                }
+            });
+            try {
+              await formTranslateController.submitForm(request);
+              return Promise.reject("Shouldn't get here");
+            } catch (err) {
+              // expected
+            }
+        });
 });

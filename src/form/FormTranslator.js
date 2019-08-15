@@ -1,9 +1,12 @@
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
+import JSONPath from "jsonpath";
 import TranslationServiceError from "../TranslationServiceError";
 import logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
+import FormSubmissionComponent from "../models/FormSubmissionComponent";
 import FormComponentVisitor from "./FormComponentVisitor";
+import FormSubmissionComponentVisitor from "./FormSubmissionComponentVisitor";
 
 export default class FormTranslator {
 
@@ -13,6 +16,7 @@ export default class FormTranslator {
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
         this.referenceGenerator = referenceGenerator;
+        this.formSubmissionComponentVisitor = new FormSubmissionComponentVisitor(dataDecryptor);
     }
 
     async translate(formName,
@@ -81,9 +85,33 @@ export default class FormTranslator {
         })
     }
 
-    async submit(formId, form, keycloakContext) {
-        return this.formEngineService.submitForm(formId, form, keycloakContext);
+    async submit(formId, formData, keycloakContext) {
+        const formSchema = await this.formEngineService.getFormById(formId);
+        this.traverseForSubmission(formSchema.components, formData.data);
+
+        return this.formEngineService.submitForm(formId, formData, keycloakContext);
     }
 
+    traverseForSubmission(components, formData) {
+      FormioUtils.eachComponent(components, (component, path) => {
+          if (!path) {
+            return;
+          }
+          console.log(`Visiting path '${path}'`);
+          const jsonPath = `$.${path}`;
+          const data = JSONPath.value(formData, jsonPath);
+
+          if (Array.isArray(data)) {
+              data.map(item => {
+                traverseForSubmission(component.components, item);
+              });
+          } else {
+              const setData = newValue => JSONPath.value(formData, jsonPath, newValue);
+              const getData = () => JSONPath.value(formData, jsonPath);
+              const formComponent = new FormSubmissionComponent(component, getData, setData);
+              formComponent.accept(this.formSubmissionComponentVisitor);
+          }
+      })
+    };
 
 }

@@ -22,6 +22,4 @@ export default class FormComponent {
     accept(visitor) {
         visitor.visit(this);
     }
-
-
 }
