@@ -111,6 +111,29 @@ const simpleFormBusinessKeyWithDefaultValue = [{
         }
     ]
 }];
+const formWithSensitiveField = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.keycloakContext.givenName}',
+            input: true,
+            tags: [
+              "sensitive"
+            ]
+        },
+        {
+            type: 'textfield',
+            key: 'lastName',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.keycloakContext.familyName}',
+            input: true
+        }
+    ]
+}];
 const imgForm = [
     {
         components: [
@@ -555,5 +578,6 @@ export {
     encryptedImgFormWithMissingEncryptionTag,
     iframeForm,
     simpleFormWithoutBusinessKey,
-    simpleFormBusinessKeyWithDefaultValue
+    simpleFormBusinessKeyWithDefaultValue,
+    formWithSensitiveField,
 }

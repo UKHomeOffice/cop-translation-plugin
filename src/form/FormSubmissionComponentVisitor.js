@@ -1,11 +1,12 @@
 import logger from '../config/winston';
+import EncryptionSubmissionVisitor from './EncryptionSubmissionVisitor';
 
 export default class FormSubmissionComponentVisitor {
     constructor(dataDecryptor) {
-      this.dataDecryptor = dataDecryptor;
+      this.encryptionVisitor = new EncryptionSubmissionVisitor(dataDecryptor);
     }
 
     visit(formComponent) {
-      // TODO apply translations
+      this.encryptionVisitor.visit(formComponent);
     }
 }
