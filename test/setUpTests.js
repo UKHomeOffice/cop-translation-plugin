@@ -4,10 +4,12 @@ process.env.NODE_ENV = 'test';
 
 import FormTranslator from "../src/form/FormTranslator";
 import FormEngineService from "../src/services/FormEngineService";
+import WorkflowEngineService from "../src/services/WorkflowEngineService";
 import DataContextFactory from "../src/services/DataContextFactory";
 import PlatformDataService from "../src/services/PlatformDataService";
 import ProcessService from "../src/services/ProcessService";
 import FormTranslateController from "../src/controllers/FormTranslateController";
+import WorkflowTranslationController from "../src/controllers/workflowTranslationController";
 import fs from "fs";
 import DataDecryptor from "../src/services/DataDecryptor";
 import KeyRepository from "../src/services/KeyRepository";
@@ -30,7 +32,6 @@ const key = Buffer.from("048edaf60d8bbd4f5bd11b4afc4ba4e607b4c86dd9798048d4f0060
 const iv = Buffer.from('W25/yzadEQNeV7jnZ3dnbA==', 'base64');
 keyRepository.putKeys('hardcodedBusinessKey', key, iv);
 const ecKey = Buffer.from(fs.readFileSync('test/certs/enc.key'));
-console.log(`Key: ${ecKey.toString('base64')}`);
 const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
 
 
@@ -42,6 +43,7 @@ const translator = new FormTranslator(new FormEngineService(appConfig),
         dataDecryptor, referenceGenerator);
 
 const formTranslateController = new FormTranslateController(translator);
+const workflowTranslatorController = new WorkflowTranslationController(new WorkflowEngineService(appConfig));
 Tracing.correlationId = () => "CorrelationId";
 
 chai.use(chaiAsPromised);
@@ -49,5 +51,6 @@ const expect = chai.expect;
 
 export {
     formTranslateController,
+    workflowTranslatorController,
     expect
 }

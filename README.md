@@ -100,6 +100,7 @@ Using the logged in user's credentials the service will create a data context wh
 {$.environmentContext.operationalDataUrl}
 {$.environmentContext.workflowUrl}
 {$.environmentContext.referenceDataUrl}
+{$.environmentContext.privateUiUrl}
 ```
 
 #### Process Variables Data Context
@@ -110,17 +111,8 @@ If you have a process instance with variables you wish to access within your for
 
 ##### Decrypted content (Currently images supported)
 
-In order to decrypt image content you will need to tag the form component with 'encrypted' and provide the following 2 properties:
+In order to decrypt image content you will need to tag the form component with 'sensitive':
 
-1. sessionKey
-2. initialisationVector
-
-These properties can have data context references for example (assuming your session key and initialisationVector is inside your process variable):
-
-```json
-sessionKey: {$.processContext.myVariable.metadata.sessionKey}
-initialisationVector: {$.processContext.myVariable.metadata.initialisationVector}
-```
 
 **_All endpoints are protected using Keycloak_**
 
@@ -130,6 +122,7 @@ The following environment variables are required:
 1. AUTH\_CLIENT\_SECRET
 2. AUTH\_URL
 3. AUTH\_REALM
+3. PRIVATE\_KEY\_PATH
 4. PROTOCOL
 5. PRIVATE\_FORM\_NAME
 6. PRIVATE\_OPERATIONAL\_DATA\_URL
@@ -137,6 +130,8 @@ The following environment variables are required:
 8. PRIVATE\_WORKFLOW\_ENGINE\_NAME
 9. EXT\_DOMAIN
 9. CORS\_ORIGIN
+
+`PRIVATE_KEY_PATH` refers to a EC private key in DER format generated with `openssl ecparam -genkey -name brainpoolP512t1 -outform der > keyfile.key`
 
 
 #### Methods

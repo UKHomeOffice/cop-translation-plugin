@@ -17,7 +17,7 @@ describe('DataDecryptor', () => {
 
     it('can derive session key', () => {
         const result = dataDecryptor.deriveSessionKey(key);
-        expect(result.toString('hex').toUpperCase()).to.be.equal('8628CF27BFB9D6404F2292A3FE88FBDC87CB63209AFC1283C1D5342DB8888980');
+        expect(result.toString('hex').toUpperCase()).to.be.equal('E822A13D5D84C98BBCE10DB0A322EA2823F5A2B2B2AD8F2CE6D3683B71AACA0F');
     });
 
     it('can decrypt value with session key and iv', () => {
@@ -25,14 +25,14 @@ describe('DataDecryptor', () => {
           publicKey: key,
           iv: iv
         });
-        const value = Buffer.from('YrKNEg44VLtfWzhlNbYb14XqgQ==', 'base64');
+        const value = Buffer.from('fWjIpGyUPmU7JxL2Zh3qqQTRjg==', 'base64');
 
         const result = dataDecryptor.decrypt('businessKey', value);
         expect(result.toString("base64")).to.equal('REFU');
         sinon.assert.calledOnce(keyRepository.getKeys);
     })
     it('returns encrypted value if no keys are found', () => {
-        const value = Buffer.from('YrKNEg44VLtfWzhlNbYb14XqgQ==', 'base64');
+        const value = Buffer.from('fWjIpGyUPmU7JxL2Zh3qqQTRjg==', 'base64');
 
         const result = dataDecryptor.decrypt('businessKey', value);
         expect(result).to.be.equal(value);

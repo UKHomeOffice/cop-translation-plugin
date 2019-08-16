@@ -12,7 +12,9 @@ import PlatformDataService from "./services/PlatformDataService";
 import ProcessService from "./services/ProcessService";
 import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
+import WorkflowEngineService from "./services/WorkflowEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
+import WorkflowTranslationController from "./controllers/workflowTranslationController";
 
 import logger from './config/winston';
 import Tracing from "./utilities/tracing";
@@ -72,7 +74,7 @@ if (appConfig.cors.origin) {
     }));
 }
 
-app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator)));
+app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(new WorkflowEngineService(appConfig))));
 
 const server = http.createServer(app).listen(app.get('port'), function () {
     logger.info('Listening on port %d', port);
