@@ -3,10 +3,12 @@ process.env.NODE_ENV = 'test';
 
 import FormTranslator from "../src/form/FormTranslator";
 import FormEngineService from "../src/services/FormEngineService";
+import WorkflowEngineService from "../src/services/WorkflowEngineService";
 import DataContextFactory from "../src/services/DataContextFactory";
 import PlatformDataService from "../src/services/PlatformDataService";
 import ProcessService from "../src/services/ProcessService";
 import FormTranslateController from "../src/controllers/FormTranslateController";
+import WorkflowTranslationController from "../src/controllers/workflowTranslationController";
 import fs from "fs";
 import DataDecryptor from "../src/services/DataDecryptor";
 import KeyRepository from "../src/services/KeyRepository";
@@ -34,6 +36,7 @@ const translator = new FormTranslator(new FormEngineService(appConfig),
     new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig)), dataDecryptor);
 
 const formTranslateController = new FormTranslateController(translator);
+const workflowTranslatorController = new WorkflowTranslationController(new WorkflowEngineService(appConfig));
 Tracing.correlationId = () => "CorrelationId";
 
 chai.use(chaiAsPromised);
@@ -41,5 +44,6 @@ const expect = chai.expect;
 
 export {
     formTranslateController,
+    workflowTranslatorController,
     expect
 }
