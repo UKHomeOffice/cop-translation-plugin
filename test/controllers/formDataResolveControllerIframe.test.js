@@ -12,7 +12,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=iframeForm')
-                .reply(200, forms.iframeForm);
+                .reply(200, {
+                    total : 1,
+                    forms: forms.iframeForm
+                });
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "email"

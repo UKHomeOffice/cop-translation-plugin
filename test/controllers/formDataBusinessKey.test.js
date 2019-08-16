@@ -10,10 +10,13 @@ describe('Form Data Resolve Controller With Business Key', () => {
     const clock = sinon.useFakeTimers();
     clock.tick(marchEpochTime);
 
-    it.only('it returns form with a newBusinessKey label and api of businessKey', async () => {
+    it('it returns form with a newBusinessKey label and api of businessKey', async () => {
         nock('http://localhost:8000')
             .get('/form?name=testForm')
-            .reply(200, forms.simpleForm);
+            .reply(200, {
+                total :1,
+                forms: forms.simpleForm
+            });
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
                 "argstaffemail": "email"
@@ -53,7 +56,10 @@ describe('Form Data Resolve Controller With Business Key', () => {
     it('it returns form without businessKey', async () => {
         nock('http://localhost:8000')
             .get('/form?name=simpleFormWithoutBusinessKey')
-            .reply(200, forms.simpleFormWithoutBusinessKey);
+            .reply(200, {
+                total :1,
+                forms: forms.simpleFormWithoutBusinessKey
+            });
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
                 "argstaffemail": "email"
@@ -92,7 +98,10 @@ describe('Form Data Resolve Controller With Business Key', () => {
     it('it returns form without populating business key if defaultValue present', async () => {
         nock('http://localhost:8000')
             .get('/form?name=simpleFormBusinessKeyWithDefaultValue')
-            .reply(200, forms.simpleFormBusinessKeyWithDefaultValue);
+            .reply(200, {
+                total : 1,
+                forms: forms.simpleFormBusinessKeyWithDefaultValue
+            });
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
                 "argstaffemail": "email"

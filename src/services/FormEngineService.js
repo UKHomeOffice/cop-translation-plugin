@@ -22,7 +22,7 @@ export default class FormEngineService {
                     });
                     if (subFormComponents && subFormComponents.length >= 1) {
                         logger.info(`Found sub form inside ${formName}...initiating a full form load...`);
-                        const fullForm = await axios.get(`${appConfig.services.form.url}/form/${form._id}?full=true`);
+                        const fullForm = await axios.get(`${appConfig.services.form.url}/form/${form.id}?full=true`);
                         return fullForm.data;
                     }
                     logger.info(`No sub forms detected for ${formName}`);

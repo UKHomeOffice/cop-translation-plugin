@@ -9,7 +9,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=userDetailsContextForm')
-                .reply(200, forms.userDetailsContextForm);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.userDetailsContextForm
+                });
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {'argstaffemail' : 'emailTest123'})
                 .reply(200,
@@ -78,7 +81,10 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:8000')
                 .log(console.log)
                 .get('/form?name=userDetailsContextForm')
-                .reply(200, forms.userDetailsContextForm);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.userDetailsContextForm
+                });
             nock('http://localhost:9001')
                 .log(console.log)
                 .post('/v1/rpc/staffdetails', {

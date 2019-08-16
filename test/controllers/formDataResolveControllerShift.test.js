@@ -11,7 +11,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=shiftForm')
-                .reply(200, forms.shiftForm);
+                .reply(200, {
+                    total : 1,
+                    forms: forms.shiftForm
+                });
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail": "email"
