@@ -18,7 +18,7 @@ const workflowSubmissionRouter = (keycloak, workflowTranslatorController) => {
     router
         .post('/workflow/process-instances', [keycloak.protect(), (req, res) => {
             workflowTranslatorController.startProcessInstance(req).then((response) => {
-                return res.status(response.status).json(response.data);
+                return res.status(response.status);
             }).catch((err) => {
                 responseHandler.res({
                     code: err.code,

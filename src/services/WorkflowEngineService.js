@@ -32,9 +32,8 @@ export default class WorkflowEngineService {
     async completeTask(taskId, taskData) {
         try {
             const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}/form/_complete`, taskData, { validateStatus: this.validateStatus} );
-            if (response && response.data) {
+            if (response) {
                 return {
-                  data: response.data,
                   status: response.status
                 }
             }

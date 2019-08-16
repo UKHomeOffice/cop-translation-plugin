@@ -13,9 +13,7 @@ describe('Workflow Controller', () => {
                   field2: "bar"
                 },
               })
-              .reply(200, {
-                success: true
-              });
+              .reply(200);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
@@ -32,7 +30,6 @@ describe('Workflow Controller', () => {
             const response = await workflowTranslatorController.completeTask(request);
           
             expect(response.status).to.equal(200);
-            expect(response.data.success).to.be.true;
         });
         it('should pass back a 40x status', async () => {
           nock('http://localhost:9000', {})
@@ -43,7 +40,7 @@ describe('Workflow Controller', () => {
                   field2: "bar"
                 },
               })
-              .reply(400, {});
+              .reply(400);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
