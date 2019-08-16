@@ -75,7 +75,7 @@ describe('Form Data Controller', () => {
         const initialisationVector = JSONPath.value(response, "$..components..properties.initialisationVector");
         expect(initialisationVector).to.equal('W25/yzadEQNeV7jnZ3dnbA==');
         expect(img).to.equal(
-            "<p>Image</p>\n\n<p><img src=\"YrKNEg44VLtfWzhlNbYb14XqgQ==\" style=\"height: 125px; width: 100px;\" /></p>\n");
+            "<p>Image</p>\n\n<p><img src=\"fWjIpGyUPmU7JxL2Zh3qqQTRjg==\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
     });
     it('returns encrypted value if encrypted tag missing', async() => {
@@ -109,6 +109,7 @@ describe('Form Data Controller', () => {
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
         expect(img).to.equal(
-            "<p>Image</p>\n\n<p><img src=\"YrKNEg44VLtfWzhlNbYb14XqgQ==\" style=\"height: 125px; width: 100px;\" /></p>\n");
+            "<p>Image</p>\n\n<p><img src=\"fWjIpGyUPmU7JxL2Zh3qqQTRjg==\" style=\"height: 125px; width: 100px;\" /></p>\n");
+
     });
 });
