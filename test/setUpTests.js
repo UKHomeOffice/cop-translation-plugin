@@ -28,7 +28,6 @@ const key = Buffer.from("048edaf60d8bbd4f5bd11b4afc4ba4e607b4c86dd9798048d4f0060
 const iv = Buffer.from('W25/yzadEQNeV7jnZ3dnbA==', 'base64');
 keyRepository.putKeys('hardcodedBusinessKey', key, iv);
 const ecKey = Buffer.from(fs.readFileSync('test/certs/enc.key'));
-console.log(`Key: ${ecKey.toString('base64')}`);
 const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
 
 const translator = new FormTranslator(new FormEngineService(appConfig),

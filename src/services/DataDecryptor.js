@@ -8,7 +8,7 @@ export default class DataDecryptor {
             throw new TranslationServiceError('Private key is missing', 500);
         }
         this.ecKey = crypto.createECDH(DataDecryptor.curveName);
-        this.ecKey.setPrivateKey(ecKey);
+        this.ecKey.setPrivateKey(ecKey.slice(8, 64));
         this.keyRepository = keyRepository;
     }
 
