@@ -30,8 +30,6 @@ const kcConfig = {
     bearerOnly: true
 };
 
-console.log("appConfig: ", appConfig);
-
 const app = express();
 
 const port = appConfig.port;
