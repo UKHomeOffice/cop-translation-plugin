@@ -17,6 +17,86 @@ const simpleForm = [{
             input: true
         },
         {
+            type: 'textfield',
+            key: 'businessKey',
+            label: 'Reference',
+            defaultValue: '',
+            input: true
+        },
+        {
+            type: 'hidden',
+            key: 'sessionId',
+            label: 'sessionid',
+            defaultValue: '{$.keycloakContext.sessionId}',
+            input: true
+        },
+        {
+            type: 'button',
+            action: 'submit',
+            label: 'Submit',
+            theme: 'primary'
+        }
+    ]
+}];
+const simpleFormWithoutBusinessKey = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.keycloakContext.givenName}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'lastName',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.keycloakContext.familyName}',
+            input: true
+        },
+        {
+            type: 'hidden',
+            key: 'sessionId',
+            label: 'sessionid',
+            defaultValue: '{$.keycloakContext.sessionId}',
+            input: true
+        },
+        {
+            type: 'button',
+            action: 'submit',
+            label: 'Submit',
+            theme: 'primary'
+        }
+    ]
+}];
+const simpleFormBusinessKeyWithDefaultValue = [{
+    components: [
+        {
+            type: 'textfield',
+            key: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.keycloakContext.givenName}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'lastName',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.keycloakContext.familyName}',
+            input: true
+        },
+        {
+            type: 'textfield',
+            key: 'businessKey',
+            label: 'Reference',
+            defaultValue: 'test',
+            input: true
+        },
+        {
             type: 'hidden',
             key: 'sessionId',
             label: 'sessionid',
@@ -63,14 +143,75 @@ const iframeForm = [
                 "input": false,
                 "html": "<p>Iframe</p>\n\n<p><iframe src=\"{$.environmentContext.operationalDataUrl}/some?access_token={$.keycloakContext.accessToken}\" style=\"height: 125px; width: 100px;\" /></p>\n",
                 "type": "content",
-                "tags": [
-                ],
+                "tags": [],
                 "conditional": {
                     "show": "",
                     "when": null,
                     "eq": ""
                 },
                 "properties": {},
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithoutVector = [
+    {
+        components: [
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "initialisationVector": '{$.processContext.variable.initialisationVector}'
+                },
+                "lockKey": true,
+                "label": "content",
+                "hideLabel": true
+            },
+        ]
+    }
+];
+const encryptedImgFormWithoutSessionKey = [
+    {
+        components: [
+            {
+                type: 'textfield',
+                key: 'initialisationVector',
+                label: 'initialisationVector',
+                placeholder: 'initialisationVector',
+                defaultValue: '{$.processContext.variable.initialisationVector}',
+                input: true
+            },
+            {
+                "key": "content",
+                "input": false,
+                "html": "<p>Image</p>\n\n<p><img src=\"{$.processContext.variable.image}\" style=\"height: 125px; width: 100px;\" /></p>\n",
+                "type": "content",
+                "tags": [
+                    "image",
+                    "encrypted"
+                ],
+                "conditional": {
+                    "show": "",
+                    "when": null,
+                    "eq": ""
+                },
+                "properties": {
+                    "sessionKey": '{$.processContext.variable.sessionKey}'
+                },
                 "lockKey": true,
                 "label": "content",
                 "hideLabel": true
@@ -98,7 +239,7 @@ const encryptedImgForm = [
                 },
                 "properties": {
                     "sessionKey": '{$.processContext.variable.sessionKey}',
-                    "initialisationVector" : '{$.processContext.variable.initialisationVector}'
+                    "initialisationVector": '{$.processContext.variable.initialisationVector}'
                 },
                 "lockKey": true,
                 "label": "content",
@@ -236,7 +377,7 @@ const dataUrlForm = [
                 "lockKey": true,
                 "hideLabel": false,
                 "properties": {
-                    "widget" : "html5",
+                    "widget": "html5",
                     "lazyLoad": true
                 }
             }
@@ -409,6 +550,10 @@ export {
     imgForm,
     jpgImgForm,
     encryptedImgForm,
+    encryptedImgFormWithoutSessionKey,
+    encryptedImgFormWithoutVector,
     encryptedImgFormWithMissingEncryptionTag,
-    iframeForm
+    iframeForm,
+    simpleFormWithoutBusinessKey,
+    simpleFormBusinessKeyWithDefaultValue
 }

@@ -1,18 +1,18 @@
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
 import TranslationServiceError from "../TranslationServiceError";
-import  logger from "../config/winston";
+import logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
 import FormComponentVisitor from "./FormComponentVisitor";
 
 export default class FormTranslator {
 
-    constructor(formEngineService, dataContextFactory, dataDecryptor) {
+    constructor(formEngineService, dataContextFactory, dataDecryptor, referenceGenerator) {
         this.formEngineService = formEngineService;
         this.dataContextFactory = dataContextFactory;
-        this.dataDecryptor = dataDecryptor;
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
+        this.referenceGenerator = referenceGenerator;
     }
 
     async translate(formName,
@@ -20,7 +20,7 @@ export default class FormTranslator {
                     {processInstanceId, taskId},
                     customDataContext = {}) {
         logger.info(`Loading form ${formName}`);
-        const form = await this.formEngineService.getForm(formName);
+        const form = await this.formEngineService.getForm(formName, keycloakContext);
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
         }
@@ -30,6 +30,18 @@ export default class FormTranslator {
             taskId
         }, customDataContext);
         const resolvedForm = this.applyFormResolution(dataContext, form);
+        if (resolvedForm) {
+            const components = resolvedForm.components;
+            const businessKeyComponents = FormioUtils.findComponents(components, {
+                'key': 'businessKey'
+            });
+            if (businessKeyComponents.length !== 0) {
+                const businessKeyComponent = businessKeyComponents[0];
+                if (businessKeyComponent.defaultValue === '') {
+                    businessKeyComponent.defaultValue = await this.referenceGenerator.newBusinessKey()
+                }
+            }
+        }
         return resolvedForm;
     }
 
@@ -46,9 +58,12 @@ export default class FormTranslator {
     }
 
     applyFormElementResolution(dataContext, form) {
-      if (form.title) {
-        form.title = this.jsonPathEvaluator.performJsonPathEvaluation({key: "Form Title", value: form.title}, dataContext);
-      }
+        if (form.title) {
+            form.title = this.jsonPathEvaluator.performJsonPathEvaluation({
+                key: "Form Title",
+                value: form.title
+            }, dataContext);
+        }
     }
 
 
@@ -66,8 +81,8 @@ export default class FormTranslator {
         })
     }
 
-    async submit(formId, form) {
-      return this.formEngineService.submitForm(formId, form);
+    async submit(formId, form, keycloakContext) {
+        return this.formEngineService.submitForm(formId, form, keycloakContext);
     }
 
 

@@ -1,4 +1,5 @@
 import httpContext from 'express-http-context';
+import uuid4 from 'uuid';
 
 const Tracing = {
     correlationId() {
@@ -7,7 +8,11 @@ const Tracing = {
 
     middleware(req, res, next) {
         httpContext.middleware(req, res, () => {
-            httpContext.set('correlationId', req.header('nginxId'));
+            if (req.header('nginxId')) {
+                httpContext.set('correlationId', req.header('nginxId'));
+            } else {
+                httpContext.set('correlationId', uuid4());
+            }
             next();
         });
     }

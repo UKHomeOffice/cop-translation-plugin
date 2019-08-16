@@ -1,3 +1,4 @@
+import BusinessKeyGenerator from "../src/services/BusinessKeyGenerator";
 
 process.env.NODE_ENV = 'test';
 
@@ -19,6 +20,7 @@ appConfig.services.workflow.url = 'http://localhost:9000'
 appConfig.services.form.url = 'http://localhost:8000';
 appConfig.services.referenceData.url = 'http://localhost:9001';
 appConfig.privateKey.path ='test/certs/enc.key';
+import MockRedis from "ioredis-mock/lib";
 
 import chai from "chai";
 import chaiAsPromised from "chai-as-promised";
@@ -31,8 +33,13 @@ const ecKey = Buffer.from(fs.readFileSync('test/certs/enc.key'));
 console.log(`Key: ${ecKey.toString('base64')}`);
 const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
 
+
+const mockRedis = new MockRedis();
+const referenceGenerator = new BusinessKeyGenerator(mockRedis);
+
 const translator = new FormTranslator(new FormEngineService(appConfig),
-    new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig)), dataDecryptor);
+    new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig)),
+        dataDecryptor, referenceGenerator);
 
 const formTranslateController = new FormTranslateController(translator);
 Tracing.correlationId = () => "CorrelationId";

@@ -1,37 +1,54 @@
 const {
-    PROTOCOL,
-    PRIVATE_FORM_NAME,
-    PRIVATE_OPERATIONAL_DATA_URL,
-    PRIVATE_REFDATA_URL,
-    PRIVATE_WORKFLOW_ENGINE_NAME,
-    PRIVATE_UI_NAME,
-    EXT_DOMAIN,
-    CORS_ORIGIN
+    API_FORM_URI,
+    API_COP_URI,
+    API_REF_URI,
+    ENGINE_URI,
+    WWW_URI,
+    TRANSLATION_CORS_ORIGIN,
+    REDIS_URI,
+    REDIS_PORT,
+    REDIS_TOKEN,
+    TRANSLATION_KEYCLOAK_CLIENT_ID,
+    KEYCLOAK_URL,
+    KEYCLOAK_REALM,
+    TRANSLATION_PORT,
+    TRANSLATION_PRIVATE_KEY_PATH,
 } = process.env;
 
 const appConfig = {
     services: {
         operationalData: {
-            url: `${PRIVATE_OPERATIONAL_DATA_URL}`,
+            url: API_COP_URI,
         },
         workflow: {
-            url: `${PROTOCOL}${PRIVATE_WORKFLOW_ENGINE_NAME}.${EXT_DOMAIN}`,
+            url: ENGINE_URI,
         },
         form: {
-            url: `${PROTOCOL}${PRIVATE_FORM_NAME}.${EXT_DOMAIN}`,
+            url: API_FORM_URI,
         },
         referenceData: {
-            url: `${PRIVATE_REFDATA_URL}`,
+            url: API_REF_URI,
         },
         privateUi: {
-            url: `${PROTOCOL}${PRIVATE_UI_NAME}.${EXT_DOMAIN}`,
+            url: WWW_URI,
         }
     },
     privateKey: {
-       path: process.env.PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem'
+        path:  TRANSLATION_PRIVATE_KEY_PATH || '/enccerts/mobileid-key.pem'
     },
     cors: {
-        origin: CORS_ORIGIN
+        origin: TRANSLATION_CORS_ORIGIN
+    },
+    redis: {
+        url: REDIS_URI || 'localhost',
+        port: REDIS_PORT || 6379,
+        token: REDIS_TOKEN,
+    },
+    port: TRANSLATION_PORT || 8080,
+    keycloak: {
+        clientId: TRANSLATION_KEYCLOAK_CLIENT_ID,
+        url: KEYCLOAK_URL,
+        realm: KEYCLOAK_REALM
     }
 };
 module.exports = appConfig;

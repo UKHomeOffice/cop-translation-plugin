@@ -31,7 +31,8 @@ export default class ContentComponentVisitor {
 
         component.html = this.jsonPathEvaluator.performJsonPathEvaluation({key, value},
             dataResolveContext,
-            processContent);
+            //processContent
+            );
     }
 }
 
