@@ -2,12 +2,11 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{.NAME}}
+  name: {{.TRANSLATION_NAME}}
   labels:
     stable.k8s.psg.io/kcm.class: default
   annotations:
     kubernetes.io/ingress.class: "nginx-external"
-    ingress.kubernetes.io/secure-backends: "true"
     ingress.kubernetes.io/backend-protocol: "HTTPS"
     ingress.kubernetes.io/force-ssl-redirect: "true"
     ingress.kubernetes.io/proxy-send-timeout: "3600"
@@ -16,14 +15,14 @@ metadata:
     stable.k8s.psg.io/kcm.provider: http
 spec:
   rules:
-  - host: {{.NAME}}.{{.EXT_DOMAIN}}
+  - host: {{.TRANSLATION_URL}}
     http:
       paths:
       - backend:
-          serviceName: {{.NAME}}
+          serviceName: {{.TRANSLATION_NAME}}
           servicePort: 10443
         path: /
   tls:
   - hosts:
-    - {{.NAME}}.{{.EXT_DOMAIN}}
-    secretName: {{.NAME}}.{{.EXT_DOMAIN}}-tls
+    - {{.TRANSLATION_URL}}
+    secretName: {{.TRANSLATION_NAME}}-tls
