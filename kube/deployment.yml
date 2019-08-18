@@ -83,8 +83,6 @@ spec:
           value: "{{.TRANSLATION_PRIVATE_KEY_PATH}}"
         - name: REDIS_URI
           value: "{{.REDIS_PROTOCOL}}{{.REDIS_URL}}"
-        - name: REDIS_PORT
-          value: "{{.REDIS_PORT}}"
         - name: REDIS_TOKEN
           value: "{{.REDIS_TOKEN}}"
       volumes:
