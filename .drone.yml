@@ -101,7 +101,7 @@ pipeline:
       - export TRANSLATION_PRIVATE_KEY=$${DEV_TRANSLATION_PRIVATE_KEY}
       - export TRANSLATION_CORS_ORIGIN=$${DEV_TRANSLATION_CORS_ORIGIN}
       - KUBE_NAMESPACE=$${DEV_TRANSLATION_KUBE_NAMESPACE}
-      - TRANSLATION_IMAGE=$${DRONE_COMMIT_SHA}
+      - TRANSLATION_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
@@ -177,7 +177,7 @@ pipeline:
       - export TRANSLATION_PRIVATE_KEY=$${STAGING_TRANSLATION_PRIVATE_KEY}
       - export TRANSLATION_CORS_ORIGIN=$${STAGING_TRANSLATION_CORS_ORIGIN}
       - KUBE_NAMESPACE=$${STAGING_TRANSLATION_KUBE_NAMESPACE}
-      - TRANSLATION_IMAGE=$${DRONE_COMMIT_SHA}
+      - TRANSLATION_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
@@ -253,7 +253,7 @@ pipeline:
       - export TRANSLATION_PRIVATE_KEY=$${PRODUCTION_TRANSLATION_PRIVATE_KEY}
       - export TRANSLATION_CORS_ORIGIN=$${PRODUCTION_TRANSLATION_CORS_ORIGIN}
       - KUBE_NAMESPACE=$${PRODUCTION_TRANSLATION_KUBE_NAMESPACE}
-      - TRANSLATION_IMAGE=$${DRONE_COMMIT_SHA}
+      - TRANSLATION_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
       - kd --insecure-skip-tls-verify -f kube/secret.yml
