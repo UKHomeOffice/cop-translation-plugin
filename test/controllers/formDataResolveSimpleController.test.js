@@ -10,7 +10,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=noContextData')
-                .reply(200, forms.noContextData);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.noContextData
+                });
             nock('http://localhost:9001')
                 .post('/rpc/staffdetails', {
                     "argstaffemail" : "email"

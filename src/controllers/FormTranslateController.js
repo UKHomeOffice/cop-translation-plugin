@@ -19,7 +19,7 @@ export default class FormTranslateController  {
 
     async submitForm(req) {
         const {formId} = req.params;
-        const form = await this.formTranslator.submit(formId, req.body);
+        const form = await this.formTranslator.submit(formId, req.body, new KeycloakContext(req.kauth));
         if (!form) {
             throw new TranslationServiceError(`Form ${formId} could not be submitted`, 500);
         }

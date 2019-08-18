@@ -3,10 +3,7 @@ import express from 'express';
 import expressValidator from 'express-validator';
 import route from './routes';
 import appConfig from './config/appConfig'
-
-const http = require('http');
-const fs = require('fs');
-
+import Redis from 'ioredis';
 import Keycloak from 'keycloak-connect';
 import helmet from 'helmet';
 import DataDecryptor from "./services/DataDecryptor";
@@ -22,17 +19,22 @@ import WorkflowTranslationController from "./controllers/workflowTranslationCont
 import logger from './config/winston';
 import Tracing from "./utilities/tracing";
 import cors from 'cors';
+import BusinessKeyGenerator from "./services/BusinessKeyGenerator";
+
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 
 const kcConfig = {
-    clientId: process.env.AUTH_CLIENT_ID,
-    serverUrl: process.env.AUTH_URL,
-    realm: process.env.AUTH_REALM,
+    clientId: appConfig.keycloak.clientId,
+    serverUrl: appConfig.keycloak.url,
+    realm: appConfig.keycloak.realm,
     bearerOnly: true
 };
 
 const app = express();
 
-const port = process.env.PORT || 8080;
+const port = appConfig.port;
 
 app.set('port', port);
 
@@ -41,12 +43,20 @@ const keycloak = new Keycloak({}, kcConfig);
 const path = appConfig.privateKey.path;
 
 logger.info('Private key path = ' + path);
-const ecKey = Buffer.from(fs.readFileSync(path));
+// const ecKey = Buffer.from(fs.readFileSync(path));
 logger.info('EC Key content resolved');
 
-const dataDecryptor = new DataDecryptor(ecKey);
+// const dataDecryptor = new DataDecryptor(ecKey);
+
+const redis = new Redis({
+    host: `${appConfig.redis.url}`,
+    port: appConfig.redis.port,
+    password: appConfig.redis.token,
+});
+
 const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig));
-const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
+const referenceGenerator = new BusinessKeyGenerator(redis);
+const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, null, referenceGenerator);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

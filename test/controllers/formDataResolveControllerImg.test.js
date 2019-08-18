@@ -12,10 +12,16 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=imgForm')
-                .reply(200, forms.imgForm);
+                .reply(200, {
+                    total :1,
+                    forms: forms.imgForm
+                });
             nock('http://localhost:8000')
                 .get('/form?name=jpgImgForm')
-                .reply(200, forms.jpgImgForm);
+                .reply(200, {
+                    total :1,
+                    forms: forms.jpgImgForm
+                });
             nock('http://localhost:9001')
                 .post('/rpc/staffdetails', {
                     "argstaffemail" : "email"
@@ -75,7 +81,7 @@ describe('Form Data Resolve Controller', () => {
             const response = await formTranslateController.getForm(request);
             const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
             expect(img).to.equal(
-                "<p>Image</p>\n\n<p><img src=\"data:image/png;base64,image\" style=\"height: 125px; width: 100px;\" /></p>\n");
+                "<p>Image</p>\n\n<p><img src=\"image\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
         });
         it('it should jpg image source', async () => {
@@ -108,7 +114,7 @@ describe('Form Data Resolve Controller', () => {
             const response = await formTranslateController.getForm(request);
             const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
             expect(img).to.equal(
-                "<p>Image</p>\n\n<p><img src=\"data:image/jpg;base64,image\" style=\"height: 125px; width: 100px;\" /></p>\n");
+                "<p>Image</p>\n\n<p><img src=\"image\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
         });
     });

@@ -21,7 +21,10 @@ describe('Form Data Resolve Controller Tracing', () => {
             })
                 .log(console.log)
                 .get('/form?name=userDetailsContextForm')
-                .reply(200, forms.userDetailsContextForm);
+                .reply(200,{
+                    total :1,
+                    forms:  forms.userDetailsContextForm
+                });
             nock('http://localhost:9001', {
                 reqheaders: {
                     nginxId: 'CorrelationId'
@@ -40,7 +43,10 @@ describe('Form Data Resolve Controller Tracing', () => {
         beforeEach(() => {
             nock('http://localhost:8000', tracingHeader)
                 .get('/form?name=processContextForm')
-                .reply(200, forms.processContextForm);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.processContextForm
+                });
             nock('http://localhost:9000', tracingHeader)
                 .get('/api/workflow/tasks/taskId')
                 .reply(200, tasks.taskData);

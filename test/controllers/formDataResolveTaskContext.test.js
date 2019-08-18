@@ -11,7 +11,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=processContextForm')
-                .reply(200, forms.processContextForm);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.processContextForm
+                });
             nock('http://localhost:9000')
                 .get('/api/workflow/tasks/taskId')
                 .reply(200, tasks.taskData);
@@ -79,7 +82,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=taskContextForm')
-                .reply(200, forms.taskContextForm);
+                .reply(200, {
+                    total :1,
+                    forms: forms.taskContextForm
+                });
             nock('http://localhost:9000')
                 .get('/api/workflow/tasks/taskId')
                 .reply(200, tasks.taskData);
@@ -145,7 +151,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=taskContextForm')
-                .reply(200, forms.taskContextForm);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.taskContextForm
+                });
             nock('http://localhost:9000')
                 .get('/api/workflow/tasks/taskId')
                 .reply(404, {});

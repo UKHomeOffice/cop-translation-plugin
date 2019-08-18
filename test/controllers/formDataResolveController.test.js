@@ -12,7 +12,10 @@ describe('Form Data Resolve Controller', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
                 .get('/form?name=testForm')
-                .reply(200, forms.simpleForm);
+                .reply(200, {
+                    total :1,
+                    forms: forms.simpleForm
+                });
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "email"
@@ -62,7 +65,10 @@ describe('Form Data Resolve Controller', () => {
             nock('http://localhost:8000')
                 .log(console.log)
                 .get('/form?name=dataUrlForm')
-                .reply(200, forms.dataUrlForm);
+                .reply(200, {
+                    total: 1,
+                    forms: forms.dataUrlForm
+                });
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "email"
