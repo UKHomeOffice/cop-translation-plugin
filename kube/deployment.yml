@@ -2,31 +2,31 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{.NAME}}
+  name: "{{.TRANSLATION_NAME}}"
 spec:
   selector:
     matchLabels:
-      name: {{.NAME}}
+      name: "{{.TRANSLATION_NAME}}"
   replicas: 3
   revisionHistoryLimit: 3
   template:
     metadata:
       labels:
-        name: {{.NAME}}
+        name: "{{.TRANSLATION_NAME}}"
     spec:
       securityContext:
         runAsUser: 1000
         fsGroup: 1000
       containers:
       - name: proxy
-        image: quay.io/ukhomeofficedigital/nginx-proxy
+        image: "{{.NGINX_IMAGE}}:{{.NGINX_TAG}}"
         env:
         - name: PROXY_SERVICE_HOST
           value: "127.0.0.1"
         - name: PROXY_SERVICE_PORT
-          value: "8080"
+          value: "{{.TRANSLATION_PORT}}"
         - name: ENABLE_UUID_PARAM
-          value: {{.ENABLE_UUID}}
+          value: "FALSE"
         - name: LOG_FORMAT_NAME
           value: 'json'
         - name: NAXSI_USE_DEFAULT_RULES
@@ -36,22 +36,22 @@ spec:
         ports:
         - name: https
           containerPort: 10443
-      - name: {{.NAME}}
-        image: quay.io/ukhomeofficedigital/cop-private-translation-service:{{.IMAGE_TAG}}
+      - name: "{{.TRANSLATION_NAME}}"
+        image: "{{.TRANSLATION_IMAGE}}:{{.TRANSLATION_TAG}}"
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
         readinessProbe:
           httpGet:
             path: /api/translation/readiness
-            port: 8080
+            port: {{.TRANSLATION_PORT}}
             scheme: HTTP
           initialDelaySeconds: 60
           periodSeconds: 60
         livenessProbe:
           httpGet:
             path: /api/translation/healthz
-            port: 8080
+            port: {{.TRANSLATION_PORT}}
             scheme: HTTP
           initialDelaySeconds: 60
           periodSeconds: 60
@@ -59,38 +59,39 @@ spec:
           - name: enccerts
             mountPath: /enccerts
         env:
-        - name: AUTH_CLIENT_ID
-          value: {{.NAME}}
-        - name: AUTH_CLIENT_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: {{.NAME}}
-              key: authClientSecret
-        - name: AUTH_URL
-          value: {{.KEYCLOAK_URL}}
-        - name: AUTH_REALM
-          value: {{.KEYCLOAK_REALM}}
-        - name: PROTOCOL
-          value: {{.PROTOCOL}}
-        - name: PRIVATE_REFDATA_URL
-          value: {{.PRIVATE_REFDATA_URL}}
-        - name: PRIVATE_FORM_NAME
-          value: {{.PRIVATE_FORM_NAME}}
-        - name: PRIVATE_OPERATIONAL_DATA_URL
-          value: {{.PRIVATE_OPERATIONAL_DATA_URL}}
-        - name: PRIVATE_WORKFLOW_ENGINE_NAME
-          value: {{.PRIVATE_WORKFLOW_ENGINE_NAME}}
-        - name: PRIVATE_UI_NAME
-          value: {{.PRIVATE_UI_NAME}}
-        - name: EXT_DOMAIN
-          value: {{.EXT_DOMAIN}}
-        - name: CORS_ORIGIN
-          value: {{.CORS_ORIGIN}}
+        - name: TRANSLATION_KEYCLOAK_CLIENT_ID
+          value: "{{.TRANSLATION_KEYCLOAK_CLIENT_ID}}"
+        - name: KEYCLOAK_URL
+          value: "{{.KEYCLOAK_PROTOCOL}}{{.KEYCLOAK_URL}}"
+        - name: KEYCLOAK_REALM
+          value: "{{.KEYCLOAK_REALM}}"
+        - name: API_FORM_URI
+          value: "{{.API_FORM_PROTOCOL}}{{.API_FORM_URL}}"
+        - name: API_COP_URI
+          value: "{{.API_COP_PROTOCOL}}{{.API_COP_URL}}"
+        - name: API_REF_URI
+          value: "{{.API_REF_PROTOCOL}}{{.API_REF_URL}}"
+        - name: ENGINE_URI
+          value: "{{.ENGINE_PROTOCOL}}{{.ENGINE_URL}}"
+        - name: WWW_URI
+          value: "{{.WWW_PROTOCOL}}{{.WWW_URL}}"
+        - name: TRANSLATION_CORS_ORIGIN
+          value: "{{.TRANSLATION_CORS_ORIGIN}}"
+        - name: TRANSLATION_PORT
+          value: "{{.TRANSLATION_PORT}}"
+        - name: TRANSLATION_PRIVATE_KEY_PATH
+          value: "{{.TRANSLATION_PRIVATE_KEY_PATH}}"
+        - name: REDIS_URI
+          value: "{{.REDIS_PROTOCOL}}{{.REDIS_URL}}"
+        - name: REDIS_PORT
+          value: "{{.REDIS_PORT}}"
+        - name: REDIS_TOKEN
+          value: "{{.REDIS_TOKEN}}"
       volumes:
       - name: enccerts
         secret:
-          secretName: mobileid
+          secretName: {{.TRANSLATION_NAME}}
           items:
-          - key: mobileid-key.pem
-            path: mobileid-key.pem
+          - key: enc-key.pem
+            path: enc-key.pem
             mode: 256
