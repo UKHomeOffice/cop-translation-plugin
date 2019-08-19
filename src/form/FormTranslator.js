@@ -86,11 +86,17 @@ export default class FormTranslator {
     }
 
     async submit(formId, formData, keycloakContext) {
+        return this.translateForSubmission(formId, formData, async () => this.formEngineService.submitForm(formId, formData, keycloakContext));
+    }
+
+    async translateForSubmission(formId, formData, submit) {
         const formSchema = await this.formEngineService.getFormById(formId);
         const submissionContext = await this.dataContextFactory.createSubmissionContext(formData);
+
+        formData.data.formName = formSchema.name;
         this.traverseForSubmission(formSchema.components, formData.data, submissionContext);
 
-        return this.formEngineService.submitForm(formId, formData, keycloakContext);
+        return submit();
     }
 
     traverseForSubmission(components, formData, submissionContext) {
@@ -98,7 +104,6 @@ export default class FormTranslator {
           if (!path) {
             return;
           }
-          console.log(`Visiting path '${path}'`);
           const jsonPath = `$.${path}`;
           const data = JSONPath.value(formData, jsonPath);
 

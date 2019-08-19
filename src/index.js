@@ -87,7 +87,7 @@ if (appConfig.cors.origin) {
     }));
 }
 
-app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(processService)));
+app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(processService, translator)));
 
 const server = http.createServer(app).listen(app.get('port'), function () {
     logger.info('Listening on port %d', port);

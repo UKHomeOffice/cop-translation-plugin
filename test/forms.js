@@ -112,6 +112,7 @@ const simpleFormBusinessKeyWithDefaultValue = [{
     ]
 }];
 const formWithSensitiveField = [{
+    name: "sensitiveField",
     components: [
         {
             type: 'textfield',
@@ -482,6 +483,7 @@ const taskContextForm = [{
     ]
 }];
 const userDetailsContextForm = [{
+    name: "UserDetails",
     components: [
         {
             type: 'textfield',

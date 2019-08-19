@@ -44,7 +44,7 @@ const translator = new FormTranslator(formEngineService,
         dataDecryptor, referenceGenerator);
 
 const formTranslateController = new FormTranslateController(translator);
-const workflowTranslatorController = new WorkflowTranslationController(processService);
+const workflowTranslatorController = new WorkflowTranslationController(processService, translator);
 Tracing.correlationId = () => "CorrelationId";
 
 chai.use(chaiAsPromised);
