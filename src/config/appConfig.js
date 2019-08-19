@@ -43,6 +43,7 @@ const appConfig = {
         url: REDIS_URI || 'localhost',
         port: REDIS_PORT || 6379,
         token: REDIS_TOKEN,
+        ssl: REDIS_SSL || false,
     },
     port: TRANSLATION_PORT || 8080,
     keycloak: {

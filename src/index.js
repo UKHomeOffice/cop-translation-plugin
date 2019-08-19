@@ -48,11 +48,26 @@ logger.info('EC Key content resolved');
 
 // const dataDecryptor = new DataDecryptor(ecKey);
 
-const redis = new Redis({
-    host: `${appConfig.redis.url}`,
-    port: appConfig.redis.port,
-    password: appConfig.redis.token,
-});
+function checkRedisSSL(redisSSl){
+    if(redisSSl) {
+        const redis = new Redis({
+            host: `${appConfig.redis.url}`,
+            port: appConfig.redis.port,
+            password: appConfig.redis.token,
+            tls: {}
+        });
+        return redis;
+    } else {
+        const redis = new Redis({
+            host: `${appConfig.redis.url}`,
+            port: appConfig.redis.port,
+            password: appConfig.redis.token,
+        });
+        return redis;
+    }
+}
+
+const redis = checkRedisSSL(appConfig.redis.ssl);
 
 const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig));
 const referenceGenerator = new BusinessKeyGenerator(redis);
