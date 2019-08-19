@@ -2,6 +2,22 @@ import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import {expect, workflowTranslatorController} from '../setUpTests'
 
+const keycloak = {
+                    grant: {
+                        access_token: {
+                            token: "test-token",
+                            content: {
+                                session_state: "session_id",
+                                email: "email",
+                                preferred_username: "test",
+                                given_name: "testgivenname",
+                                family_name: "testfamilyname"
+                            }
+                        }
+
+                    }
+                };
+
 describe('Workflow Controller', () => {
     describe('completing tasks', () => {
         it('should complete the task with the form data', async () => {
@@ -25,7 +41,8 @@ describe('Workflow Controller', () => {
                 },
                 params: {
                   taskId: "myTaskId"
-                }
+                },
+                kauth: keycloak
             });
             const response = await workflowTranslatorController.completeTask(request);
           
@@ -52,7 +69,8 @@ describe('Workflow Controller', () => {
                 },
                 params: {
                   taskId: "myTaskId"
-                }
+                },
+                kauth: keycloak
             });
             const response = await workflowTranslatorController.completeTask(request);
           
@@ -85,6 +103,7 @@ describe('Workflow Controller', () => {
                   processKey: "myProcessName",
                   variableName: "myVariableName",
                 },
+                kauth: keycloak
             });
             const response = await workflowTranslatorController.startProcessInstance(request);
           
@@ -116,7 +135,8 @@ describe('Workflow Controller', () => {
                 },
                 params: {
                   taskId: "myTaskId"
-                }
+                },
+                kauth: keycloak
             });
             const response = await workflowTranslatorController.startProcessInstance(request);
           

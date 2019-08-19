@@ -1,18 +1,28 @@
 export default class WorkflowTranslationController {
-    constructor(workflowEngine) {
-      this.workflowEngine = workflowEngine;
+    constructor(processService) {
+      this.processService = processService;
     }
 
 
     async startProcessInstance(req) {
-      return this.workflowEngine.startProcessInstance(req.body);
+      const headers = this.createHeader(req.kauth);
+
+      return this.processService.startProcessInstance(req.body, headers);
     }
 
     async completeTask(req) {
       const {taskId} = req.params;
       const taskData = req.body;
+      const headers = this.createHeader(req.kauth);
 
-      return this.workflowEngine.completeTask(taskId, taskData);
+      return this.processService.completeTask(taskId, taskData, headers);
     }
 
+    createHeader(keycloakContext) {
+        return {
+            'Authorization': `Bearer ${keycloakContext.accessToken}`,
+            'Content-Type': 'application/json',
+            'Accept-Type': 'application/json'
+        };
+    }
 }

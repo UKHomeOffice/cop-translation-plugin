@@ -12,7 +12,6 @@ import PlatformDataService from "./services/PlatformDataService";
 import ProcessService from "./services/ProcessService";
 import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
-import WorkflowEngineService from "./services/WorkflowEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
 import WorkflowTranslationController from "./controllers/workflowTranslationController";
 
@@ -69,7 +68,8 @@ function checkRedisSSL(redisSSl){
 
 const redis = checkRedisSSL(appConfig.redis.ssl);
 
-const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig));
+const processService = new ProcessService(appConfig);
+const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService);
 const referenceGenerator = new BusinessKeyGenerator(redis);
 const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, null, referenceGenerator);
 
@@ -87,7 +87,7 @@ if (appConfig.cors.origin) {
     }));
 }
 
-app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(new WorkflowEngineService(appConfig))));
+app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(processService)));
 
 const server = http.createServer(app).listen(app.get('port'), function () {
     logger.info('Listening on port %d', port);
