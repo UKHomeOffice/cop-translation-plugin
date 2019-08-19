@@ -4,7 +4,6 @@ process.env.NODE_ENV = 'test';
 
 import FormTranslator from "../src/form/FormTranslator";
 import FormEngineService from "../src/services/FormEngineService";
-import WorkflowEngineService from "../src/services/WorkflowEngineService";
 import DataContextFactory from "../src/services/DataContextFactory";
 import PlatformDataService from "../src/services/PlatformDataService";
 import ProcessService from "../src/services/ProcessService";
@@ -38,12 +37,13 @@ const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
 const mockRedis = new MockRedis();
 const referenceGenerator = new BusinessKeyGenerator(mockRedis);
 
+const processService = new ProcessService(appConfig)
 const translator = new FormTranslator(new FormEngineService(appConfig),
-    new DataContextFactory(new PlatformDataService(appConfig), new ProcessService(appConfig)),
+    new DataContextFactory(new PlatformDataService(appConfig), processService),
         dataDecryptor, referenceGenerator);
 
 const formTranslateController = new FormTranslateController(translator);
-const workflowTranslatorController = new WorkflowTranslationController(new WorkflowEngineService(appConfig));
+const workflowTranslatorController = new WorkflowTranslationController(processService);
 Tracing.correlationId = () => "CorrelationId";
 
 chai.use(chaiAsPromised);

@@ -12,7 +12,8 @@ export default class FormEngineService {
 
     async getForm (formName, keycloakContext) {
         try {
-            const response = await axios.get(`${this.config.services.form.url}/form?name=${formName}`, { headers: { Authorization: `Bearer ${keycloakContext.accessToken}` }});
+            const headers = this.createHeader(keycloakContext);
+            const response = await axios.get(`${this.config.services.form.url}/form?name=${formName}`, { headers: headers });
             if (response && response.data) {
                 const form = response.data.forms[0];
                 if (form) {
@@ -22,7 +23,7 @@ export default class FormEngineService {
                     });
                     if (subFormComponents && subFormComponents.length >= 1) {
                         logger.info(`Found sub form inside ${formName}...initiating a full form load...`);
-                        const fullForm = await axios.get(`${appConfig.services.form.url}/form/${form.id}?full=true`);
+                        const fullForm = await axios.get(`${appConfig.services.form.url}/form/${form.id}?full=true`, { headers: headers } );
                         return fullForm.data;
                     }
                     logger.info(`No sub forms detected for ${formName}`);
@@ -46,7 +47,8 @@ export default class FormEngineService {
 
     async submitForm (formId, form, keycloakContext) {
         try {
-            const response = await axios.post(`${this.config.services.form.url}/form/${formId}/submission`, form, { validateStatus: this.validateStatus, headers: { Authorization: `Bearer ${keycloakContext.accessToken}` }} );
+            const headers = this.createHeader(keycloakContext);
+            const response = await axios.post(`${this.config.services.form.url}/form/${formId}/submission`, form, { validateStatus: this.validateStatus, headers: headers} );
             if (response && response.data) {
                 return {
                   data: response.data,
@@ -59,5 +61,13 @@ export default class FormEngineService {
             logger.error(errorMessage, e);
             throw new TranslationServiceError(errorMessage, 500);
         }
+    }
+
+    createHeader(keycloakContext) {
+        return {
+            'Authorization': `Bearer ${keycloakContext.accessToken}`,
+            'Content-Type': 'application/json',
+            'Accept-Type': 'application/json'
+        };
     }
 }

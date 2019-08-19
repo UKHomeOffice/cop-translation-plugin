@@ -1,5 +1,6 @@
 import axios from "../utilities/axios";
 import  logger from "../config/winston";
+import TranslationServiceError from "../TranslationServiceError"
 
 
 export default class ProcessService {
@@ -32,5 +33,42 @@ export default class ProcessService {
 
     async getProcessVariables(processInstanceId, headers) {
         return await this.getApiCall(`${this.config.services.workflow.url}/api/workflow/process-instances/${processInstanceId}/variables`, headers);
+    }
+
+    validateStatus(status) {
+        return status < 500;
+    }
+
+    async startProcessInstance(processData, headers) {
+        try {
+            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/process-instances`, processData, { validateStatus: this.validateStatus, headers: headers } );
+            if (response && response.data) {
+                return {
+                  data: response.data,
+                  status: response.status
+                }
+            }
+            return null;
+        } catch (e) {
+            const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e}'`;
+            logger.error(errorMessage, e);
+            throw new TranslationServiceError(errorMessage, 500);
+        }
+    }
+
+    async completeTask(taskId, taskData, headers) {
+        try {
+            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}/form/_complete`, taskData, { validateStatus: this.validateStatus, headers: headers } );
+            if (response) {
+                return {
+                  status: response.status
+                }
+            }
+            return null;
+        } catch (e) {
+            const errorMessage = `An exception occurred while trying to complete task ${taskId} ... '${e}'`;
+            logger.error(errorMessage, e);
+            throw new TranslationServiceError(errorMessage, 500);
+        }
     }
 }
