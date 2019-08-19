@@ -1,5 +1,6 @@
 import axios from "../utilities/axios";
 import  logger from "../config/winston";
+import TranslationServiceError from "../TranslationServiceError"
 
 
 export default class ProcessService {
