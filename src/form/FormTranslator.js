@@ -93,8 +93,15 @@ export default class FormTranslator {
         const formSchema = await this.formEngineService.getFormById(formId);
         const submissionContext = await this.dataContextFactory.createSubmissionContext(formData);
 
-        formData.data.formName = formSchema.name;
         this.traverseForSubmission(formSchema.components, formData.data, submissionContext);
+        if (submissionContext.encryptionMetaData) {
+            const {iv, publicKey} = submissionContext.encryptionMetaData;
+
+            formData.data._encryptionMetaData = {
+              iv: iv.toString('base64'),
+              publicKey: publicKey.toString('base64'),
+            }
+        }
 
         return submit();
     }

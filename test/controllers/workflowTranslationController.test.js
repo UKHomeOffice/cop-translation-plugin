@@ -29,7 +29,6 @@ describe('Workflow Controller', () => {
                 data: JSON.stringify({
                   field1: "foo",
                   field2: "bar",
-                  formName: "UserDetails",
                 }),
                 formId: "myFormId", 
               })
@@ -103,7 +102,6 @@ describe('Workflow Controller', () => {
                 data: JSON.stringify({
                   field1: "foo",
                   field2: "bar",
-                  formName: "UserDetails",
                 }),
                 formId: "myFormId",
               })
@@ -141,7 +139,6 @@ describe('Workflow Controller', () => {
                 data: JSON.stringify({
                   field1: "foo",
                   field2: "bar",
-                  formName: "UserDetails"
                 }),
                 processKey: "myProcessName",
                 variableName: "myVariableName",
@@ -170,6 +167,47 @@ describe('Workflow Controller', () => {
             });
             const response = await workflowTranslatorController.startProcessInstance(request);
           
+            expect(response.status).to.equal(200);
+            expect(response.data.success).to.be.true;
+        });
+        it('should add encryptionMetaData', async () => {
+            nock('http://localhost:9000', {})
+              .log(console.log)
+              .post('/api/workflow/process-instances', body => {
+                  const data = JSON.parse(body.data);
+                  try {
+                    expect(data._encryptionMetaData.iv).to.match(/.*==/);
+                    expect(data._encryptionMetaData.publicKey).to.not.be.null;
+                    return true;
+                  } catch (err) {
+                    console.log(`error in encryption ${err.message}`, err);
+                    return false;
+                  }
+              })
+              .reply(200, {
+                success: true
+              });
+            nock('http://localhost:8000', {})
+              .log(console.log)
+              .get('/form/myFormId?full=true')
+              .reply(200, forms.userDetailsContextForm);
+            const request = httpMocks.createRequest({
+                method: 'POST',
+                url: '/api/translation/workflow/process-instances',
+                body: {
+                  data: JSON.stringify({
+                    field1: "foo",
+                    field2: "bar",
+                    businessKey: "myProcessId",
+                  }),
+                  processKey: "myProcessName",
+                  variableName: "myVariableName",
+                  formId: "myFormId",
+                },
+                kauth: keycloak
+            });
+            const response = await workflowTranslatorController.startProcessInstance(request);
+
             expect(response.status).to.equal(200);
             expect(response.data.success).to.be.true;
         });
@@ -221,7 +259,6 @@ describe('Workflow Controller', () => {
                 data: JSON.stringify({
                   field1: "foo",
                   field2: "bar",
-                  formName: "UserDetails"
                 }),
                 processKey: "myProcessName",
                 variableName: "myVariableName",

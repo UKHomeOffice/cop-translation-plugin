@@ -69,9 +69,9 @@ function checkRedisSSL(redisSSl){
 const redis = checkRedisSSL(appConfig.redis.ssl);
 
 const processService = new ProcessService(appConfig);
-const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService);
+const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, /* dataDecryptor */ null);
 const referenceGenerator = new BusinessKeyGenerator(redis);
-const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, null, referenceGenerator);
+const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, /* dataDecryptor */ null, referenceGenerator);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));

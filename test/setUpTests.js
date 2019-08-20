@@ -40,7 +40,7 @@ const referenceGenerator = new BusinessKeyGenerator(mockRedis);
 const processService = new ProcessService(appConfig)
 const formEngineService = new FormEngineService(appConfig);
 const translator = new FormTranslator(formEngineService,
-    new DataContextFactory(new PlatformDataService(appConfig), processService),
+    new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor),
         dataDecryptor, referenceGenerator);
 
 const formTranslateController = new FormTranslateController(translator);
