@@ -49,7 +49,7 @@ const appConfig = {
     port: TRANSLATION_PORT || 8080,
     keycloak: {
         clientId: TRANSLATION_KEYCLOAK_CLIENT_ID,
-        url: KEYCLOAK_URL,
+        url: KEYCLOAK_URI,
         realm: KEYCLOAK_REALM
     }
 };
