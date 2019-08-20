@@ -61,7 +61,7 @@ spec:
         env:
         - name: TRANSLATION_KEYCLOAK_CLIENT_ID
           value: "{{.TRANSLATION_KEYCLOAK_CLIENT_ID}}"
-        - name: KEYCLOAK_URL
+        - name: KEYCLOAK_URI
           value: "{{.KEYCLOAK_PROTOCOL}}{{.KEYCLOAK_URL}}"
         - name: KEYCLOAK_REALM
           value: "{{.KEYCLOAK_REALM}}"

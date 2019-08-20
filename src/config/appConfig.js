@@ -10,7 +10,7 @@ const {
     REDIS_TOKEN,
     REDIS_SSL,
     TRANSLATION_KEYCLOAK_CLIENT_ID,
-    KEYCLOAK_URL,
+    KEYCLOAK_URI,
     KEYCLOAK_REALM,
     TRANSLATION_PORT,
     TRANSLATION_PRIVATE_KEY_PATH,
@@ -49,7 +49,7 @@ const appConfig = {
     port: TRANSLATION_PORT || 8080,
     keycloak: {
         clientId: TRANSLATION_KEYCLOAK_CLIENT_ID,
-        url: KEYCLOAK_URL,
+        url: KEYCLOAK_URI,
         realm: KEYCLOAK_REALM
     }
 };
