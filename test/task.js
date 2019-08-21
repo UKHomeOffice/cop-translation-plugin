@@ -39,7 +39,7 @@ const processVariablesWithEncryptedValues = {
     },
     person: {
         type: "Object",
-        value: "{\"firstName\": \"W0jm3TN7WCVANdCtGcJVJ9P4Zw==\",\"lastName\": \"lastNameFromProcess\",\"id\": \"idFromProcess\",\"encryptedFields\": [\"firstName\"]}",
+        value: "{\"firstName\": \"W0jm3TN7WCVANdCtGcJVJ9P4Zw==\",\"lastName\": \"lastNameFromProcess\",\"id\": \"idFromProcess\",\"encryptedFields\": [\"firstName\"], \"businessKey\": \"hardcodedBusinessKey\"}",
         valueInfo: {
             objectTypeName: "xxxx",
             serializationDataFormat: "application/json"

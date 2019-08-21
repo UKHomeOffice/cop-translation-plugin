@@ -6,12 +6,14 @@ class ProcessContext {
                 const variable = variables.data[key];
                 if (variable.type.toLowerCase() === 'json' || variable.type.toLowerCase() === 'object') {
                     this[key] = JSON.parse(variable.value);
+                    if (!this.businessKey && this[key].businessKey) {
+                        this.businessKey = this[key].businessKey;
+                    }
                 } else {
                     this[key] = variable.value
                 }
             });
         }
-        this.businessKey = 'hardcodedBusinessKey';
     }
 }
 

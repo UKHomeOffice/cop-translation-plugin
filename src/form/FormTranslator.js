@@ -8,12 +8,11 @@ import FormDataDecryptor from "./FormDataDecryptor";
 
 export default class FormTranslator {
 
-    constructor(formEngineService, dataContextFactory, dataDecryptor, referenceGenerator) {
+    constructor(formEngineService, dataContextFactory, dataDecryptor) {
         this.formEngineService = formEngineService;
         this.dataContextFactory = dataContextFactory;
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
-        this.referenceGenerator = referenceGenerator;
         this.formDataDecryptor = new FormDataDecryptor(dataDecryptor);
     }
 
@@ -32,20 +31,7 @@ export default class FormTranslator {
             taskId
         }, customDataContext);
         this.decryptDataContext(dataContext);
-        const resolvedForm = this.applyFormResolution(dataContext, form);
-        if (resolvedForm) {
-            const components = resolvedForm.components;
-            const businessKeyComponents = FormioUtils.findComponents(components, {
-                'key': 'businessKey'
-            });
-            if (businessKeyComponents.length !== 0) {
-                const businessKeyComponent = businessKeyComponents[0];
-                if (!businessKeyComponent.defaultValue || businessKeyComponent.defaultValue === '') {
-                    businessKeyComponent.defaultValue = await this.referenceGenerator.newBusinessKey()
-                }
-            }
-        }
-        return resolvedForm;
+        return this.applyFormResolution(dataContext, form);
     }
 
     applyFormResolution(dataContext, form) {
