@@ -42,9 +42,10 @@ export default class FormEngineService {
         }
     }
 
-    async getFormById (formId) {
+    async getFormById (formId, keycloakContext) {
         try {
-            const response = await axios.get(`${this.config.services.form.url}/form/${formId}?full=true`);
+            const headers = this.createHeader(keycloakContext);
+            const response = await axios.get(`${this.config.services.form.url}/form/${formId}?full=true`, { headers: headers });
             if (response && response.data) {
                 const form = response.data[0];
                 if (form) {
