@@ -1,3 +1,5 @@
+import KeycloakContext from '../models/KeycloakContext';
+
 export default class WorkflowTranslationController {
     constructor(processService) {
       this.processService = processService;
@@ -18,7 +20,8 @@ export default class WorkflowTranslationController {
       return this.processService.completeTask(taskId, taskData, headers);
     }
 
-    createHeader(keycloakContext) {
+    createHeader(kauth) {
+        const keycloakContext = new KeycloakContext(kauth);
         return {
             'Authorization': `Bearer ${keycloakContext.accessToken}`,
             'Content-Type': 'application/json',

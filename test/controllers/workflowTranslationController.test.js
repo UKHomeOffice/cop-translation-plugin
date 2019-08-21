@@ -23,6 +23,7 @@ describe('Workflow Controller', () => {
         it('should complete the task with the form data', async () => {
           nock('http://localhost:9000', {})
               .log(console.log)
+              .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/tasks/myTaskId/form/_complete', {
                 data: {
                   field1: "foo",
@@ -51,6 +52,7 @@ describe('Workflow Controller', () => {
         it('should pass back a 40x status', async () => {
           nock('http://localhost:9000', {})
               .log(console.log)
+              .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/tasks/myTaskId/form/_complete', {
                 data: {
                   field1: "foo",
@@ -81,6 +83,7 @@ describe('Workflow Controller', () => {
         it('should start the process with the form data', async () => {
           nock('http://localhost:9000', {})
               .log(console.log)
+              .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/process-instances', {
                 data: {
                   field1: "foo",
@@ -113,6 +116,7 @@ describe('Workflow Controller', () => {
         it('should pass back a 40x status', async () => {
           nock('http://localhost:9000', {})
               .log(console.log)
+              .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/process-instances', {
                 data: {
                   field1: "foo",
