@@ -5,7 +5,6 @@ import TranslationServiceError from "../TranslationServiceError";
 import logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
 import FormComponentVisitor from "./FormComponentVisitor";
-import FormSubmissionComponentVisitor from "./FormSubmissionComponentVisitor";
 import FormDataDecryptor from "./FormDataDecryptor";
 
 export default class FormTranslator {
