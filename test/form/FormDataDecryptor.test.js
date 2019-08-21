@@ -1,4 +1,4 @@
-import {dataDecryptor, formDataDecryptor, expect} from '../setUpTests';
+import {formDataDecryptor, expect} from '../setUpTests';
 import * as forms from '../forms';
 
 const metadata = {

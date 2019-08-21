@@ -1,6 +1,5 @@
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
-import JSONPath from "jsonpath";
 import TranslationServiceError from "../TranslationServiceError";
 import logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
@@ -102,7 +101,7 @@ export default class FormTranslator {
 
     async translateForSubmission(formId, formData, keycloakContext, submit) {
         const formSchema = await this.formEngineService.getFormById(formId, keycloakContext);
-        const submissionContext = await this.dataContextFactory.createSubmissionContext(formData, keycloakContext);
+        const submissionContext = await this.dataContextFactory.createSubmissionContext(formData);
 
         this.formDataDecryptor.encryptFormData(formSchema.components, formData.data, submissionContext);
         if (submissionContext.encryptionMetaData) {
