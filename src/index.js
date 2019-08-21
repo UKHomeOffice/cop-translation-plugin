@@ -42,10 +42,10 @@ const keycloak = new Keycloak({}, kcConfig);
 const path = appConfig.privateKey.path;
 
 logger.info('Private key path = ' + path);
-// const ecKey = Buffer.from(fs.readFileSync(path));
+const ecKey = Buffer.from(fs.readFileSync(path));
 logger.info('EC Key content resolved');
 
-// const dataDecryptor = new DataDecryptor(ecKey);
+ const dataDecryptor = new DataDecryptor(ecKey);
 
 function checkRedisSSL(redisSSl){
     if(redisSSl) {
@@ -69,9 +69,9 @@ function checkRedisSSL(redisSSl){
 const redis = checkRedisSSL(appConfig.redis.ssl);
 
 const processService = new ProcessService(appConfig);
-const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, /* dataDecryptor */ null);
+const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor);
 const referenceGenerator = new BusinessKeyGenerator(redis);
-const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, /* dataDecryptor */ null, referenceGenerator);
+const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor, referenceGenerator);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
