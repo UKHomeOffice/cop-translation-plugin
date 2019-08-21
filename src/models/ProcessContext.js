@@ -11,6 +11,7 @@ class ProcessContext {
                 }
             });
         }
+        this.businessKey = 'hardcodedBusinessKey';
     }
 }
 

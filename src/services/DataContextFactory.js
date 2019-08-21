@@ -7,9 +7,10 @@ import TaskContext from "../models/TaskContext";
 import appConfig from "../config/appConfig";
 
 export default class DataContextFactory {
-    constructor(platformDataService, processService) {
+    constructor(platformDataService, processService, dataDecryptor) {
         this.platformDataService = platformDataService;
         this.processService = processService;
+        this.dataDecryptor = dataDecryptor;
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
@@ -58,5 +59,17 @@ export default class DataContextFactory {
             'Content-Type': 'application/json',
             'Accept-Type': 'application/json'
         };
+    }
+
+    createSubmissionContext(formData) {
+      const businessKey = formData.data.businessKey;
+      if (businessKey) {
+        const keys = this.dataDecryptor.ensureKeys(businessKey);
+        return {
+          businessKey: businessKey,
+          encryptionMetaData: keys,
+        };
+      }
+      return { };
     }
 }

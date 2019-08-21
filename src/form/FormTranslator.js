@@ -1,9 +1,11 @@
 import FormioUtils from "formiojs/utils";
 import JsonPathEvaluator from "./JsonPathEvaluator";
+import JSONPath from "jsonpath";
 import TranslationServiceError from "../TranslationServiceError";
 import logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
 import FormComponentVisitor from "./FormComponentVisitor";
+import FormDataDecryptor from "./FormDataDecryptor";
 
 export default class FormTranslator {
 
@@ -13,6 +15,7 @@ export default class FormTranslator {
         this.jsonPathEvaluator = new JsonPathEvaluator();
         this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
         this.referenceGenerator = referenceGenerator;
+        this.formDataDecryptor = new FormDataDecryptor(dataDecryptor);
     }
 
     async translate(formName,
@@ -29,6 +32,7 @@ export default class FormTranslator {
             processInstanceId,
             taskId
         }, customDataContext);
+        this.decryptDataContext(dataContext);
         const resolvedForm = this.applyFormResolution(dataContext, form);
         if (resolvedForm) {
             const components = resolvedForm.components;
@@ -81,9 +85,35 @@ export default class FormTranslator {
         })
     }
 
-    async submit(formId, form, keycloakContext) {
-        return this.formEngineService.submitForm(formId, form, keycloakContext);
+    decryptDataContext(dataContext) {
+        if (dataContext.processContext) {
+          Object.keys(dataContext.processContext).forEach(key => {
+              const value = dataContext.processContext[key];
+              if (value) {
+                  this.formDataDecryptor.decryptFormData(value, dataContext);
+              }
+          });
+        }
     }
 
+    async submit(formId, formData, keycloakContext) {
+        return this.translateForSubmission(formId, formData, async () => this.formEngineService.submitForm(formId, formData, keycloakContext));
+    }
 
+    async translateForSubmission(formId, formData, submit) {
+        const formSchema = await this.formEngineService.getFormById(formId);
+        const submissionContext = await this.dataContextFactory.createSubmissionContext(formData);
+
+        this.formDataDecryptor.encryptFormData(formSchema.components, formData.data, submissionContext);
+        if (submissionContext.encryptionMetaData) {
+            const {iv, publicKey} = submissionContext.encryptionMetaData;
+
+            formData.data._encryptionMetaData = {
+              iv: iv.toString('base64'),
+              publicKey: publicKey.toString('base64'),
+            }
+        }
+
+        return submit();
+    }
 }

@@ -111,6 +111,117 @@ const simpleFormBusinessKeyWithDefaultValue = [{
         }
     ]
 }];
+const formWithSensitiveField = [{
+    name: "sensitiveField",
+    components: [
+        {
+            type: 'textfield',
+            key: 'firstName',
+            label: 'First Name',
+            placeholder: 'Enter your first name.',
+            defaultValue: '{$.keycloakContext.givenName}',
+            input: true,
+            tags: [
+              "sensitive"
+            ]
+        },
+        {
+            type: 'textfield',
+            key: 'lastName',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.keycloakContext.familyName}',
+            input: true
+        }
+    ]
+}];
+const formWithNestedSensitiveField = [{
+    name: "sensitiveField",
+    components: [
+        {
+            type: 'grid',
+            key: 'nested',
+            label: 'First Name',
+            tree: true,
+            columns: [{
+              components: [{
+                    type: 'textfield',
+                    key: 'firstName',
+                    label: 'First Name',
+                    placeholder: 'Enter your first name.',
+                    defaultValue: '{$.keycloakContext.givenName}',
+                    input: true,
+                    tags: [
+                      "sensitive"
+                    ]
+                }],
+            },{
+              components: [{
+                    type: 'textfield',
+                    key: 'lastName',
+                    label: 'Last Name',
+                    placeholder: 'Enter your last name',
+                    defaultValue: '{$.keycloakContext.familyName}',
+                    input: true,
+                    tags: [
+                      "sensitive"
+                    ]
+                }]
+            }]
+        },
+        {
+            type: 'textfield',
+            key: 'outer',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.keycloakContext.familyName}',
+            input: true
+        }
+    ]
+}];
+const formWithNestedSensitiveArray = [{
+    name: "sensitiveField",
+    components: [
+        {
+            type: 'grid',
+            key: 'nested',
+            label: 'First Name',
+            tree: true,
+            components: [{
+                columns: [{
+                  components: [{
+                        type: 'textfield',
+                        key: 'firstName',
+                        label: 'First Name',
+                        placeholder: 'Enter your first name.',
+                        defaultValue: '{$.keycloakContext.givenName}',
+                        input: true,
+                        tags: [
+                          "sensitive"
+                        ]
+                    }],
+                },{
+                  components: [{
+                        type: 'textfield',
+                        key: 'lastName',
+                        label: 'Last Name',
+                        placeholder: 'Enter your last name',
+                        defaultValue: '{$.keycloakContext.familyName}',
+                        input: true
+                    }]
+                }]
+            }]
+        },
+        {
+            type: 'textfield',
+            key: 'outer',
+            label: 'Last Name',
+            placeholder: 'Enter your last name',
+            defaultValue: '{$.keycloakContext.familyName}',
+            input: true
+        }
+    ]
+}];
 const imgForm = [
     {
         components: [
@@ -459,6 +570,7 @@ const taskContextForm = [{
     ]
 }];
 const userDetailsContextForm = [{
+    name: "UserDetails",
     components: [
         {
             type: 'textfield',
@@ -555,5 +667,8 @@ export {
     encryptedImgFormWithMissingEncryptionTag,
     iframeForm,
     simpleFormWithoutBusinessKey,
-    simpleFormBusinessKeyWithDefaultValue
+    simpleFormBusinessKeyWithDefaultValue,
+    formWithSensitiveField,
+    formWithNestedSensitiveField,
+    formWithNestedSensitiveArray,
 }

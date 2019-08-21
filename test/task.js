@@ -31,6 +31,21 @@ const processVariables = {
         }
     }
 };
+const processVariablesWithEncryptedValues = {
+    type: {
+        type: "String",
+        value: "non-notification",
+        valueInfo: {}
+    },
+    person: {
+        type: "Object",
+        value: "{\"firstName\": \"W0jm3TN7WCVANdCtGcJVJ9P4Zw==\",\"lastName\": \"lastNameFromProcess\",\"id\": \"idFromProcess\",\"encryptedFields\": [\"firstName\"]}",
+        valueInfo: {
+            objectTypeName: "xxxx",
+            serializationDataFormat: "application/json"
+        }
+    }
+};
 
 const processVariablesWithEncryptedFields = {
     type: {
@@ -55,5 +70,6 @@ export {
     taskData,
     taskVariables,
     processVariables,
+    processVariablesWithEncryptedValues,
     processVariablesWithEncryptedFields
 }

@@ -69,9 +69,9 @@ function checkRedisSSL(redisSSl){
 const redis = checkRedisSSL(appConfig.redis.ssl);
 
 const processService = new ProcessService(appConfig);
-const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService);
+const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, /* dataDecryptor */ null);
 const referenceGenerator = new BusinessKeyGenerator(redis);
-const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, null, referenceGenerator);
+const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, /* dataDecryptor */ null, referenceGenerator);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -87,7 +87,7 @@ if (appConfig.cors.origin) {
     }));
 }
 
-app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(processService)));
+app.use('/api/translation', route.allApiRouter(keycloak, new FormDataResolveController(translator), new WorkflowTranslationController(processService, translator)));
 
 const server = http.createServer(app).listen(app.get('port'), function () {
     logger.info('Listening on port %d', port);
