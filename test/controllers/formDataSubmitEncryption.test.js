@@ -11,7 +11,8 @@ describe('Form Data Controller', () => {
               .post('/form/formId/submission', {
                 data: {
                   firstName: /.*==/,
-                  lastName: "bar"
+                  lastName: "bar",
+                  encryptedFields: ["firstName"]
                 }
               })
               .reply(200, forms.formWithSensitiveField);
