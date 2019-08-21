@@ -3,6 +3,7 @@ import BusinessKeyGenerator from "../src/services/BusinessKeyGenerator";
 process.env.NODE_ENV = 'test';
 
 import FormTranslator from "../src/form/FormTranslator";
+import FormDataDecryptor from "../src/form/FormDataDecryptor";
 import FormEngineService from "../src/services/FormEngineService";
 import DataContextFactory from "../src/services/DataContextFactory";
 import PlatformDataService from "../src/services/PlatformDataService";
@@ -32,6 +33,7 @@ const iv = Buffer.from('W25/yzadEQNeV7jnZ3dnbA==', 'base64');
 keyRepository.putKeys('hardcodedBusinessKey', key, iv);
 const ecKey = Buffer.from(fs.readFileSync('test/certs/enc.key'));
 const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
+const formDataDecryptor = new FormDataDecryptor(dataDecryptor);
 
 
 const mockRedis = new MockRedis();
@@ -54,5 +56,6 @@ export {
     formTranslateController,
     workflowTranslatorController,
     formEngineService,
+    formDataDecryptor,
     expect
 }
