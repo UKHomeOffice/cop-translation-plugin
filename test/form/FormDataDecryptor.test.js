@@ -1,10 +1,19 @@
 import {dataDecryptor, formDataDecryptor, expect} from '../setUpTests';
+import * as forms from '../forms';
+
+const metadata = {
+  publicKey: "BI7a9g2LvU9b0RtK/Euk5ge0yG3ZeYBI1PAGCwfVTxd/XySj1Yt2ok0YVKRj2T5D2wkYv/7doNcT0KfYNvRzENENFPgpTyVSazNdaMJfd76S2XWPuxFiRv0VcruX13o2PiO2a6AFsBMrbfNstobkRv9hskPUGTCRoPYe+pES2LIg",
+  iv: 'W25/yzadEQNeV7jnZ3dnbA==',
+};
 
 const dataContext = {
     processContext: {
         businessKey: 'hardcodedBusinessKey'
     }
 };
+const submissionContext = {
+    businessKey: 'hardcodedBusinessKey'
+}
 
 const noEncryption = {
     field1: 'foo',
@@ -45,10 +54,11 @@ const invalidEncryption = {
     field1: 'M14f866mV02tjebZeLHnwoYn0peyN/w2',
 };
 
-describe('Decrypting form data', () => {
+describe('Form data encryption', () => {
+  describe('Decrypting form data', () => {
     it('should decrypt data', () => {
         formDataDecryptor.decryptFormData(encryption, dataContext);
-        
+
         expect(encryption.field1).to.equal('MyClearText');
         expect(encryption.field2).to.equal('MyClearText');
         expect(encryption.field3).to.equal('baz');
@@ -56,7 +66,7 @@ describe('Decrypting form data', () => {
 
     it('should pass through unencrypted data', () => {
         formDataDecryptor.decryptFormData(noEncryption, dataContext);
-        
+
         expect(noEncryption.field1).to.equal('foo');
         expect(noEncryption.field2).to.equal('bar');
     });
@@ -79,4 +89,51 @@ describe('Decrypting form data', () => {
 
         expect(invalidEncryption.field1).to.equal('M14f866mV02tjebZeLHnwoYn0peyN/w2');
     });
+  });
+  describe('Encrypting form data', () => {
+    const toEncrypt = {
+        lastName: 'foo',
+        firstName: 'baz',
+    };
+    const toEncryptNested = {
+        nested: {
+            lastName: 'foo',
+            firstName: 'baz',
+        },
+        outer: 'fred'
+    };
+    const toEncryptNestedArray = {
+        nested: [{
+            lastName: 'foo',
+            firstName: 'baz',
+        },{
+            lastName: 'foo',
+            firstName: 'baz',
+        }],
+        outer: 'fred'
+    };
+    it('should encrypt sensitive fields', () => {
+        formDataDecryptor.encryptFormData(forms.formWithSensitiveField, toEncrypt, submissionContext);
+
+        expect(toEncrypt.lastName).to.equal('foo');
+        expect(toEncrypt.firstName).to.equal('W0jm3TN7WCVANdCtGcJVJ9P4Zw==');
+        expect(toEncrypt.encryptedFields).to.eql(['firstName']);
+    });
+    it('should encrypt sensitive fields in nested structures', () => {
+        formDataDecryptor.encryptFormData(forms.formWithNestedSensitiveField, toEncryptNested, submissionContext);
+
+        expect(toEncryptNested.nested.firstName).to.equal('W0jm3TN7WCVANdCtGcJVJ9P4Zw==');
+        expect(toEncryptNested.nested.lastName).to.equal('X0bz6FVfHwEjwmUALK0j12jHZg==');
+        expect(toEncryptNested.nested.encryptedFields).to.eql(['firstName', 'lastName']);
+        expect(toEncryptNested.outer).to.equal('fred');
+    });
+    it('should encrypt sensitive fields in arrays', () => {
+        formDataDecryptor.encryptFormData(forms.formWithNestedSensitiveArray, toEncryptNestedArray, submissionContext);
+
+        expect(toEncryptNestedArray.nested[0].firstName).to.equal('W0jm3TN7WCVANdCtGcJVJ9P4Zw==');
+        expect(toEncryptNestedArray.nested[0].lastName).to.equal('foo');
+        expect(toEncryptNestedArray.nested[0].encryptedFields).to.eql(['firstName']);
+        expect(toEncryptNestedArray.outer).to.equal('fred');
+    });
+  });
 });
