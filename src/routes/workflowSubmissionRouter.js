@@ -1,5 +1,6 @@
 import express from 'express';
 import responseHandler from "../utilities/handlers/responseHandler";
+import logger from "../config/winston";
 
 const router = express.Router();
 
@@ -9,6 +10,7 @@ const workflowSubmissionRouter = (keycloak, workflowTranslatorController) => {
             workflowTranslatorController.completeTask(req).then((response) => {
                 return res.status(response.status).json(response.data);
             }).catch((err) => {
+                logger.error(`Error completing task ${err.message}`, err);
                 responseHandler.res({
                     code: err.code,
                     message: err.toString()
@@ -20,6 +22,7 @@ const workflowSubmissionRouter = (keycloak, workflowTranslatorController) => {
             workflowTranslatorController.startProcessInstance(req).then((response) => {
                 return res.status(response.status).json({});
             }).catch((err) => {
+                logger.error(`Error starting process ${err.message}`, err);
                 responseHandler.res({
                     code: err.code,
                     message: err.toString()
