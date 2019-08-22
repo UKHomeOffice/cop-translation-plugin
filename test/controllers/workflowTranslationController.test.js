@@ -36,7 +36,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
@@ -74,7 +74,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.formWithSensitiveField);
+              .reply(200, forms.formWithSensitiveField[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
@@ -109,7 +109,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
@@ -150,7 +150,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
@@ -190,7 +190,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
@@ -231,7 +231,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.formWithSensitiveField);
+              .reply(200, forms.formWithSensitiveField[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
@@ -268,7 +268,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/myFormId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',

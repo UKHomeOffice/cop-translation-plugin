@@ -15,11 +15,11 @@ describe('Form Data Controller', () => {
                   encryptedFields: ["firstName"]
                 }
               })
-              .reply(200, forms.formWithSensitiveField);
+              .reply(200, forms.formWithSensitiveField[0]);
           nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/formId?full=true')
-              .reply(200, forms.formWithSensitiveField);
+              .reply(200, forms.formWithSensitiveField[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
@@ -61,11 +61,11 @@ describe('Form Data Controller', () => {
                   lastName: "bar"
                 }
               })
-              .reply(200, forms.formWithSensitiveField);
+              .reply(200, forms.formWithSensitiveField[0]);
           nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/formId?full=true')
-              .reply(200, forms.formWithSensitiveField);
+              .reply(200, forms.formWithSensitiveField[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',

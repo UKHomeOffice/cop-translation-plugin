@@ -47,7 +47,7 @@ export default class FormEngineService {
             const headers = this.createHeader(keycloakContext);
             const response = await axios.get(`${this.config.services.form.url}/form/${formId}?full=true`, { headers: headers });
             if (response && response.data) {
-                const form = response.data[0];
+                const form = response.data;
                 if (form) {
                     logger.info(`Form  ${form.name} found`);
                     return form;
