@@ -19,7 +19,7 @@ describe('Form Data Controller', () => {
           nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/formId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
@@ -70,7 +70,7 @@ describe('Form Data Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/formId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
@@ -120,7 +120,7 @@ describe('Form Data Controller', () => {
             nock('http://localhost:8000', {})
               .log(console.log)
               .get('/form/formId?full=true')
-              .reply(200, forms.userDetailsContextForm);
+              .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
