@@ -136,10 +136,10 @@ describe('Workflow Controller', () => {
               .log(console.log)
               .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/process-instances', {
-                data: JSON.stringify({
+                data: {
                   field1: "foo",
                   field2: "bar",
-                }),
+                },
                 processKey: "myProcessName",
                 variableName: "myVariableName",
                 formId: "myFormId",
@@ -155,10 +155,10 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
                 body: {
-                  data: JSON.stringify({
+                  data: {
                     field1: "foo",
                     field2: "bar"
-                  }),
+                  },
                   processKey: "myProcessName",
                   variableName: "myVariableName",
                   formId: "myFormId",
@@ -174,7 +174,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:9000', {})
               .log(console.log)
               .post('/api/workflow/process-instances', body => {
-                  const data = JSON.parse(body.data);
+                  const data = body.data;
                   try {
                     expect(data._encryptionMetaData.iv).to.match(/.*==/);
                     expect(data._encryptionMetaData.publicKey).to.not.be.null;
@@ -195,11 +195,11 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
                 body: {
-                  data: JSON.stringify({
+                  data: {
                     field1: "foo",
                     field2: "bar",
                     businessKey: "myProcessId",
-                  }),
+                  },
                   processKey: "myProcessName",
                   variableName: "myVariableName",
                   formId: "myFormId",
@@ -215,7 +215,7 @@ describe('Workflow Controller', () => {
             nock('http://localhost:9000', {})
               .log(console.log)
               .post('/api/workflow/process-instances', body => {
-                const data = JSON.parse(body.data);
+                const data = body.data;
                 try {
                   expect(data.lastName).to.equal('foo');
                   expect(data.firstName).to.match(/.*==/);
@@ -236,10 +236,10 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
                 body: {
-                  data: JSON.stringify({
+                  data: {
                     lastName: "foo",
                     firstName: "bar"
-                  }),
+                  },
                   processKey: "myProcessName",
                   variableName: "myVariableName",
                   formId: "myFormId",
@@ -256,10 +256,10 @@ describe('Workflow Controller', () => {
               .log(console.log)
               .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/process-instances', {
-                data: JSON.stringify({
+                data: {
                   field1: "foo",
                   field2: "bar",
-                }),
+                },
                 processKey: "myProcessName",
                 variableName: "myVariableName",
                 formId: "myFormId",
@@ -273,10 +273,10 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/process-instances',
                 body: {
-                  data: JSON.stringify({
+                  data: {
                     field1: "foo",
                     field2: "bar"
-                  }),
+                  },
                   processKey: "myProcessName",
                   variableName: "myVariableName",
                   formId: "myFormId",
