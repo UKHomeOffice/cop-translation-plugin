@@ -15,7 +15,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
                 }).catch((err) => {
                     logger.error(`Error translating form ${err.message}`, err);
                     responseHandler.res({
-                        code: err.code || 500,
+                        code: err.code,
                         message: err.message
                     }, {formName}, res);
                 })
@@ -28,7 +28,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             }).catch((err) => {
                 logger.error(`Error translating form ${err.message}`, err);
                 responseHandler.res({
-                    code: err.code || 500,
+                    code: err.code,
                     message: err.toString()
                 }, {}, res);
             });
@@ -40,7 +40,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             }).catch((err) => {
                 logger.error(`Error submitting form ${err.message}`, err);
                 responseHandler.res({
-                    code: err.code || 500,
+                    code: err.code,
                     message: err.toString()
                 }, {}, res);
             });
