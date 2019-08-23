@@ -21,11 +21,9 @@ export default class DataDecryptor {
     }
 
 
-    decrypt(businessKey, val) {
-        const keys = this.keyRepository.getKeys(businessKey);
+    decrypt(keys, val) {
         if (!keys) {
-          logger.warn(`No encryption keys are available for business process ${businessKey}`);
-          return val;
+            return val;
         }
         const { publicKey, iv } = keys;
         const sessionKey = this.deriveSessionKey(publicKey);
@@ -36,8 +34,8 @@ export default class DataDecryptor {
         return Buffer.concat([decipher.update(data), decipher.final()]);
     }
 
-    encrypt(businessKey, value) {
-        const { publicKey, iv } = this.ensureKeys(businessKey);
+    encrypt(keys, value) {
+        const { publicKey, iv } = keys;
         const sessionKey = this.deriveSessionKey(publicKey);
 
         const enc = crypto.createCipheriv(DataDecryptor.algorithm, sessionKey, iv);

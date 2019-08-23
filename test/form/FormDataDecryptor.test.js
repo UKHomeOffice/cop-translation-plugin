@@ -2,17 +2,17 @@ import {formDataDecryptor, expect} from '../setUpTests';
 import * as forms from '../forms';
 
 const metadata = {
-  publicKey: "BI7a9g2LvU9b0RtK/Euk5ge0yG3ZeYBI1PAGCwfVTxd/XySj1Yt2ok0YVKRj2T5D2wkYv/7doNcT0KfYNvRzENENFPgpTyVSazNdaMJfd76S2XWPuxFiRv0VcruX13o2PiO2a6AFsBMrbfNstobkRv9hskPUGTCRoPYe+pES2LIg",
-  iv: 'W25/yzadEQNeV7jnZ3dnbA==',
+  publicKey: Buffer.from("BI7a9g2LvU9b0RtK/Euk5ge0yG3ZeYBI1PAGCwfVTxd/XySj1Yt2ok0YVKRj2T5D2wkYv/7doNcT0KfYNvRzENENFPgpTyVSazNdaMJfd76S2XWPuxFiRv0VcruX13o2PiO2a6AFsBMrbfNstobkRv9hskPUGTCRoPYe+pES2LIg", 'base64'),
+  iv: Buffer.from('W25/yzadEQNeV7jnZ3dnbA==', 'base64'),
 };
 
 const dataContext = {
     processContext: {
-        businessKey: 'hardcodedBusinessKey'
+        encryptionMetaData: metadata
     }
 };
 const submissionContext = {
-    businessKey: 'hardcodedBusinessKey'
+    encryptionMetaData: metadata
 }
 
 const noEncryption = {
