@@ -1,5 +1,6 @@
 import express from 'express';
 import responseHandler from "../utilities/handlers/responseHandler";
+import logger from "../config/winston";
 
 const router = express.Router();
 
@@ -12,6 +13,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
                 formTranslatorController.getForm(req).then((form) => {
                     responseHandler.res(null, {formName, form}, res);
                 }).catch((err) => {
+                    logger.error(`Error translating form ${err.message}`, err);
                     responseHandler.res({
                         code: err.code,
                         message: err.message
@@ -24,6 +26,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             formTranslatorController.getFormWithContext(req).then((form) => {
                 responseHandler.res(null, {form}, res);
             }).catch((err) => {
+                logger.error(`Error translating form ${err.message}`, err);
                 responseHandler.res({
                     code: err.code,
                     message: err.toString()
@@ -35,6 +38,7 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             formTranslatorController.submitForm(req).then((form) => {
                 return res.status(form.status).json(form.data);
             }).catch((err) => {
+                logger.error(`Error submitting form ${err.message}`, err);
                 responseHandler.res({
                     code: err.code,
                     message: err.toString()
