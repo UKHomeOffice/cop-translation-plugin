@@ -6,6 +6,7 @@ import appConfig from './config/appConfig'
 import Redis from 'ioredis';
 import Keycloak from 'keycloak-connect';
 import helmet from 'helmet';
+import KeyRepository from "./services/KeyRepository";
 import DataDecryptor from "./services/DataDecryptor";
 import DataContextFactory from "./services/DataContextFactory";
 import PlatformDataService from "./services/PlatformDataService";
@@ -45,7 +46,8 @@ logger.info('Private key path = ' + path);
 const ecKey = Buffer.from(fs.readFileSync(path));
 logger.info('EC Key content resolved');
 
- const dataDecryptor = new DataDecryptor(ecKey);
+const keyRepository = new KeyRepository();
+const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
 
 function checkRedisSSL(redisSSl){
     if(redisSSl) {
