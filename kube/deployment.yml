@@ -81,12 +81,12 @@ spec:
           value: "{{.TRANSLATION_PORT}}"
         - name: TRANSLATION_PRIVATE_KEY_PATH
           value: "{{.TRANSLATION_PRIVATE_KEY_PATH}}"
+        - name: REDIS_SSL
+          value: "{{.REDIS_SSL}}"
         - name: REDIS_URI
           value: "{{.REDIS_URL}}"
         - name: REDIS_TOKEN
           value: "{{.REDIS_TOKEN}}"
-        - name: REDIS_SSL
-          value: "{{.REDIS_SSL}}"
       volumes:
       - name: enccerts
         secret:
