@@ -40,7 +40,7 @@ export default class FormTranslator {
             });
             if (businessKeyComponents.length !== 0) {
                 const businessKeyComponent = businessKeyComponents[0];
-                if (businessKeyComponent.defaultValue === '') {
+                if (!businessKeyComponent.defaultValue || businessKeyComponent.defaultValue === '') {
                     businessKeyComponent.defaultValue = await this.referenceGenerator.newBusinessKey()
                 }
             }
