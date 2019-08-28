@@ -4,7 +4,7 @@ export default class CustomPropertiesVisitor {
     visit(formComponent) {
         const component = formComponent.component;
         if (component.properties) {
-            logger.info(`Applying custom properties to component`)
+            logger.debug(`Applying custom properties to component`)
             Object.keys(component.properties).forEach((key) => {
                 const propertyValue = component.properties[key];
                 logger.debug(`Adding '${key}' with value '${propertyValue}' to select component [${component.name}]`);
