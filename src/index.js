@@ -38,13 +38,17 @@ const port = appConfig.port;
 
 app.set('port', port);
 
+logger.debug('Keycloak ClientID = ' + kcConfig.clientId);
+logger.debug('Keycloak serverUrl = ' + kcConfig.serverUrl);
+logger.debug('Keycloak realm = ' + kcConfig.realm);
+
 const keycloak = new Keycloak({}, kcConfig);
 
 const path = appConfig.privateKey.path;
 
-logger.info('Private key path = ' + path);
+logger.debug('Private key path = ' + path);
 const ecKey = Buffer.from(fs.readFileSync(path));
-logger.info('EC Key content resolved');
+logger.debug('EC Key content resolved');
 
 const keyRepository = new KeyRepository();
 const dataDecryptor = new DataDecryptor(ecKey, keyRepository);

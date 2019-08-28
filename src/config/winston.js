@@ -8,7 +8,12 @@ const addCorrelationId = format((info) => {
     return info;
 });
 
+const {
+    TRANSLATION_LOG_LEVEL,
+} = process.env;
+
 const logger = createLogger({
+    level: TRANSLATION_LOG_LEVEL || 'info',
     format: combine(
         timestamp(),
         splat(),
