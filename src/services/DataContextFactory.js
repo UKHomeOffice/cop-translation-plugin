@@ -7,10 +7,11 @@ import TaskContext from "../models/TaskContext";
 import appConfig from "../config/appConfig";
 
 export default class DataContextFactory {
-    constructor(platformDataService, processService, dataDecryptor) {
+    constructor(platformDataService, processService, dataDecryptor, referenceGenerator) {
         this.platformDataService = platformDataService;
         this.processService = processService;
         this.dataDecryptor = dataDecryptor;
+        this.referenceGenerator = referenceGenerator
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
@@ -43,14 +44,22 @@ export default class DataContextFactory {
             ]);
             return new DataResolveContext(keycloakContext, staffDetailsContext,
                 environmentContext,
-                new ProcessContext(processData),
+                await this.createProcessContext(processData),
                 new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext);
 
         } else {
             return new DataResolveContext(keycloakContext,
-                staffDetailsContext, environmentContext, null, null,
+                staffDetailsContext, environmentContext, await this.createProcessContext([]), null,
                 customDataContext, shiftDetailsContext);
         }
+    }
+
+    async createProcessContext(processData) {
+        const processContext = new ProcessContext(processData);
+        if (!processContext.businessKey) {
+          processContext.businessKey = await this.referenceGenerator.newBusinessKey();
+        }
+        return processContext;
     }
 
     createHeader(keycloakContext) {

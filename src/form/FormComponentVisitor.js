@@ -7,6 +7,7 @@ import FileStorageComponentVisitor from "./FileStorageComponentVisitor";
 import FilterComponentVisitor from "./FilterComponentVisitor";
 import LabelComponentVisitor from "./LabelComponentVisitor";
 import RadioComponentVisitor from "./RadioComponentVisitor";
+import BusinessKeyVisitor from "./BusinessKeyVisitor";
 
 export default class FormComponentVisitor {
     constructor(jsonPathEvaluator, dataDecryptor) {
@@ -19,6 +20,7 @@ export default class FormComponentVisitor {
         this.filterComponentVisitor = new FilterComponentVisitor(jsonPathEvaluator);
         this.labelComponentVisitor = new LabelComponentVisitor(jsonPathEvaluator);
         this.radioComponentVisitor = new RadioComponentVisitor(jsonPathEvaluator);
+        this.businessKeyVisitor = new BusinessKeyVisitor();
     }
 
     visit(formComponent) {
@@ -39,6 +41,7 @@ export default class FormComponentVisitor {
         }
         if (component.data && component.dataSrc) {
             formComponent.accept(this.selectComponentVisitor);
-       }
+        }
+        formComponent.accept(this.businessKeyVisitor);
     }
 }
