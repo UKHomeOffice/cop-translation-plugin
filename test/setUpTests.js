@@ -41,9 +41,8 @@ const referenceGenerator = new BusinessKeyGenerator(mockRedis);
 
 const processService = new ProcessService(appConfig)
 const formEngineService = new FormEngineService(appConfig);
-const translator = new FormTranslator(new FormEngineService(appConfig),
-    new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor, referenceGenerator),
-        dataDecryptor);
+const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor, referenceGenerator);
+const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
 
 const formTranslateController = new FormTranslateController(translator);
 const workflowTranslatorController = new WorkflowTranslationController(processService, translator);
@@ -57,5 +56,6 @@ export {
     workflowTranslatorController,
     formEngineService,
     formDataDecryptor,
+    dataContextFactory,
     expect
 }
