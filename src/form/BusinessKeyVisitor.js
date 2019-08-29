@@ -3,8 +3,10 @@ export default class BusinessKeyVisitor {
         const component = formComponent.component;
         const dataResolveContext = formComponent.dataContext;
 
-        if (component.key === 'businessKey' && component.defaultValue === '') {
-            component.defaultValue = dataResolveContext.processContext.businessKey;
+        if (component.key === 'businessKey') {
+            if (!component.defaultValue || component.defaultValue === '') {
+                component.defaultValue = dataResolveContext.processContext.businessKey;
+            }
         }
     }
 }
