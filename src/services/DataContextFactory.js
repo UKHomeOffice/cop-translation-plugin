@@ -59,6 +59,7 @@ export default class DataContextFactory {
         if (!processContext.businessKey) {
           processContext.businessKey = await this.referenceGenerator.newBusinessKey();
         }
+        processContext.encryptionMetaData = await this.dataDecryptor.ensureKeys(processContext.businessKey);
         return processContext;
     }
 

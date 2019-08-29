@@ -21,37 +21,34 @@ describe('DataDecryptor', () => {
     });
 
     it('can decrypt value with session key and iv', () => {
-        keyRepository.getKeys.returns({
+        const keys = {
           publicKey: key,
           iv: iv
-        });
+        };
         const value = Buffer.from('fWjIpGyUPmU7JxL2Zh3qqQTRjg==', 'base64');
 
-        const result = dataDecryptor.decrypt('businessKey', value);
+        const result = dataDecryptor.decrypt(keys, value);
         expect(result.toString("base64")).to.equal('REFU');
-        sinon.assert.calledOnce(keyRepository.getKeys);
     })
     it('returns encrypted value if no keys are found', () => {
         const value = Buffer.from('fWjIpGyUPmU7JxL2Zh3qqQTRjg==', 'base64');
 
-        const result = dataDecryptor.decrypt('businessKey', value);
+        const result = dataDecryptor.decrypt(null, value);
         expect(result).to.be.equal(value);
-        sinon.assert.calledOnce(keyRepository.getKeys);
     })
 
     it('can encrypt and decrypt a value', () => {
-        keyRepository.getKeys.returns({
+        const keys = {
           publicKey: key,
           iv: iv
-        });
+        };
         const clearText = 'My very secret message';
 
-        const encrypted = dataDecryptor.encrypt('businessKey', clearText);
+        const encrypted = dataDecryptor.encrypt(keys, clearText);
 
-        const decrypted = dataDecryptor.decrypt('businessKey', encrypted);
+        const decrypted = dataDecryptor.decrypt(keys, encrypted);
 
         expect(decrypted.toString()).to.equal(clearText);
-        sinon.assert.calledTwice(keyRepository.getKeys);
     });
 
     it('creates keys when none are found for a business process', () => {
