@@ -88,7 +88,7 @@ spec:
         - name: REDIS_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{.REDIS_NAME}}
+              name: {{.TRANSLATION_NAME}}
               key: redisAuthToken
       volumes:
       - name: enccerts
