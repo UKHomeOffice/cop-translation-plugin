@@ -70,22 +70,27 @@ export default class FormEngineService {
     }
 
     async submitForm (formId, form, keycloakContext) {
-        try {
-            const headers = this.createHeader(keycloakContext);
-            const response = await axios.post(`${this.config.services.form.url}/form/${formId}/submission`, form, { validateStatus: this.validateStatus, headers: headers} );
-            if (response && response.data) {
-                return {
-                  data: response.data,
-                  status: response.status
-                }
-            }
-            return null;
-        } catch (e) {
-            const errorMessage = `An exception occurred while trying to submit form ${formId} ... '${e}'`;
-            logger.error(errorMessage, e);
-            throw new TranslationServiceError(errorMessage, 500);
-        }
+        
+        return Promise.resolve({ status: 200, data:form})
     }
+
+    // async submitForm (formId, form, keycloakContext) {
+    //     try {
+    //         const headers = this.createHeader(keycloakContext);
+    //         const response = await axios.post(`${this.config.services.form.url}/form/${formId}/submission`, form, { validateStatus: this.validateStatus, headers: headers} );
+    //         if (response && response.data) {
+    //             return {
+    //               data: response.data,
+    //               status: response.status
+    //             }
+    //         }
+    //         return null;
+    //     } catch (e) {
+    //         const errorMessage = `An exception occurred while trying to submit form ${formId} ... '${e}'`;
+    //         logger.error(errorMessage, e);
+    //         throw new TranslationServiceError(errorMessage, 500);
+    //     }
+    // }
 
     createHeader(keycloakContext) {
         return {
