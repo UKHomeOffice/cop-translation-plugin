@@ -82,7 +82,8 @@ describe('Workflow Controller', () => {
                   formId: "myFormId", 
                   data: JSON.stringify({
                     lastName: "foo",
-                    firstName: "bar"
+                    firstName: "bar",
+                    businessKey: "hardcodedBusinessKey",
                   }),
                 },
                 params: {
@@ -238,7 +239,8 @@ describe('Workflow Controller', () => {
                 body: {
                   data: {
                     lastName: "foo",
-                    firstName: "bar"
+                    firstName: "bar",
+                    businessKey: "hardcodedBusinessKey",
                   },
                   processKey: "myProcessName",
                   variableName: "myVariableName",

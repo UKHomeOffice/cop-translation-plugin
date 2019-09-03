@@ -74,7 +74,7 @@ export default class FormTranslator {
         if (dataContext.processContext) {
           Object.keys(dataContext.processContext).forEach(key => {
               const value = dataContext.processContext[key];
-              if (value) {
+              if (value && value.businessKey) {
                   this.formDataDecryptor.decryptFormData(value, dataContext);
               }
           });
@@ -88,6 +88,10 @@ export default class FormTranslator {
     async translateForSubmission(formId, formData, keycloakContext, submit) {
         const formSchema = await this.formEngineService.getFormById(formId, keycloakContext);
         const submissionContext = await this.dataContextFactory.createSubmissionContext(formData);
+        if (!submissionContext.businessKey) {
+            logger.warn(`Not encrypting data for form ${formSchema.name} as there is no business key field on the form`);
+            return submit();
+        }
 
         this.formDataDecryptor.encryptFormData(formSchema.components, formData.data, submissionContext);
         if (submissionContext.encryptionMetaData) {

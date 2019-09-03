@@ -16,7 +16,7 @@ export default class ContentComponentVisitor {
             if (formComponent.isEncrypted()) {
                 logger.info(`Encrypted field detected ${key}`);
                 try {
-                    value = this.dataDecryptor.decrypt('hardcodedBusinessKey', Buffer.from(value, 'base64'));
+                    value = this.dataDecryptor.decrypt(dataResolveContext.processContext.encryptionMetaData, Buffer.from(value, 'base64'));
                 } catch (err) {
                     logger.error(`Failed to decrypt value  ${err.toString()}...returning encrypted value`);
                 }

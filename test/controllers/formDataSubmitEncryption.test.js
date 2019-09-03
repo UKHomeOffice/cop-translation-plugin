@@ -10,9 +10,14 @@ describe('Form Data Controller', () => {
               .log(console.log)
               .post('/form/formId/submission', {
                 data: {
-                  firstName: /.*==/,
+                  firstName: "X0bz6FVfHwEjwmUALK0j12jHZg==",
                   lastName: "bar",
-                  encryptedFields: ["firstName"]
+                  encryptedFields: ["firstName"],
+                  _encryptionMetaData: {
+                    iv: "W25/yzadEQNeV7jnZ3dnbA==",
+                    publicKey: "BI7a9g2LvU9b0RtK/Euk5ge0yG3ZeYBI1PAGCwfVTxd/XySj1Yt2ok0YVKRj2T5D2wkYv/7doNcT0KfYNvRzENENFPgpTyVSazNdaMJfd76S2XWPuxFiRv0VcruX13o2PiO2a6AFsBMrbfNstobkRv9hskPUGTCRoPYe+pES2LIg"
+                  },
+                  businessKey: "hardcodedBusinessKey",
                 }
               })
               .reply(200, forms.formWithSensitiveField[0]);
@@ -26,7 +31,8 @@ describe('Form Data Controller', () => {
                 body: {
                   data: {
                     firstName: "foo",
-                    lastName: "bar"
+                    lastName: "bar",
+                    businessKey: "hardcodedBusinessKey",
                   }
                 },
                 params: {

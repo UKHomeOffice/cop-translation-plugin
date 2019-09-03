@@ -15,7 +15,7 @@ export default class FormDataDecryptor {
                 const value = formData[field];
                 if (value) {
                   try {
-                      formData[field] = this.dataDecryptor.decrypt(dataContext.processContext.businessKey, Buffer.from(value, 'base64')).toString();
+                      formData[field] = this.dataDecryptor.decrypt(dataContext.processContext.encryptionMetaData, Buffer.from(value, 'base64')).toString();
                   } catch (err) {
                       logger.warn(`Unable to decrypt field ${field}: ${err.message}`, err); 
                   }
@@ -49,7 +49,7 @@ export default class FormDataDecryptor {
                 if (this.isEncrypted(component)) {
                     const clearText = data;
                     if (clearText) {
-                        const cipherText = this.dataDecryptor.encrypt(submissionContext.businessKey, clearText);
+                        const cipherText = this.dataDecryptor.encrypt(submissionContext.encryptionMetaData, clearText);
                         JSONPath.value(formData, jsonPath, cipherText.toString('base64'));
                         this.updateEncryptedFields(formData, jsonPath);
                     }
