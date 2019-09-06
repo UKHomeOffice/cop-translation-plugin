@@ -6,7 +6,7 @@ const router = express.Router();
 
 const workflowSubmissionRouter = (keycloak, workflowTranslatorController) => {
     router
-        .post('/tasks/:taskId/form/_complete', [keycloak.protect(), (req, res) => {
+        .post('/workflow/tasks/:taskId/form/_complete', [keycloak.protect(), (req, res) => {
             workflowTranslatorController.completeTask(req).then((response) => {
                 return res.status(response.status).json(response.data);
             }).catch((err) => {
