@@ -26,16 +26,14 @@ export default class WorkflowTranslationController {
       const formId = req.body.formId;
 
 
-      await Promise.all(Object.entries(req.body.variables).map(async ([key, formVariable]) => {
+      await Promise.all(Object.entries(req.body.variables).map(([key, formVariable]) => {
           const formData = {
               data: JSON.parse(formVariable.value),
           }
-          return this.formTranslator.translateForSubmission(formId, formData, keycloakContext, async () => {
+          return this.formTranslator.translateForSubmission(formId, formData, keycloakContext, () => {
               formVariable.value = JSON.stringify(formData.data);
-              console.log(`Encrypted value ${formVariable.value}`);
           })
       }));
-      console.log(`Task ${JSON.stringify(taskData)}`);
       return this.processService.completeTask(taskId, taskData, headers);
 
     }
