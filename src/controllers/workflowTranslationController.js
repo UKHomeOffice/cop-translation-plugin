@@ -24,14 +24,17 @@ export default class WorkflowTranslationController {
       const keycloakContext = new KeycloakContext(req.kauth);
       const headers = this.createHeader(keycloakContext);
       const formId = req.body.formId;
-      const formData =  {
-        data: JSON.parse(taskData.data)
-      };
 
-      return this.formTranslator.translateForSubmission(formId, formData, keycloakContext, async () => {
-          taskData.data = JSON.stringify(formData.data);
-          return this.processService.completeTask(taskId, taskData, headers);
-      })
+
+      await Promise.all(Object.entries(req.body.variables).map(([key, formVariable]) => {
+          const formData = {
+              data: JSON.parse(formVariable.value),
+          }
+          return this.formTranslator.translateForSubmission(formId, formData, keycloakContext, () => {
+              formVariable.value = JSON.stringify(formData.data);
+          })
+      }));
+      return this.processService.completeTask(taskId, taskData, headers);
 
     }
 

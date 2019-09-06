@@ -26,11 +26,17 @@ describe('Workflow Controller', () => {
               .log(console.log)
               .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/tasks/myTaskId/form/_complete', {
-                data: JSON.stringify({
-                  field1: "foo",
-                  field2: "bar",
-                }),
-                formId: "myFormId", 
+                variables: {
+                    myForm: {
+                        type: "json",
+                        value: JSON.stringify({
+                          field1: "foo",
+                          field2: "bar",
+                        }),
+                        valueInfo: {}
+                    }
+                },
+                formId: "myFormId",
               })
               .reply(200);
             nock('http://localhost:8000', {})
@@ -41,11 +47,17 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
                 body: {
-                  formId: "myFormId", 
-                  data: JSON.stringify({
-                    field1: "foo",
-                    field2: "bar"
-                  }),
+                  variables: {
+                      myForm: {
+                          type: "json",
+                          value: JSON.stringify({
+                            field1: "foo",
+                            field2: "bar",
+                          }),
+                          valueInfo: {}
+                      }
+                  },
+                  formId: "myFormId",
                 },
                 params: {
                   taskId: "myTaskId"
@@ -53,14 +65,14 @@ describe('Workflow Controller', () => {
                 kauth: keycloak
             });
             const response = await workflowTranslatorController.completeTask(request);
-          
+
             expect(response.status).to.equal(200);
         });
         it('should encrypt sensitive fields', async () => {
           nock('http://localhost:9000', {})
               .log(console.log)
               .post('/api/workflow/tasks/myTaskId/form/_complete', body => {
-                const data = JSON.parse(body.data);
+                const data = JSON.parse(body.variables.myForm.value);
                 try {
                   expect(data.lastName).to.equal('foo');
                   expect(data.firstName).to.match(/.*==/);
@@ -79,20 +91,24 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
                 body: {
-                  formId: "myFormId", 
-                  data: JSON.stringify({
-                    lastName: "foo",
-                    firstName: "bar",
-                    businessKey: "hardcodedBusinessKey",
-                  }),
+                    formId: "myFormId",
+                    variables: {
+                        myForm: {
+                            value: JSON.stringify({
+                              lastName: "foo",
+                              firstName: "bar",
+                              businessKey: "hardcodedBusinessKey",
+                            }),
+                        }
+                    }
                 },
                 params: {
-                  taskId: "myTaskId"
+                    taskId: "myTaskId"
                 },
                 kauth: keycloak
             });
             const response = await workflowTranslatorController.completeTask(request);
-          
+
             expect(response.status).to.equal(200);
         });
         it('should pass back a 40x status', async () => {
@@ -100,10 +116,16 @@ describe('Workflow Controller', () => {
               .log(console.log)
               .matchHeader("authorization", "Bearer test-token")
               .post('/api/workflow/tasks/myTaskId/form/_complete', {
-                data: JSON.stringify({
-                  field1: "foo",
-                  field2: "bar",
-                }),
+                variables: {
+                    myForm: {
+                        type: "json",
+                        value: JSON.stringify({
+                          field1: "foo",
+                          field2: "bar",
+                        }),
+                        valueInfo: {}
+                    }
+                },
                 formId: "myFormId",
               })
               .reply(400);
@@ -115,10 +137,16 @@ describe('Workflow Controller', () => {
                 method: 'POST',
                 url: '/api/translation/workflow/tasks/myTaskId/form/_complete',
                 body: {
-                  data: JSON.stringify({
-                    field1: "foo",
-                    field2: "bar"
-                  }),
+                  variables: {
+                      myForm: {
+                          type: "json",
+                          value: JSON.stringify({
+                            field1: "foo",
+                            field2: "bar",
+                          }),
+                          valueInfo: {}
+                      }
+                  },
                   formId: "myFormId",
                 },
                 params: {
@@ -127,7 +155,7 @@ describe('Workflow Controller', () => {
                 kauth: keycloak
             });
             const response = await workflowTranslatorController.completeTask(request);
-          
+
             expect(response.status).to.equal(400);
         });
     });
@@ -167,7 +195,7 @@ describe('Workflow Controller', () => {
                 kauth: keycloak
             });
             const response = await workflowTranslatorController.startProcessInstance(request);
-          
+
             expect(response.status).to.equal(200);
             expect(response.data.success).to.be.true;
         });
@@ -289,7 +317,7 @@ describe('Workflow Controller', () => {
                 kauth: keycloak
             });
             const response = await workflowTranslatorController.startProcessInstance(request);
-          
+
             expect(response.status).to.equal(400);
         });
     });
