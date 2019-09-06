@@ -40,6 +40,10 @@ export default class ProcessService {
     }
 
     async startProcessInstance(processData, headers) {
+        const payload = processData.data;
+
+        processData['businessKey'] = payload.businessKey;
+        
         try {
             const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/process-instances`, processData, { validateStatus: this.validateStatus, headers: headers } );
             if (response && response.data) {
