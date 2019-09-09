@@ -82,7 +82,7 @@ export default class FormTranslator {
     }
 
     async submit(formId, formData, keycloakContext) {
-        return this.translateForSubmission(formId, formData, keycloakContext, async () => this.formEngineService.submitForm(formId, formData, keycloakContext));
+        return this.formEngineService.submitForm(formId, formData, keycloakContext);
     }
 
     async translateForSubmission(formId, formData, keycloakContext, submit) {
