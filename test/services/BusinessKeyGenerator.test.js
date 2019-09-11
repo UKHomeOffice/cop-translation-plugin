@@ -8,7 +8,7 @@ import moment from "moment";
 
 
 describe('BusinessKeyGenerator', () => {
-    const dataKey = `BF-190812`;
+    const dataKey = `BF-20190812`;
     const mockRedis = new MockRedis({
         data: {
             [dataKey]: 0
@@ -44,7 +44,7 @@ describe('BusinessKeyGenerator', () => {
             const businessKeyGenerator = new BusinessKeyGenerator(mockRedis);
             const businessKey = await businessKeyGenerator.newBusinessKey(data.prefix);
             const prefix = data.prefix ? `${data.prefix}` : `BF`;
-            expect(businessKey).to.be.eq(`${prefix}-${moment(data.date).format('YYMMDD')}-${data.expectedCount}`);
+            expect(businessKey).to.be.eq(`${prefix}-${moment(data.date).format('YYYYMMDD')}-${data.expectedCount}`);
         });
 
 

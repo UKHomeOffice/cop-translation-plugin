@@ -9,7 +9,7 @@ export default class BusinessKeyGenerator {
 
     async newBusinessKey(prefix = null) {
         let today = moment();
-        const currentDate = today.format("YYMMDD");
+        const currentDate = today.format("YYYYMMDD");
         const key = _.isEmpty(prefix) ? `BF-${currentDate}` : `${prefix}-${currentDate}`;
         const expiryAt = today.add(1, 'day').unix();
 

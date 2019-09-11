@@ -50,7 +50,7 @@ describe('Form Data Resolve Controller With Business Key', () => {
         const response = await formTranslateController.getForm(request);
         const businessKey = JSONPath.value(response, "$..components[?(@.key=='businessKey')].defaultValue");
 
-        expect(businessKey).to.equal("BF-190812-1");
+        expect(businessKey).to.equal("BF-20190812-1");
     });
 
     it('it returns form without businessKey', async () => {
