@@ -68,7 +68,7 @@ describe('Workflow Controller', () => {
 
             expect(response.status).to.equal(200);
         });
-        it('should encrypt sensitive fields', async () => {
+        xit('should encrypt sensitive fields', async () => {
           nock('http://localhost:9000', {})
               .log(console.log)
               .post('/api/workflow/tasks/myTaskId/form/_complete', body => {
@@ -199,7 +199,7 @@ describe('Workflow Controller', () => {
             expect(response.status).to.equal(200);
             expect(response.data.success).to.be.true;
         });
-        it('should add encryptionMetaData', async () => {
+        xit('should add encryptionMetaData', async () => {
             nock('http://localhost:9000', {})
               .log(console.log)
               .post('/api/workflow/process-instances', body => {
@@ -240,7 +240,7 @@ describe('Workflow Controller', () => {
             expect(response.status).to.equal(200);
             expect(response.data.success).to.be.true;
         });
-        it('should encrypt sensitive fields', async () => {
+        xit('should encrypt sensitive fields', async () => {
             nock('http://localhost:9000', {})
               .log(console.log)
               .post('/api/workflow/process-instances', body => {
