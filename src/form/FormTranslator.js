@@ -30,7 +30,7 @@ export default class FormTranslator {
             processInstanceId,
             taskId
         }, customDataContext);
-        this.decryptDataContext(dataContext);
+//        this.decryptDataContext(dataContext);
         return this.applyFormResolution(dataContext, form);
     }
 

@@ -12,9 +12,9 @@ export default class WorkflowTranslationController {
       const headers = this.createHeader(keycloakContext);
       const formId = req.body.formId;
 
-      return this.formTranslator.translateForSubmission(formId, req.body, keycloakContext, async () => {
+//      return this.formTranslator.translateForSubmission(formId, req.body, keycloakContext, async () => {
           return this.processService.startProcessInstance(req.body, headers);
-      })
+ //     })
 
     }
 
