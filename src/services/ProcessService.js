@@ -1,5 +1,5 @@
 import axios from "../utilities/axios";
-import  logger from "../config/winston";
+import logger from "../config/winston";
 import TranslationServiceError from "../TranslationServiceError"
 
 
@@ -43,13 +43,16 @@ export default class ProcessService {
         const payload = processData.data;
 
         processData['businessKey'] = payload.businessKey;
-        
+
         try {
-            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/process-instances`, processData, { validateStatus: this.validateStatus, headers: headers } );
+            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/process-instances`, processData, {
+                validateStatus: this.validateStatus,
+                headers: headers
+            });
             if (response && response.data) {
                 return {
-                  data: response.data,
-                  status: response.status
+                    data: response.data,
+                    status: response.status
                 }
             }
             return null;
@@ -62,27 +65,32 @@ export default class ProcessService {
 
     async startNonShiftProcessInstance(processData, processKey, headers) {
         try {
-        const response = await axios.post(`${this.config.services.workflow.url}/rest/camunda/process-definition/key/${processKey}/start`, processData, { validateStatus: this.validateStatus, headers: headers } );
-        if (response && response.data) {
-            return {
-              data: response.data,
-              status: response.status
+            const response = await axios.post(`${this.config.services.workflow.url}/rest/camunda/process-definition/key/${processKey}/start`,
+                processData,
+                {validateStatus: this.validateStatus, headers: headers});
+            if (response && response.data) {
+                return {
+                    data: response.data,
+                    status: response.status
+                }
             }
-        }
-        return null;
+            return null;
         } catch (e) {
             const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e}'`;
             logger.error(errorMessage, e);
-            throw new TranslationServiceError(errorMessage, 500); 
-        } 
+            throw new TranslationServiceError(errorMessage, 500);
+        }
     }
 
     async completeTask(taskId, taskData, headers) {
         try {
-            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}/form/_complete`, taskData, { validateStatus: this.validateStatus, headers: headers } );
+            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}/form/_complete`, taskData, {
+                validateStatus: this.validateStatus,
+                headers: headers
+            });
             if (response) {
                 return {
-                  status: response.status
+                    status: response.status
                 }
             }
             return null;

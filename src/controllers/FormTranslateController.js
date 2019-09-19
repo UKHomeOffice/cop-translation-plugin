@@ -1,7 +1,7 @@
 import KeycloakContext from "../models/KeycloakContext";
 import TranslationServiceError from "../TranslationServiceError";
 
-export default class FormTranslateController  {
+export default class FormTranslateController {
     constructor(formTranslator, processService) {
         this.formTranslator = formTranslator;
         this.processService = processService;
@@ -11,7 +11,7 @@ export default class FormTranslateController  {
         const {formName} = req.params;
         const {taskId, processInstanceId} = req.query;
         const form = await this.formTranslator.translate(formName,
-            new KeycloakContext(req.kauth),{taskId, processInstanceId});
+            new KeycloakContext(req.kauth), {taskId, processInstanceId});
         if (!form) {
             throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
         }
@@ -20,17 +20,17 @@ export default class FormTranslateController  {
 
     async submitForm(req) {
         const {formId} = req.params;
-        
+
         const bodyData = req.body;
         const variableName = bodyData.variableName;
         const processKey = bodyData.processKey;
         const submissionData = bodyData.data;
         const isShiftApiCall = bodyData.isShiftApiCall;
         const keycloakContext = new KeycloakContext(req.kauth);
-        
+
         const email = keycloakContext.email;
         try {
-           await this.formTranslator.submit(formId, bodyData.data, keycloakContext);
+            await this.formTranslator.submit(formId, bodyData.data, keycloakContext);
         } catch (e) {
             throw new TranslationServiceError(e.message, e.status);
         }
@@ -42,27 +42,22 @@ export default class FormTranslateController  {
                 variableName: variableName
             }, req.headers);
         } else {
-            const createVariable = () => {
-                const variables = {};
-                variables[variableName] = {
-                  value: JSON.stringify(submissionData),
-                  type: 'json',
-                };
-                variables.initiatedBy = {
-                  value: email,
-                  type: 'String',
-                };
-              
-                variables.type = {
-                  value: 'non-notifications',
-                  type: 'String',
-                };
-                return {
-                  variables,
-                };
-              };
-              response =  await this.processService.startNonShiftProcessInstance(createVariable(), processKey, req.headers);
-        }    
+            const processData = {};
+            processData[variableName] = {
+                value: JSON.stringify(submissionData),
+                type: 'json',
+            };
+            processData.initiatedBy = {
+                value: email,
+                type: 'String',
+            };
+
+            processData.type = {
+                value: 'non-notifications',
+                type: 'String',
+            };
+            response = await this.processService.startNonShiftProcessInstance(processData, processKey, req.headers);
+        }
         if (response) {
             return response.data;
         }
