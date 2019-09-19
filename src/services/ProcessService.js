@@ -60,6 +60,23 @@ export default class ProcessService {
         }
     }
 
+    async startNonShiftProcessInstance(processData, processKey, headers) {
+        try {
+        const response = await axios.post(`${this.config.services.workflow.url}/rest/camunda/process-definition/key/${processKey}/start`, processData, { validateStatus: this.validateStatus, headers: headers } );
+        if (response && response.data) {
+            return {
+              data: response.data,
+              status: response.status
+            }
+        }
+        return null;
+        } catch (e) {
+            const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e}'`;
+            logger.error(errorMessage, e);
+            throw new TranslationServiceError(errorMessage, 500); 
+        } 
+    }
+
     async completeTask(taskId, taskData, headers) {
         try {
             const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/tasks/${taskId}/form/_complete`, taskData, { validateStatus: this.validateStatus, headers: headers } );

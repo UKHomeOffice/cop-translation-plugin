@@ -44,7 +44,7 @@ const formEngineService = new FormEngineService(appConfig);
 const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor, referenceGenerator);
 const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
 
-const formTranslateController = new FormTranslateController(translator);
+const formTranslateController = new FormTranslateController(translator, processService);
 const workflowTranslatorController = new WorkflowTranslationController(processService, translator);
 Tracing.correlationId = () => "CorrelationId";
 
