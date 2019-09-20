@@ -43,12 +43,16 @@ export default class ProcessService {
         const payload = processData.data;
 
         processData['businessKey'] = payload.businessKey;
-
+        console.log(`Sending process data ${JSON.stringify(processData)}`);
+        console.log(`Headers: ${JSON.stringify(headers)}`);
         try {
-            const response = await axios.post(`${this.config.services.workflow.url}/api/workflow/process-instances`, processData, {
-                validateStatus: this.validateStatus,
+            const response = await axios({
+                url:`${this.config.services.workflow.url}/api/workflow/process-instances`,
+                method: 'POST',
+                data: processData,
                 headers: headers
             });
+            console.log(`Workflow response ${JSON.stringify(response)}`);
             if (response && response.data) {
                 return {
                     data: response.data,
@@ -57,9 +61,9 @@ export default class ProcessService {
             }
             return null;
         } catch (e) {
-            const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e}'`;
-            logger.error(errorMessage, e);
-            throw new TranslationServiceError(errorMessage, 500);
+            const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e.message}'`;
+            logger.error(errorMessage);
+            throw new TranslationServiceError(errorMessage, e.response.status);
         }
     }
 

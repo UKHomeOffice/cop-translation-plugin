@@ -17,15 +17,16 @@ export default class FormTranslateController {
         }
         return form;
     }
-
     async submitForm(req) {
         const {formId} = req.params;
 
         const bodyData = req.body;
+
+        console.log("JSON BODY" + JSON.stringify(bodyData));
         const variableName = bodyData.variableName;
         const processKey = bodyData.processKey;
         const submissionData = bodyData.data;
-        const isShiftApiCall = bodyData.isShiftApiCall;
+        const nonShiftApiCall = bodyData.nonShiftApiCall;
         const keycloakContext = new KeycloakContext(req.kauth);
 
         const email = keycloakContext.email;
@@ -35,7 +36,8 @@ export default class FormTranslateController {
             throw new TranslationServiceError(e.message, e.status);
         }
         let response;
-        if (isShiftApiCall) {
+        if (!nonShiftApiCall) {
+            console.log(`Starting workflow ${processKey}`)
             response = await this.processService.startProcessInstance({
                 data: submissionData,
                 processKey: processKey,

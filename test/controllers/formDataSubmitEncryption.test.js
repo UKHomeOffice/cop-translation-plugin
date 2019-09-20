@@ -45,7 +45,7 @@ describe('Form Data Controller', () => {
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
                 body: {
-                    isShiftApiCall: false,
+                    nonShiftApiCall: false,
                     processKey: 'processKey',
                     variableName: 'variableName',
                     data: {
@@ -110,7 +110,7 @@ describe('Form Data Controller', () => {
                 method: 'POST',
                 url: '/api/translation/form/formId/submission',
                 body: {
-                    isShiftApiCall: false,
+                    nonShiftApiCall: false,
                     processKey: 'processKey',
                     variableName: 'variableName',
                     data: {
