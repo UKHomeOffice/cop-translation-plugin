@@ -20,12 +20,56 @@ pipeline:
         - push
         - pull_request
 
+  synch_dev_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+    secrets:
+      - source: DEV_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: DEV_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      event: push
+
+  synch_staging_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+    secrets:
+      - source: STAGING_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: STAGING_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      event: deployment
+      environment: staging
+
+  synch_production_secrets:
+    image: quay.io/ukhomeofficedigital/cop-secrets
+    environment:
+      - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+    secrets:
+      - source: PRODUCTION_DRONE_AWS_ACCESS_KEY_ID
+        target: AWS_ACCESS_KEY_ID
+      - source: PRODUCTION_DRONE_AWS_SECRET_ACCESS_KEY
+        target: AWS_SECRET_ACCESS_KEY
+      - source: DRONE_PUBLIC_TOKEN
+        target: DRONE_TOKEN
+    when:
+      event: deployment
+      environment: production
+
   image_to_quay:
     image: quay.io/ukhomeofficedigital/drone-docker
     secrets:
-    - source: DEV_QUAY_USERNAME
+    - source: QUAY_USERNAME
       target: DOCKER_USERNAME
-    - source: DEV_QUAY_PASSWORD
+    - source: QUAY_PASSWORD
       target: DOCKER_PASSWORD
     registry: quay.io
     repo: quay.io/ukhomeofficedigital/cop-private-translation-service
@@ -39,70 +83,67 @@ pipeline:
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - DEV_NGINX_IMAGE
-      - DEV_NGINX_TAG
-      - DEV_KUBE_SERVER
-      - DEV_KUBE_TOKEN
-      - DEV_KUBE_NAMESPACE
-      - DEV_KEYCLOAK_URL
-      - DEV_KEYCLOAK_REALM
-      - DEV_KEYCLOAK_PROTOCOL
-      - DEV_WHITELIST
-      - DEV_API_REF_URL
-      - DEV_API_REF_PROTOCOL
-      - DEV_API_COP_URL
-      - DEV_API_COP_PROTOCOL
-      - DEV_API_FORM_URL
-      - DEV_API_FORM_PROTOCOL
-      - DEV_ENGINE_URL
-      - DEV_ENGINE_PROTOCOL
-      - DEV_WWW_URL
-      - DEV_WWW_PROTOCOL
-      - DEV_REDIS_TOKEN
-      - DEV_REDIS_SSL
-      - DEV_REDIS_URL
-      - DEV_TRANSLATION_KEYCLOAK_CLIENT_ID
-      - DEV_TRANSLATION_PORT
-      - DEV_TRANSLATION_KUBE_NAMESPACE
-      - DEV_TRANSLATION_IMAGE
-      - DEV_TRANSLATION_NAME
-      - DEV_TRANSLATION_URL
-      - DEV_TRANSLATION_PRIVATE_KEY_PATH
-      - DEV_TRANSLATION_PRIVATE_KEY
-      - DEV_TRANSLATION_CORS_ORIGIN
+      - source: API_COP_PROTOCOL
+        target: API_COP_PROTOCOL
+      - source: DEV_API_COP_URL
+        target: API_COP_URL
+      - source: API_FORM_PROTOCOL
+        target: API_FORM_PROTOCOL
+      - source: DEV_API_FORM_URL
+        target: API_FORM_URL
+      - source: API_REF_PROTOCOL
+        target: API_REF_PROTOCOL
+      - source: DEV_API_REF_URL
+        target: API_REF_URL
+      - source: ENGINE_PROTOCOL
+        target: ENGINE_PROTOCOL
+      - source: DEV_ENGINE_URL
+        target: ENGINE_URL
+      - source: DEV_KEYCLOAK_PROTOCOL
+        target: KEYCLOAK_PROTOCOL
+      - source: DEV_KEYCLOAK_REALM
+        target: KEYCLOAK_REALM
+      - source: DEV_KEYCLOAK_URL
+        target: KEYCLOAK_URL
+      - source: DEV_TRANSLATION_KUBE_NAMESPACE
+        target: KUBE_NAMESPACE
+      - source: DEV_KUBE_SERVER
+        target: KUBE_SERVER
+      - source: DEV_KUBE_TOKEN
+        target: KUBE_TOKEN
+      - source: NGINX_IMAGE
+        target: NGINX_IMAGE
+      - source: NGINX_TAG
+        target: NGINX_TAG
+      - source: DEV_REDIS_SSL
+        target: REDIS_SSL
+      - source: DEV_REDIS_TOKEN
+        target: REDIS_TOKEN
+      - source: DEV_REDIS_URL
+        target: REDIS_URL
+      - source: DEV_TRANSLATION_CORS_ORIGIN
+        target: TRANSLATION_CORS_ORIGIN
+      - source: TRANSLATION_IMAGE
+        target: TRANSLATION_IMAGE
+      - source: TRANSLATION_KEYCLOAK_CLIENT_ID
+        target: TRANSLATION_KEYCLOAK_CLIENT_ID
+      - source: TRANSLATION_NAME
+        target: TRANSLATION_NAME
+      - source: TRANSLATION_PORT
+        target: TRANSLATION_PORT
+      - source: DEV_TRANSLATION_PRIVATE_KEY
+        target: TRANSLATION_PRIVATE_KEY
+      - source: TRANSLATION_PRIVATE_KEY_PATH
+        target: TRANSLATION_PRIVATE_KEY_PATH
+      - source: DEV_TRANSLATION_URL
+        target: TRANSLATION_URL
+      - source: DEV_WHITELIST
+        target: WHITELIST
+      - source: WWW_PROTOCOL
+        target: WWW_PROTOCOL
+      - source: DEV_WWW_URL
+        target: WWW_URL
     commands:
-      - export NGINX_IMAGE=$${DEV_NGINX_IMAGE}
-      - export NGINX_TAG=$${DEV_NGINX_TAG}
-      - export KUBE_SERVER=$${DEV_KUBE_SERVER}
-      - export KUBE_TOKEN=$${DEV_KUBE_TOKEN}
-      - export KUBE_NAMESPACE=$${DEV_KUBE_NAMESPACE}
-      - export KEYCLOAK_URL=$${DEV_KEYCLOAK_URL}
-      - export KEYCLOAK_REALM=$${DEV_KEYCLOAK_REALM}
-      - export KEYCLOAK_PROTOCOL=$${DEV_KEYCLOAK_PROTOCOL}
-      - export WHITELIST=$${DEV_WHITELIST}
-      - export API_REF_URL=$${DEV_API_REF_URL}
-      - export API_REF_PROTOCOL=$${DEV_API_REF_PROTOCOL}
-      - export API_COP_URL=$${DEV_API_COP_URL}
-      - export API_COP_PROTOCOL=$${DEV_API_COP_PROTOCOL}
-      - export API_FORM_URL=$${DEV_API_FORM_URL}
-      - export API_FORM_PROTOCOL=$${DEV_API_FORM_PROTOCOL}
-      - export ENGINE_URL=$${DEV_ENGINE_URL}
-      - export ENGINE_PROTOCOL=$${DEV_ENGINE_PROTOCOL}
-      - export WWW_URL=$${DEV_WWW_URL}
-      - export WWW_PROTOCOL=$${DEV_WWW_PROTOCOL}
-      - export REDIS_TOKEN=$${DEV_REDIS_TOKEN}
-      - export REDIS_SSL=$${DEV_REDIS_SSL}
-      - export REDIS_URL=$${DEV_REDIS_URL}
-      - export TRANSLATION_KEYCLOAK_CLIENT_ID=$${DEV_TRANSLATION_KEYCLOAK_CLIENT_ID}
-      - export TRANSLATION_PORT=$${DEV_TRANSLATION_PORT}
-      - export TRANSLATION_KUBE_NAMESPACE=$${DEV_TRANSLATION_KUBE_NAMESPACE}
-      - export TRANSLATION_IMAGE=$${DEV_TRANSLATION_IMAGE}
-      - export TRANSLATION_NAME=$${DEV_TRANSLATION_NAME}
-      - export TRANSLATION_URL=$${DEV_TRANSLATION_URL}
-      - export TRANSLATION_PRIVATE_KEY_PATH=$${DEV_TRANSLATION_PRIVATE_KEY_PATH}
-      - export TRANSLATION_PRIVATE_KEY=$${DEV_TRANSLATION_PRIVATE_KEY}
-      - export TRANSLATION_CORS_ORIGIN=$${DEV_TRANSLATION_CORS_ORIGIN}
-      - export KUBE_NAMESPACE=$${DEV_TRANSLATION_KUBE_NAMESPACE}
       - export TRANSLATION_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
@@ -117,70 +158,67 @@ pipeline:
   deploy_to_staging:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - STAGING_NGINX_IMAGE
-      - STAGING_NGINX_TAG
-      - STAGING_KUBE_SERVER
-      - STAGING_KUBE_TOKEN
-      - STAGING_KUBE_NAMESPACE
-      - STAGING_KEYCLOAK_URL
-      - STAGING_KEYCLOAK_REALM
-      - STAGING_KEYCLOAK_PROTOCOL
-      - STAGING_WHITELIST
-      - STAGING_API_REF_URL
-      - STAGING_API_REF_PROTOCOL
-      - STAGING_API_COP_URL
-      - STAGING_API_COP_PROTOCOL
-      - STAGING_API_FORM_URL
-      - STAGING_API_FORM_PROTOCOL
-      - STAGING_ENGINE_URL
-      - STAGING_ENGINE_PROTOCOL
-      - STAGING_WWW_URL
-      - STAGING_WWW_PROTOCOL
-      - STAGING_REDIS_TOKEN
-      - STAGING_REDIS_SSL
-      - STAGING_REDIS_URL
-      - STAGING_TRANSLATION_KEYCLOAK_CLIENT_ID
-      - STAGING_TRANSLATION_PORT
-      - STAGING_TRANSLATION_KUBE_NAMESPACE
-      - STAGING_TRANSLATION_IMAGE
-      - STAGING_TRANSLATION_NAME
-      - STAGING_TRANSLATION_URL
-      - STAGING_TRANSLATION_PRIVATE_KEY_PATH
-      - STAGING_TRANSLATION_PRIVATE_KEY
-      - STAGING_TRANSLATION_CORS_ORIGIN
+      - source: API_COP_PROTOCOL
+        target: API_COP_PROTOCOL
+      - source: STAGING_API_COP_URL
+        target: API_COP_URL
+      - source: API_FORM_PROTOCOL
+        target: API_FORM_PROTOCOL
+      - source: STAGING_API_FORM_URL
+        target: API_FORM_URL
+      - source: API_REF_PROTOCOL
+        target: API_REF_PROTOCOL
+      - source: STAGING_API_REF_URL
+        target: API_REF_URL
+      - source: ENGINE_PROTOCOL
+        target: ENGINE_PROTOCOL
+      - source: STAGING_ENGINE_URL
+        target: ENGINE_URL
+      - source: STAGING_KEYCLOAK_PROTOCOL
+        target: KEYCLOAK_PROTOCOL
+      - source: STAGING_KEYCLOAK_REALM
+        target: KEYCLOAK_REALM
+      - source: STAGING_KEYCLOAK_URL
+        target: KEYCLOAK_URL
+      - source: STAGING_TRANSLATION_KUBE_NAMESPACE
+        target: KUBE_NAMESPACE
+      - source: STAGING_KUBE_SERVER
+        target: KUBE_SERVER
+      - source: STAGING_KUBE_TOKEN
+        target: KUBE_TOKEN
+      - source: NGINX_IMAGE
+        target: NGINX_IMAGE
+      - source: NGINX_TAG
+        target: NGINX_TAG
+      - source: STAGING_REDIS_SSL
+        target: REDIS_SSL
+      - source: STAGING_REDIS_TOKEN
+        target: REDIS_TOKEN
+      - source: STAGING_REDIS_URL
+        target: REDIS_URL
+      - source: STAGING_TRANSLATION_CORS_ORIGIN
+        target: TRANSLATION_CORS_ORIGIN
+      - source: TRANSLATION_IMAGE
+        target: TRANSLATION_IMAGE
+      - source: TRANSLATION_KEYCLOAK_CLIENT_ID
+        target: TRANSLATION_KEYCLOAK_CLIENT_ID
+      - source: TRANSLATION_NAME
+        target: TRANSLATION_NAME
+      - source: TRANSLATION_PORT
+        target: TRANSLATION_PORT
+      - source: STAGING_TRANSLATION_PRIVATE_KEY
+        target: TRANSLATION_PRIVATE_KEY
+      - source: TRANSLATION_PRIVATE_KEY_PATH
+        target: TRANSLATION_PRIVATE_KEY_PATH
+      - source: STAGING_TRANSLATION_URL
+        target: TRANSLATION_URL
+      - source: STAGING_WHITELIST
+        target: WHITELIST
+      - source: WWW_PROTOCOL
+        target: WWW_PROTOCOL
+      - source: STAGING_WWW_URL
+        target: WWW_URL
     commands:
-      - export NGINX_IMAGE=$${STAGING_NGINX_IMAGE}
-      - export NGINX_TAG=$${STAGING_NGINX_TAG}
-      - export KUBE_SERVER=$${STAGING_KUBE_SERVER}
-      - export KUBE_TOKEN=$${STAGING_KUBE_TOKEN}
-      - export KUBE_NAMESPACE=$${STAGING_KUBE_NAMESPACE}
-      - export KEYCLOAK_URL=$${STAGING_KEYCLOAK_URL}
-      - export KEYCLOAK_REALM=$${STAGING_KEYCLOAK_REALM}
-      - export KEYCLOAK_PROTOCOL=$${STAGING_KEYCLOAK_PROTOCOL}
-      - export WHITELIST=$${STAGING_WHITELIST}
-      - export API_REF_URL=$${STAGING_API_REF_URL}
-      - export API_REF_PROTOCOL=$${STAGING_API_REF_PROTOCOL}
-      - export API_COP_URL=$${STAGING_API_COP_URL}
-      - export API_COP_PROTOCOL=$${STAGING_API_COP_PROTOCOL}
-      - export API_FORM_URL=$${STAGING_API_FORM_URL}
-      - export API_FORM_PROTOCOL=$${STAGING_API_FORM_PROTOCOL}
-      - export ENGINE_URL=$${STAGING_ENGINE_URL}
-      - export ENGINE_PROTOCOL=$${STAGING_ENGINE_PROTOCOL}
-      - export WWW_URL=$${STAGING_WWW_URL}
-      - export WWW_PROTOCOL=$${STAGING_WWW_PROTOCOL}
-      - export REDIS_TOKEN=$${STAGING_REDIS_TOKEN}
-      - export REDIS_SSL=$${STAGING_REDIS_SSL}
-      - export REDIS_URL=$${STAGING_REDIS_URL}
-      - export TRANSLATION_KEYCLOAK_CLIENT_ID=$${STAGING_TRANSLATION_KEYCLOAK_CLIENT_ID}
-      - export TRANSLATION_PORT=$${STAGING_TRANSLATION_PORT}
-      - export TRANSLATION_KUBE_NAMESPACE=$${STAGING_TRANSLATION_KUBE_NAMESPACE}
-      - export TRANSLATION_IMAGE=$${STAGING_TRANSLATION_IMAGE}
-      - export TRANSLATION_NAME=$${STAGING_TRANSLATION_NAME}
-      - export TRANSLATION_URL=$${STAGING_TRANSLATION_URL}
-      - export TRANSLATION_PRIVATE_KEY_PATH=$${STAGING_TRANSLATION_PRIVATE_KEY_PATH}
-      - export TRANSLATION_PRIVATE_KEY=$${STAGING_TRANSLATION_PRIVATE_KEY}
-      - export TRANSLATION_CORS_ORIGIN=$${STAGING_TRANSLATION_CORS_ORIGIN}
-      - export KUBE_NAMESPACE=$${STAGING_TRANSLATION_KUBE_NAMESPACE}
       - export TRANSLATION_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
@@ -195,70 +233,67 @@ pipeline:
   deploy_to_production:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - PRODUCTION_NGINX_IMAGE
-      - PRODUCTION_NGINX_TAG
-      - PRODUCTION_KUBE_SERVER
-      - PRODUCTION_KUBE_TOKEN
-      - PRODUCTION_KUBE_NAMESPACE
-      - PRODUCTION_KEYCLOAK_URL
-      - PRODUCTION_KEYCLOAK_REALM
-      - PRODUCTION_KEYCLOAK_PROTOCOL
-      - PRODUCTION_WHITELIST
-      - PRODUCTION_API_REF_URL
-      - PRODUCTION_API_REF_PROTOCOL
-      - PRODUCTION_API_COP_URL
-      - PRODUCTION_API_COP_PROTOCOL
-      - PRODUCTION_API_FORM_URL
-      - PRODUCTION_API_FORM_PROTOCOL
-      - PRODUCTION_ENGINE_URL
-      - PRODUCTION_ENGINE_PROTOCOL
-      - PRODUCTION_WWW_URL
-      - PRODUCTION_WWW_PROTOCOL
-      - PRODUCTION_REDIS_TOKEN
-      - PRODUCTION_REDIS_SSL
-      - PRODUCTION_REDIS_URL
-      - PRODUCTION_TRANSLATION_KEYCLOAK_CLIENT_ID
-      - PRODUCTION_TRANSLATION_PORT
-      - PRODUCTION_TRANSLATION_KUBE_NAMESPACE
-      - PRODUCTION_TRANSLATION_IMAGE
-      - PRODUCTION_TRANSLATION_NAME
-      - PRODUCTION_TRANSLATION_URL
-      - PRODUCTION_TRANSLATION_PRIVATE_KEY_PATH
-      - PRODUCTION_TRANSLATION_PRIVATE_KEY
-      - PRODUCTION_TRANSLATION_CORS_ORIGIN
+      - source: API_COP_PROTOCOL
+        target: API_COP_PROTOCOL
+      - source: PRODUCTION_API_COP_URL
+        target: API_COP_URL
+      - source: API_FORM_PROTOCOL
+        target: API_FORM_PROTOCOL
+      - source: PRODUCTION_API_FORM_URL
+        target: API_FORM_URL
+      - source: API_REF_PROTOCOL
+        target: API_REF_PROTOCOL
+      - source: PRODUCTION_API_REF_URL
+        target: API_REF_URL
+      - source: ENGINE_PROTOCOL
+        target: ENGINE_PROTOCOL
+      - source: PRODUCTION_ENGINE_URL
+        target: ENGINE_URL
+      - source: PRODUCTION_KEYCLOAK_PROTOCOL
+        target: KEYCLOAK_PROTOCOL
+      - source: PRODUCTION_KEYCLOAK_REALM
+        target: KEYCLOAK_REALM
+      - source: PRODUCTION_KEYCLOAK_URL
+        target: KEYCLOAK_URL
+      - source: PRODUCTION_TRANSLATION_KUBE_NAMESPACE
+        target: KUBE_NAMESPACE
+      - source: PRODUCTION_KUBE_SERVER
+        target: KUBE_SERVER
+      - source: PRODUCTION_KUBE_TOKEN
+        target: KUBE_TOKEN
+      - source: NGINX_IMAGE
+        target: NGINX_IMAGE
+      - source: NGINX_TAG
+        target: NGINX_TAG
+      - source: PRODUCTION_REDIS_SSL
+        target: REDIS_SSL
+      - source: PRODUCTION_REDIS_TOKEN
+        target: REDIS_TOKEN
+      - source: PRODUCTION_REDIS_URL
+        target: REDIS_URL
+      - source: PRODUCTION_TRANSLATION_CORS_ORIGIN
+        target: TRANSLATION_CORS_ORIGIN
+      - source: TRANSLATION_IMAGE
+        target: TRANSLATION_IMAGE
+      - source: TRANSLATION_KEYCLOAK_CLIENT_ID
+        target: TRANSLATION_KEYCLOAK_CLIENT_ID
+      - source: TRANSLATION_NAME
+        target: TRANSLATION_NAME
+      - source: TRANSLATION_PORT
+        target: TRANSLATION_PORT
+      - source: PRODUCTION_TRANSLATION_PRIVATE_KEY
+        target: TRANSLATION_PRIVATE_KEY
+      - source: TRANSLATION_PRIVATE_KEY_PATH
+        target: TRANSLATION_PRIVATE_KEY_PATH
+      - source: PRODUCTION_TRANSLATION_URL
+        target: TRANSLATION_URL
+      - source: PRODUCTION_WHITELIST
+        target: WHITELIST
+      - source: WWW_PROTOCOL
+        target: WWW_PROTOCOL
+      - source: PRODUCTION_WWW_URL
+        target: WWW_URL
     commands:
-      - export NGINX_IMAGE=$${PRODUCTION_NGINX_IMAGE}
-      - export NGINX_TAG=$${PRODUCTION_NGINX_TAG}
-      - export KUBE_SERVER=$${PRODUCTION_KUBE_SERVER}
-      - export KUBE_TOKEN=$${PRODUCTION_KUBE_TOKEN}
-      - export KUBE_NAMESPACE=$${PRODUCTION_KUBE_NAMESPACE}
-      - export KEYCLOAK_URL=$${PRODUCTION_KEYCLOAK_URL}
-      - export KEYCLOAK_REALM=$${PRODUCTION_KEYCLOAK_REALM}
-      - export KEYCLOAK_PROTOCOL=$${PRODUCTION_KEYCLOAK_PROTOCOL}
-      - export WHITELIST=$${PRODUCTION_WHITELIST}
-      - export API_REF_URL=$${PRODUCTION_API_REF_URL}
-      - export API_REF_PROTOCOL=$${PRODUCTION_API_REF_PROTOCOL}
-      - export API_COP_URL=$${PRODUCTION_API_COP_URL}
-      - export API_COP_PROTOCOL=$${PRODUCTION_API_COP_PROTOCOL}
-      - export API_FORM_URL=$${PRODUCTION_API_FORM_URL}
-      - export API_FORM_PROTOCOL=$${PRODUCTION_API_FORM_PROTOCOL}
-      - export ENGINE_URL=$${PRODUCTION_ENGINE_URL}
-      - export ENGINE_PROTOCOL=$${PRODUCTION_ENGINE_PROTOCOL}
-      - export WWW_URL=$${PRODUCTION_WWW_URL}
-      - export WWW_PROTOCOL=$${PRODUCTION_WWW_PROTOCOL}
-      - export REDIS_TOKEN=$${PRODUCTION_REDIS_TOKEN}
-      - export REDIS_SSL=$${PRODUCTION_REDIS_SSL}
-      - export REDIS_URL=$${PRODUCTION_REDIS_URL}
-      - export TRANSLATION_KEYCLOAK_CLIENT_ID=$${PRODUCTION_TRANSLATION_KEYCLOAK_CLIENT_ID}
-      - export TRANSLATION_PORT=$${PRODUCTION_TRANSLATION_PORT}
-      - export TRANSLATION_KUBE_NAMESPACE=$${PRODUCTION_TRANSLATION_KUBE_NAMESPACE}
-      - export TRANSLATION_IMAGE=$${PRODUCTION_TRANSLATION_IMAGE}
-      - export TRANSLATION_NAME=$${PRODUCTION_TRANSLATION_NAME}
-      - export TRANSLATION_PRIVATE_KEY_PATH=$${PRODUCTION_TRANSLATION_PRIVATE_KEY_PATH}
-      - export TRANSLATION_PRIVATE_KEY=$${PRODUCTION_TRANSLATION_PRIVATE_KEY}
-      - export TRANSLATION_CORS_ORIGIN=$${PRODUCTION_TRANSLATION_CORS_ORIGIN}
-      - export TRANSLATION_URL=$${PRODUCTION_TRANSLATION_URL}
-      - export KUBE_NAMESPACE=$${PRODUCTION_TRANSLATION_KUBE_NAMESPACE}
       - export TRANSLATION_TAG=$${DRONE_COMMIT_SHA}
       - kd --insecure-skip-tls-verify -f kube/cert.yml
       - kd --insecure-skip-tls-verify -f kube/network-policy.yml
