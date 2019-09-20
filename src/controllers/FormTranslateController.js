@@ -1,5 +1,6 @@
 import KeycloakContext from "../models/KeycloakContext";
 import TranslationServiceError from "../TranslationServiceError";
+import logger from "../config/winston";
 
 export default class FormTranslateController {
     constructor(formTranslator, processService) {
@@ -17,12 +18,36 @@ export default class FormTranslateController {
         }
         return form;
     }
+
+
+    async submitShiftForm(req) {
+        const shiftData = req.body;
+        const {formId} = req.params;
+        const keycloakContext = new KeycloakContext(req.kauth);
+
+        const email = keycloakContext.email;
+        try {
+            logger.info(`Validating shift data for ${email}`);
+            await this.formTranslator.submit(formId, shiftData, keycloakContext);
+            logger.info("Validated shift data");
+        } catch (e) {
+            throw new TranslationServiceError(e.message, e.status);
+        }
+
+        const response = await this.processService.startShift(
+            shiftData, req.headers
+        );
+        if (!response) {
+            throw new TranslationServiceError('Failed to create start shift');
+        }
+        return response;
+    }
+
     async submitForm(req) {
         const {formId} = req.params;
 
         const bodyData = req.body;
 
-        console.log("JSON BODY" + JSON.stringify(bodyData));
         const variableName = bodyData.variableName;
         const processKey = bodyData.processKey;
         const submissionData = bodyData.data;
@@ -32,12 +57,13 @@ export default class FormTranslateController {
         const email = keycloakContext.email;
         try {
             await this.formTranslator.submit(formId, bodyData.data, keycloakContext);
+            logger.info("Validated form submission");
         } catch (e) {
             throw new TranslationServiceError(e.message, e.status);
         }
         let response;
         if (!nonShiftApiCall) {
-            console.log(`Starting workflow ${processKey}`)
+            logger.info(`Starting workflow ${processKey}`);
             response = await this.processService.startProcessInstance({
                 data: submissionData,
                 processKey: processKey,
@@ -61,7 +87,7 @@ export default class FormTranslateController {
             response = await this.processService.startNonShiftProcessInstance(processData, processKey, req.headers);
         }
         if (response) {
-            return response.data;
+            return response;
         }
         throw new TranslationServiceError('Failed to create workflow');
     }

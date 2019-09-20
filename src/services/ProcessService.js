@@ -43,16 +43,15 @@ export default class ProcessService {
         const payload = processData.data;
 
         processData['businessKey'] = payload.businessKey;
-        console.log(`Sending process data ${JSON.stringify(processData)}`);
-        console.log(`Headers: ${JSON.stringify(headers)}`);
         try {
             const response = await axios({
-                url:`${this.config.services.workflow.url}/api/workflow/process-instances`,
+                url: `${this.config.services.workflow.url}/api/workflow/process-instances`,
+                validateStatus: this.validateStatus,
                 method: 'POST',
                 data: processData,
                 headers: headers
             });
-            console.log(`Workflow response ${JSON.stringify(response)}`);
+            logger.info(`Workflow response ${response.status}`);
             if (response && response.data) {
                 return {
                     data: response.data,
@@ -63,7 +62,7 @@ export default class ProcessService {
         } catch (e) {
             const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e.message}'`;
             logger.error(errorMessage);
-            throw new TranslationServiceError(errorMessage, e.response.status);
+            throw new TranslationServiceError(errorMessage, e.response ? e.response.status : 500);
         }
     }
 
@@ -83,6 +82,30 @@ export default class ProcessService {
             const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e}'`;
             logger.error(errorMessage, e);
             throw new TranslationServiceError(errorMessage, 500);
+        }
+    }
+
+    async startShift(shiftData, headers) {
+        try {
+            const response = await axios({
+                url: `${this.config.services.workflow.url}/api/workflow/shift`,
+                validateStatus: this.validateStatus,
+                method: 'POST',
+                data: shiftData,
+                headers: headers
+            });
+            logger.log(`Shift response ${JSON.stringify(response)}`);
+            if (response && response.data) {
+                return {
+                    data: response.data,
+                    status: response.status
+                }
+            }
+            return null;
+        } catch (e) {
+            const errorMessage = `An exception occurred while trying to start shift ... '${e.message}'`;
+            logger.error(errorMessage);
+            throw new TranslationServiceError(errorMessage, e.response ? e.response.status : 500);
         }
     }
 

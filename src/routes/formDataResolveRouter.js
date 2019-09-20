@@ -34,6 +34,19 @@ const formDataResolveRouter = (keycloak, formTranslatorController) => {
             });
         }]);
     router
+        .post('/form/:formId/shift', [keycloak.protect(), (req, res) => {
+            logger.info("Submitting shift form");
+            formTranslatorController.submitShiftForm(req).then((form) => {
+                return res.status(form.status).json(form.data);
+            }).catch((err) => {
+                logger.error(`Error submitting form ${err.message}`, err);
+                responseHandler.res({
+                    code: err.code,
+                    message: err.toString()
+                }, {}, res);
+            });
+        }]);
+    router
         .post('/form/:formId/submission', [keycloak.protect(), (req, res) => {
             formTranslatorController.submitForm(req).then((form) => {
                 return res.status(form.status).json(form.data);

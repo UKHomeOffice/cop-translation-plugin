@@ -23,7 +23,7 @@ describe('Form Data Controller', () => {
                 .reply(200, forms.formWithSensitiveField[0]);
             nock('http://localhost:9000', {})
                 .log(console.log)
-                .post('/rest/camunda/process-definition/key/processKey/start')
+                .post('/api/workflow/process-instances')
                 .reply(200, {
                     "links": [{
                         "method": "GET",
@@ -92,7 +92,7 @@ describe('Form Data Controller', () => {
                 .reply(200, forms.formWithSensitiveField[0]);
             nock('http://localhost:9000', {})
                 .log(console.log)
-                .post('/rest/camunda/process-definition/key/processKey/start')
+                .post('/api/workflow/process-instances')
                 .reply(200, {
                     "links": [{
                         "method": "GET",
