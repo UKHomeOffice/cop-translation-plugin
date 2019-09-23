@@ -43,6 +43,8 @@ export default class ProcessService {
         const payload = processData.data;
 
         processData['businessKey'] = payload.businessKey;
+        console.log(`Posting to: ${this.config.services.workflow.url}`);
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
         try {
             const response = await axios({
                 url: `${this.config.services.workflow.url}/api/workflow/process-instances`,
@@ -62,6 +64,7 @@ export default class ProcessService {
         } catch (e) {
             const errorMessage = `An exception occurred while trying to start process ${processData.processKey} ... '${e.message}'`;
             logger.error(errorMessage);
+            logger.error(e.config);
             throw new TranslationServiceError(errorMessage, e.response ? e.response.status : 500);
         }
     }
