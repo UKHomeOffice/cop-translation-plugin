@@ -91,7 +91,7 @@ pipeline:
         target: API_FORM_PROTOCOL
       - source: DEV_API_FORM_URL
         target: API_FORM_URL
-      - source: API_REF_PROTOCOL
+      - source: DEV_API_REF_PROTOCOL
         target: API_REF_PROTOCOL
       - source: DEV_API_REF_URL
         target: API_REF_URL
@@ -115,6 +115,8 @@ pipeline:
         target: NGINX_IMAGE
       - source: NGINX_TAG
         target: NGINX_TAG
+      - source: DEV_REDIS_PORT
+        target: REDIS_PORT
       - source: DEV_REDIS_SSL
         target: REDIS_SSL
       - source: DEV_REDIS_TOKEN
@@ -166,7 +168,7 @@ pipeline:
         target: API_FORM_PROTOCOL
       - source: STAGING_API_FORM_URL
         target: API_FORM_URL
-      - source: API_REF_PROTOCOL
+      - source: STAGING_API_REF_PROTOCOL
         target: API_REF_PROTOCOL
       - source: STAGING_API_REF_URL
         target: API_REF_URL
@@ -190,6 +192,8 @@ pipeline:
         target: NGINX_IMAGE
       - source: NGINX_TAG
         target: NGINX_TAG
+      - source: STAGING_REDIS_PORT
+        target: REDIS_PORT
       - source: STAGING_REDIS_SSL
         target: REDIS_SSL
       - source: STAGING_REDIS_TOKEN
@@ -241,7 +245,7 @@ pipeline:
         target: API_FORM_PROTOCOL
       - source: PRODUCTION_API_FORM_URL
         target: API_FORM_URL
-      - source: API_REF_PROTOCOL
+      - source: PRODUCTION_API_REF_PROTOCOL
         target: API_REF_PROTOCOL
       - source: PRODUCTION_API_REF_URL
         target: API_REF_URL
@@ -266,6 +270,8 @@ pipeline:
       - source: NGINX_TAG
         target: NGINX_TAG
       - source: PRODUCTION_REDIS_SSL
+      - source: PRODUCTION_REDIS_PORT
+        target: REDIS_PORT
         target: REDIS_SSL
       - source: PRODUCTION_REDIS_TOKEN
         target: REDIS_TOKEN
