@@ -30,7 +30,6 @@ export default class FormTranslator {
             processInstanceId,
             taskId
         }, customDataContext);
-//        this.decryptDataContext(dataContext);
         return this.applyFormResolution(dataContext, form);
     }
 
@@ -55,7 +54,6 @@ export default class FormTranslator {
         }
     }
 
-
     handleNestedForms(form) {
         form.components.forEach((c) => {
             if (c.components) {
@@ -70,17 +68,6 @@ export default class FormTranslator {
         })
     }
 
-    decryptDataContext(dataContext) {
-        if (dataContext.processContext) {
-          Object.keys(dataContext.processContext).forEach(key => {
-              const value = dataContext.processContext[key];
-              if (value && value.businessKey) {
-                  this.formDataDecryptor.decryptFormData(value, dataContext);
-              }
-          });
-        }
-    }
-
     async submit(formId, formData, keycloakContext) {
         return this.formEngineService.submitForm(formId, formData, keycloakContext);
     }
@@ -93,15 +80,15 @@ export default class FormTranslator {
             return submit();
         }
 
-        this.formDataDecryptor.encryptFormData(formSchema.components, formData.data, submissionContext);
-        if (submissionContext.encryptionMetaData) {
-            const {iv, publicKey} = submissionContext.encryptionMetaData;
+        // this.formDataDecryptor.encryptFormData(formSchema.components, formData.data, submissionContext);
+        // if (submissionContext.encryptionMetaData) {
+        //     const {iv, publicKey} = submissionContext.encryptionMetaData;
 
-            formData.data._encryptionMetaData = {
-              iv: iv.toString('base64'),
-              publicKey: publicKey.toString('base64'),
-            }
-        }
+        //     formData.data._encryptionMetaData = {
+        //       iv: iv.toString('base64'),
+        //       publicKey: publicKey.toString('base64'),
+        //     }
+        // }
 
         return submit();
     }

@@ -33,42 +33,6 @@ describe('Form Data Resolve Controller', () => {
                 .get('/api/workflow/process-instances/processInstanceId/variables')
                 .reply(200, tasks.processVariablesWithEncryptedValues);
         });
-        xit('should return form with encrypted data decrypted', async () => {
-            const request = httpMocks.createRequest({
-                method: 'GET',
-                url: '/api/translation/form',
-                params: {
-                    formName: "taskContextForm"
-                },
-                query: {
-                    taskId: "taskId",
-                    processInstanceId : 'processInstanceId'
-                },
-                kauth: {
-                    grant: {
-                        access_token: {
-                            token: "test-token",
-                            content: {
-                                session_state: "session_id",
-                                email: "email",
-                                preferred_username: "test",
-                                given_name: "testgivenname",
-                                family_name: "testfamilyname"
-                            }
-                        }
-
-                    }
-                }
-            });
-            const response = await formTranslateController.getForm(request);
-
-            const firstName = JSONPath.value(response, "$..components[?(@.key=='firstName')].defaultValue");
-            const lastName = JSONPath.value(response, "$..components[?(@.key=='lastName')].defaultValue");
-
-            expect(firstName).to.equal("baz");
-            expect(lastName).to.equal("lastNameFromProcess");
-
-        });
     });
 
 });
