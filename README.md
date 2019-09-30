@@ -109,9 +109,9 @@ If you have a process instance with variables you wish to access within your for
 {$.processContext.myProcessVariableName.attribute}
 ```
 
-##### Decrypted content (Currently images supported)
+##### Encrypted content
 
-In order to decrypt image content you will need to tag the form component with 'sensitive':
+In order to encrypt content you will need to tag the form component with 'sensitive':
 
 
 **_All endpoints are protected using Keycloak_**

@@ -8,6 +8,9 @@ export default class FormDataDecryptor {
     }
 
 
+    /**
+     * Decrypts any fields listed in the encryptedFields field.
+     */
     decryptFormData(formData, dataContext) {
         const encrypted = formData.encryptedFields;
         if (Array.isArray(encrypted)) {
@@ -33,6 +36,11 @@ export default class FormDataDecryptor {
     }
 
 
+    /** Encrypts any form fields marked as sensitive.
+     *
+     * An array containing field names of all encrypted fields is added to the
+     * form data as encryptedFields to support later decryption.
+     */
     encryptFormData(components, formData, submissionContext) {
         FormioUtils.eachComponent(components, (component, path) => {
             if (!path) {

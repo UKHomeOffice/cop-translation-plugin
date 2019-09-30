@@ -2,6 +2,18 @@ import crypto from 'crypto';
 import logger from '../config/winston';
 import TranslationServiceError from "../TranslationServiceError";
 
+/** Encrypts and decrypts data using elliptic curve crypto.
+ *
+ * In general, methods operate on and return buffers of binary data.
+ *
+ * Symmetric keys (session keys) are derived from the server's private key and
+ * an ephemeral public key. These public keys are stored in the Operational
+ * Data store.  Private keys are expected to be available in the environment.
+ *
+ * Symmetric cipher: AES-256-GCM/No Padding
+ * Curve: brainpoolP512t1
+ */
+
 export default class DataDecryptor {
     constructor(ecKey, keyRepository) {
         if (!ecKey) {
