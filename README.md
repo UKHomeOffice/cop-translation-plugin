@@ -80,18 +80,18 @@ Using the logged in user's credentials the service will create a data context wh
 
 #### Shift Data Context
 ```json
-{$.shiftDetailsDataContext.shiftid}
-{$.shiftDetailsDataContext.email}
-{$.shiftDetailsDataContext.enddatetime}
-{$.shiftDetailsDataContext.shifthours}
-{$.shiftDetailsDataContext.shiftminutes}
-{$.shiftDetailsDataContext.startdatetime}
-{$.shiftDetailsDataContext.staffid}
-{$.shiftDetailsDataContext.teamid}
-{$.shiftDetailsDataContext.locationid}
-{$.shiftDetailsDataContext.shifthistoryid}
-{$.shiftDetailsDataContext.phone}
-{$.shiftDetailsDataContext.roles}
+{$.shiftDetailsContext.shiftid}
+{$.shiftDetailsContext.email}
+{$.shiftDetailsContext.enddatetime}
+{$.shiftDetailsContext.shifthours}
+{$.shiftDetailsContext.shiftminutes}
+{$.shiftDetailsContext.startdatetime}
+{$.shiftDetailsContext.staffid}
+{$.shiftDetailsContext.teamid}
+{$.shiftDetailsContext.locationid}
+{$.shiftDetailsContext.shifthistoryid}
+{$.shiftDetailsContext.phone}
+{$.shiftDetailsContext.roles}
 
 ```
 
@@ -109,9 +109,9 @@ If you have a process instance with variables you wish to access within your for
 {$.processContext.myProcessVariableName.attribute}
 ```
 
-##### Decrypted content (Currently images supported)
+##### Encrypted content
 
-In order to decrypt image content you will need to tag the form component with 'sensitive':
+In order to encrypt content you will need to tag the form component with 'sensitive':
 
 
 **_All endpoints are protected using Keycloak_**
