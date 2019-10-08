@@ -77,6 +77,14 @@ Using the logged in user's credentials the service will create a data context wh
 {$.staffDetailsDataContext.qualificationTypes}
 
 ```
+#### Extended Staff Data Context
+
+```json
+{$.extendedStaffDetailsContext.linemanagerEmail}
+{$.extendedStaffDetailsContext.delegateEmails}
+{$.extendedStaffDetailsContext.integrityLeadEmails}
+
+```
 
 #### Shift Data Context
 ```json

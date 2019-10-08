@@ -90,7 +90,9 @@ describe('Form Data Resolve Controller', () => {
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail" : "noEmail"
                 })
-                .reply(200, []);
+                .reply(200, [{
+                    staffid: 'abc-123'
+                }]);
             nock('http://localhost:9001')
                 .get('/v1/shift?email=eq.noEmail')
                 .reply(200, []);

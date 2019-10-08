@@ -7,6 +7,9 @@ import {expect, formTranslateController} from '../setUpTests'
 
 
 describe('Form Data Resolve Controller', () => {
+    afterEach(() => {
+        nock.cleanAll();
+    });
 
     describe('A call to data resolve controller custom context', () => {
         beforeEach(() => {
@@ -20,7 +23,9 @@ describe('Form Data Resolve Controller', () => {
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
-                .reply(200, []);
+                .reply(200, [{
+                    staffid: 'abc-123'
+                }]);
             nock('http://localhost:9001')
                 .get('/v1/shift?email=eq.email')
                 .reply(200, []);

@@ -2,6 +2,7 @@ import StaffDetailsContext from "../models/StaffDetailsContext";
 import EnvironmentContext from "../models/EnvironmentContext";
 import ShiftDetailsContext from "../models/ShiftDetailsContext";
 import DataResolveContext from "../models/DataResolveContext";
+import ExtendedStaffDetailsContext from '../models/ExtendedStaffDetailsContext';
 import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import appConfig from "../config/appConfig";
@@ -36,6 +37,10 @@ export default class DataContextFactory {
             shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
         }
 
+        const extendedStaffDetails = this.platformDataService.getExtendedStaffDetails(staffDetails.staffid, headers);
+        extendedStaffDetails.integritylead_email = this.platformDataService.getIntegrityLeadEmails(staffDetails.branchid, headers);
+        const extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails);
+
         if (taskId && processInstanceId) {
             const [taskData, processData, taskVariables] = await Promise.all([
                 this.processService.getTaskData(taskId, headers),
@@ -45,12 +50,12 @@ export default class DataContextFactory {
             return new DataResolveContext(keycloakContext, staffDetailsContext,
                 environmentContext,
                 await this.createProcessContext(processData),
-                new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext);
+                new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
 
         } else {
             return new DataResolveContext(keycloakContext,
                 staffDetailsContext, environmentContext, await this.createProcessContext([]), null,
-                customDataContext, shiftDetailsContext);
+                customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
         }
     }
 

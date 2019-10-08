@@ -20,7 +20,9 @@ describe('Form Data Resolve Controller With Business Key', () => {
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
                 "argstaffemail": "email"
-            }).reply(200, []);
+            }).reply(200, [{
+                staffid: 'abc-123'
+            }]);
         nock('http://localhost:9001')
             .get('/v1/shift?email=eq.email')
             .reply(200, []);
@@ -63,7 +65,9 @@ describe('Form Data Resolve Controller With Business Key', () => {
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
                 "argstaffemail": "email"
-            }).reply(200, []);
+            }).reply(200, [{
+                staffid: 'abc-123'
+            }]);
         nock('http://localhost:9001')
             .get('/v1/shift?email=eq.email')
             .reply(200, []);
@@ -105,7 +109,9 @@ describe('Form Data Resolve Controller With Business Key', () => {
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
                 "argstaffemail": "email"
-            }).reply(200, []);
+            }).reply(200, [{
+                staffid: 'abc-123'
+            }]);
         nock('http://localhost:9001')
             .get('/v1/shift?email=eq.email')
             .reply(200, []);
