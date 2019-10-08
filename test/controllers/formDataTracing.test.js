@@ -61,7 +61,9 @@ describe('Form Data Resolve Controller Tracing', () => {
                 .post('/v1/rpc/staffdetails', {
                     "argstaffemail": "email"
                 })
-                .reply(200, []);
+                .reply(200, [{
+                    staffid: 'abc-123'
+                }]);
             nock('http://localhost:9001', tracingHeader)
                 .get('/v1/shift?email=eq.email')
                 .reply(200, []);
