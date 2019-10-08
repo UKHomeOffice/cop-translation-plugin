@@ -69,5 +69,37 @@ export default class PlatformDataService {
 
     }
 
+    async getIntegrityLeadEmails(branchId, headers)  {
+        try {
+            const response = await axios({
+                url: `${this.config.services.operationalData.url}/v1/view_rolemembers?select=email&rolelabel=eq.bfint,&branchid=eq.${branchId}`,
+                method: 'GET',
+                headers: headers
+            });
+            const integrityLeadEmails = response.data ? response.data.map(val => val.email) : null;
+            logger.info(`Integrity lead emails found`, integrityLeadEmails);
+            return integrityLeadEmails;
+        } catch (err) {
+            logger.error('Failed to get integrity lead emails ', err);
+            return null;
+        }
+    }
+
+    async getExtendedStaffDetails(staffId, headers)  {
+        try {
+            const response = await axios({
+                url: `${this.config.services.operationalData.url}/v1/extendedstaffdetails?staffid=eq.${staffId}`,
+                method: 'GET',
+                headers: headers
+            });
+            const extendedStaffDetails = response.data ? response.data[0] : null;
+            logger.info(`Extended staff details found`, extendedStaffDetails);
+            return extendedStaffDetails;
+        } catch (err) {
+            logger.error('Failed to get extended staff details ', err);
+            return null;
+        }
+    }
+
 
 }
