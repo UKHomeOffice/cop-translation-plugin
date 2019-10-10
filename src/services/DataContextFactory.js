@@ -37,9 +37,13 @@ export default class DataContextFactory {
             shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
         }
 
-        const extendedStaffDetails = this.platformDataService.getExtendedStaffDetails(staffDetails.staffid, headers);
-        extendedStaffDetails.integritylead_email = this.platformDataService.getIntegrityLeadEmails(staffDetails.branchid, headers);
-        const extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails);
+        let extendedStaffDetailsContext = null;
+
+        if (staffDetails) {
+            const extendedStaffDetails = this.platformDataService.getExtendedStaffDetails(staffDetails.staffid, headers);
+            extendedStaffDetails.integritylead_email = this.platformDataService.getIntegrityLeadEmails(staffDetails.branchid, headers);
+            extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails);
+        }
 
         if (taskId && processInstanceId) {
             const [taskData, processData, taskVariables] = await Promise.all([
