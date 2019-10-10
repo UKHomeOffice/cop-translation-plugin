@@ -88,7 +88,7 @@ export default class PlatformDataService {
     async getExtendedStaffDetails(staffId, headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalData.url}/v1/extendedstaffdetails?staffid=eq.${staffId}`,
+                url: `${this.config.services.operationalData.url}/v1/rpc/extendedstaffdetails?staffid=eq.${staffId}`,
                 method: 'GET',
                 headers: headers
             });
