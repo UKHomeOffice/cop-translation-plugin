@@ -6,6 +6,7 @@ import ExtendedStaffDetailsContext from '../models/ExtendedStaffDetailsContext';
 import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import appConfig from "../config/appConfig";
+import logger from "../config/winston";
 
 export default class DataContextFactory {
     constructor(platformDataService, processService, dataDecryptor, referenceGenerator) {
@@ -19,14 +20,16 @@ export default class DataContextFactory {
         const email = keycloakContext.email;
         const headers = this.createHeader(keycloakContext);
 
-        const [staffDetails, shiftDetails] = await Promise.all([
+        const [staffDetails, shiftDetails, extendedStaffDetails] = await Promise.all([
             this.platformDataService.getStaffDetails(email, headers),
-            this.platformDataService.getShiftDetails(email, headers)
+            this.platformDataService.getShiftDetails(email, headers),
+            this.platformDataService.getExtendedStaffDetails(email, headers)
         ]);
 
         const staffDetailsContext = new StaffDetailsContext(staffDetails);
         const environmentContext = new EnvironmentContext(appConfig);
         let shiftDetailsContext = null;
+        let extendedStaffDetailsContext = null;
 
         if (shiftDetails) {
             const location = await this.platformDataService.getLocation(shiftDetails.locationid, headers);
@@ -37,12 +40,9 @@ export default class DataContextFactory {
             shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
         }
 
-        let extendedStaffDetailsContext = null;
-
         if (staffDetails) {
-            const extendedStaffDetails = this.platformDataService.getExtendedStaffDetails(staffDetails.staffid, headers);
-            extendedStaffDetails.integritylead_email = this.platformDataService.getIntegrityLeadEmails(staffDetails.branchid, headers);
-            extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails);
+            const integrityLeadEmail = await this.platformDataService.getIntegrityLeadEmails(staffDetails.branchId, headers);
+            extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails, integrityLeadEmail);
         }
 
         if (taskId && processInstanceId) {

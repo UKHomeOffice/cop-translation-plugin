@@ -1,8 +1,10 @@
 class ExtendedStaffDetailsContext {
-    constructor(extendedStaffDetails) {
+    constructor(extendedStaffDetails, integrityLeadEmail) {
         this.linemanagerEmail = extendedStaffDetails.linemanager_email;
         this.delegateEmails = extendedStaffDetails.delegate_email;
-        this.integrityLeadEmails = extendedStaffDetails.integritylead_email;
+        if (integrityLeadEmail) {
+            this.integrityLeadEmails = integrityLeadEmail;
+        }
     }
 }
 

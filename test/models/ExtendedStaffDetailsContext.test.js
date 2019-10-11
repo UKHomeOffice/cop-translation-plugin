@@ -9,7 +9,7 @@ describe('ExtendedStaffDetailsContext', () => {
                     'delegate1@homeoffice.gov.uk',
                     'delegate2@homeoffice.gov.uk'
                 ],
-                integritylead_email: [
+                integrityLeadEmail: [
                     'integritylead1@homeoffice.gov.uk',
                     'integritylead2@homeoffice.gov.uk'
                 ]
@@ -18,6 +18,6 @@ describe('ExtendedStaffDetailsContext', () => {
 
             expect(extendedStaffDetailsContext.linemanagerEmail).to.equal(extendedStaffDetails.linemanager_email);
             expect(extendedStaffDetailsContext.delegateEmails).to.equal(extendedStaffDetails.delegate_email);
-            expect(extendedStaffDetailsContext.integrityLeadEmails).to.equal(extendedStaffDetails.integritylead_email);
+            expect(extendedStaffDetailsContext.integrityLeadEmails).to.equal(extendedStaffDetails.integrityLeadEmail);
     });
 });

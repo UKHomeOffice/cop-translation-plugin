@@ -88,7 +88,7 @@ app.use(Tracing.middleware);
 
 if (appConfig.cors.origin) {
     app.use(cors({
-        origin: appConfig.cors.origin.split('|'),
+        origin: appConfig.cors.origin.split(','),
         optionsSuccessStatus: 200
     }));
 }

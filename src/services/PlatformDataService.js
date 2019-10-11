@@ -85,14 +85,14 @@ export default class PlatformDataService {
         }
     }
 
-    async getExtendedStaffDetails(staffId, headers)  {
+    async getExtendedStaffDetails(email, headers)  {
         try {
             const response = await axios({
                 url: `${this.config.services.operationalData.url}/v1/rpc/extendedstaffdetails`,
                 method: 'POST',
                 headers: headers,
                 data: {
-                    argstaffid: staffId
+                    argstaffemail: email
                 }
             });
             const extendedStaffDetails = response.data ? response.data[0] : null;
