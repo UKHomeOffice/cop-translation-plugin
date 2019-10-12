@@ -1,6 +1,5 @@
 import KeycloakContext from "../models/KeycloakContext";
 import TranslationServiceError from "../TranslationServiceError";
-import logger from "../config/winston";
 
 export default class FormTranslateController {
     constructor(formTranslator) {

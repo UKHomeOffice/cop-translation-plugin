@@ -1,8 +1,8 @@
-import nock from "nock";
-import * as forms from "../forms";
-import * as tasks from "../task";
-import JSONPath from "jsonpath";
-import httpMocks from "node-mocks-http";
+import nock from 'nock';
+import * as forms from '../forms';
+import * as tasks from '../task';
+import JSONPath from 'jsonpath';
+import httpMocks from 'node-mocks-http';
 import {expect, formTranslateController} from '../setUpTests'
 
 describe('Form Data Controller', () => {
@@ -31,16 +31,20 @@ describe('Form Data Controller', () => {
 
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
-                "argstaffemail": "email"
+                argstaffemail: 'email'
             })
             .reply(200, [{
                 staffid: 'abc-123'
             }]);
         nock('http://localhost:9001')
             .get('/v1/shift?email=eq.email')
-            .reply(200, []);
-
-
+            .reply(200, [])
+            .post('/v1/rpc/extendedstaffdetails', {
+                argstaffemail: 'email'
+            })
+            .reply(200, [{
+                linemanager_email: 'linemanager@homeoffice.gov.uk'
+            }]);
     });
 
     it('can decrypt value before serving', async() => {
@@ -49,22 +53,22 @@ describe('Form Data Controller', () => {
             method: 'GET',
             url: '/api/translation/form/encryptedImgForm',
             params: {
-                formName: "encryptedImgForm"
+                formName: 'encryptedImgForm'
             },
             query: {
-                taskId: "taskId",
+                taskId: 'taskId',
                 processInstanceId : 'processInstanceId'
             },
             kauth: {
                 grant: {
                     access_token: {
-                        token: "test-token",
+                        token: 'test-token',
                         content: {
-                            session_state: "session_id",
-                            email: "email",
-                            preferred_username: "test",
-                            given_name: "testgivenname",
-                            family_name: "testfamilyname"
+                            session_state: 'session_id',
+                            email: 'email',
+                            preferred_username: 'test',
+                            given_name: 'testgivenname',
+                            family_name: 'testfamilyname'
                         }
                     }
 
@@ -80,27 +84,28 @@ describe('Form Data Controller', () => {
             "<p>Image</p>\n\n<p><img src=\"fWjIpGyUPmU7JxL2Zh3qqQTRjg==\" style=\"height: 125px; width: 100px;\" /></p>\n");
 
     });
+
     it('returns encrypted value if encrypted tag missing', async() => {
         const request = httpMocks.createRequest({
             method: 'GET',
             url: '/api/translation/form/encryptedImgFormWithMissingEncryptionTag',
             params: {
-                formName: "encryptedImgFormWithMissingEncryptionTag"
+                formName: 'encryptedImgFormWithMissingEncryptionTag'
             },
             query: {
-                taskId: "taskId",
+                taskId: 'taskId',
                 processInstanceId : 'processInstanceId'
             },
             kauth: {
                 grant: {
                     access_token: {
-                        token: "test-token",
+                        token: 'test-token',
                         content: {
-                            session_state: "session_id",
-                            email: "email",
-                            preferred_username: "test",
-                            given_name: "testgivenname",
-                            family_name: "testfamilyname"
+                            session_state: 'session_id',
+                            email: 'email',
+                            preferred_username: 'test',
+                            given_name: 'testgivenname',
+                            family_name: 'testfamilyname'
                         }
                     }
 
@@ -110,8 +115,6 @@ describe('Form Data Controller', () => {
 
         const response = await formTranslateController.getForm(request);
         const img = JSONPath.value(response, "$..components[?(@.key=='content')].html");
-        expect(img).to.equal(
-            "<p>Image</p>\n\n<p><img src=\"fWjIpGyUPmU7JxL2Zh3qqQTRjg==\" style=\"height: 125px; width: 100px;\" /></p>\n");
-
+        expect(img).to.equal("<p>Image</p>\n\n<p><img src=\"fWjIpGyUPmU7JxL2Zh3qqQTRjg==\" style=\"height: 125px; width: 100px;\" /></p>\n");
     });
 });

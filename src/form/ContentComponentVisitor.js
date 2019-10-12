@@ -1,5 +1,3 @@
-import  logger from "../config/winston";
-
 export default class ContentComponentVisitor {
 
     constructor(jsonPathEvaluator, dataDecryptor) {
@@ -12,27 +10,8 @@ export default class ContentComponentVisitor {
         const dataResolveContext = formComponent.dataContext;
         const value = component.html;
         const key = component.key;
-        const processContent = (value) => {
-            if (formComponent.isEncrypted()) {
-                logger.info(`Encrypted field detected ${key}`);
-                try {
-                    value = this.dataDecryptor.decrypt(dataResolveContext.processContext.encryptionMetaData, Buffer.from(value, 'base64'));
-                } catch (err) {
-                    logger.error(`Failed to decrypt value  ${err.toString()}...returning encrypted value`);
-                }
-            }
-            if (formComponent.isImage()) {
-                value = value ?
-                    `data:image/${formComponent.imageType()};base64,${value.toString('base64')}` :
-                    `data:image/png;base64,${ContentComponentVisitor.defaultImg}`;
-            }
-            return value ? value.toString('base64') : undefined;
-        };
 
-        component.html = this.jsonPathEvaluator.performJsonPathEvaluation({key, value},
-            dataResolveContext,
-            //processContent
-            );
+        component.html = this.jsonPathEvaluator.performJsonPathEvaluation({key, value}, dataResolveContext);
     }
 }
 

@@ -6,7 +6,6 @@ import ExtendedStaffDetailsContext from '../models/ExtendedStaffDetailsContext';
 import ProcessContext from "../models/ProcessContext";
 import TaskContext from "../models/TaskContext";
 import appConfig from "../config/appConfig";
-import logger from "../config/winston";
 
 export default class DataContextFactory {
     constructor(platformDataService, processService, dataDecryptor, referenceGenerator) {

@@ -15,14 +15,12 @@ import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
 import WorkflowTranslationController from "./controllers/workflowTranslationController";
-
 import logger from './config/winston';
 import Tracing from "./utilities/tracing";
 import cors from 'cors';
 import BusinessKeyGenerator from "./services/BusinessKeyGenerator";
 
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 
 const kcConfig = {

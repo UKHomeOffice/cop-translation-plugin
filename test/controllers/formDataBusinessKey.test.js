@@ -10,6 +10,26 @@ describe('Form Data Resolve Controller With Business Key', () => {
     const clock = sinon.useFakeTimers();
     clock.tick(marchEpochTime);
 
+    beforeEach(() => {
+        nock('http://localhost:9001')
+            .post('/v1/rpc/staffdetails', {
+                argstaffemail: "email"
+            })
+            .reply(200, [{
+                staffid: 'abc-123'
+            }])
+            .get('/v1/shift?email=eq.email')
+            .reply(200, [])
+            .get('/v1/view_rolemembers?select=email&rolelabel=eq.bfint,&branchid=eq.undefined')
+            .reply(200, [])
+            .post('/v1/rpc/extendedstaffdetails', {
+                argstaffemail: 'email'
+            })
+            .reply(200, [{
+                linemanager_email: 'linemanager@homeoffice.gov.uk'
+            }]);
+    });
+
     it('it returns form with a newBusinessKey label and api of businessKey', async () => {
         nock('http://localhost:8000')
             .get('/form?name=testForm')
@@ -17,15 +37,7 @@ describe('Form Data Resolve Controller With Business Key', () => {
                 total :1,
                 forms: forms.simpleForm
             });
-        nock('http://localhost:9001')
-            .post('/v1/rpc/staffdetails', {
-                "argstaffemail": "email"
-            }).reply(200, [{
-                staffid: 'abc-123'
-            }]);
-        nock('http://localhost:9001')
-            .get('/v1/shift?email=eq.email')
-            .reply(200, []);
+
         const request = httpMocks.createRequest({
             method: 'GET',
             url: '/api/translation/form/testFrom',
@@ -62,15 +74,7 @@ describe('Form Data Resolve Controller With Business Key', () => {
                 total :1,
                 forms: forms.simpleFormWithoutBusinessKey
             });
-        nock('http://localhost:9001')
-            .post('/v1/rpc/staffdetails', {
-                "argstaffemail": "email"
-            }).reply(200, [{
-                staffid: 'abc-123'
-            }]);
-        nock('http://localhost:9001')
-            .get('/v1/shift?email=eq.email')
-            .reply(200, []);
+
         const request = httpMocks.createRequest({
             method: 'GET',
             url: '/api/translation/form/simpleFormWithoutBusinessKey',
@@ -106,15 +110,7 @@ describe('Form Data Resolve Controller With Business Key', () => {
                 total : 1,
                 forms: forms.simpleFormBusinessKeyWithDefaultValue
             });
-        nock('http://localhost:9001')
-            .post('/v1/rpc/staffdetails', {
-                "argstaffemail": "email"
-            }).reply(200, [{
-                staffid: 'abc-123'
-            }]);
-        nock('http://localhost:9001')
-            .get('/v1/shift?email=eq.email')
-            .reply(200, []);
+
         const request = httpMocks.createRequest({
             method: 'GET',
             url: '/api/translation/form/simpleFormBusinessKeyWithDefaultValue',

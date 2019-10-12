@@ -1,11 +1,10 @@
-import axios from "../utilities/axios";
-import logger from "../config/winston";
+import axios from '../utilities/axios';
+import logger from '../config/winston';
 import FormioUtils from 'formiojs/utils';
-import TranslationServiceError from "../TranslationServiceError";
+import TranslationServiceError from '../TranslationServiceError';
 import appConfig from '../config/appConfig';
 
-export default class FormEngineService {
-
+class FormEngineService {
     constructor(config) {
         this.config = config;
     }
@@ -69,28 +68,9 @@ export default class FormEngineService {
         return status < 500;
     }
 
-    async submitForm (formId, form, keycloakContext) {
-        
+    async submitForm (formId, form) {
         return Promise.resolve({ status: 200, data:form})
     }
-
-    // async submitForm (formId, form, keycloakContext) {
-    //     try {
-    //         const headers = this.createHeader(keycloakContext);
-    //         const response = await axios.post(`${this.config.services.form.url}/form/${formId}/submission`, form, { validateStatus: this.validateStatus, headers: headers} );
-    //         if (response && response.data) {
-    //             return {
-    //               data: response.data,
-    //               status: response.status
-    //             }
-    //         }
-    //         return null;
-    //     } catch (e) {
-    //         const errorMessage = `An exception occurred while trying to submit form ${formId} ... '${e}'`;
-    //         logger.error(errorMessage, e);
-    //         throw new TranslationServiceError(errorMessage, 500);
-    //     }
-    // }
 
     createHeader(keycloakContext) {
         return {
@@ -100,3 +80,5 @@ export default class FormEngineService {
         };
     }
 }
+
+export default FormEngineService;
