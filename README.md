@@ -242,27 +242,27 @@ Add the following to your Extrac Mocha Options:
 
 Name|Example value
 ---|---
-dev_api_cop_url|operational-data-api.dev.cop.homeoffice.gov.uk, operational-data-api.staging.cop.homeoffice.gov.uk, operational-data-api.cop.homeoffice.gov.uk
-dev_api_form_url|form-api-server.dev.cop.homeoffice.gov.uk, form-api-server.staging.cop.homeoffice.gov.uk, form-api-server.cop.homeoffice.gov.uk
-dev_api_ref_url|api.dev.refdata.homeoffice.gov.uk, api.staging.refdata.homeoffice.gov.uk, api.refdata.homeoffice.gov.uk
 dev_drone_aws_access_key_id|https://console.aws.amazon.com/iam/home?region=eu-west-2#/users/bf-it-devtest-drone?section=security_credentials
 dev_drone_aws_secret_access_key|https://console.aws.amazon.com/iam/home?region=eu-west-2#/users/bf-it-devtest-drone?section=security_credentials
-dev_engine_url|private-workflow-engine.dev.cop.homeoffice.gov.uk, private-workflow-engine.staging.cop.homeoffice.gov.uk, private-workflow-engine.cop.homeoffice.gov.uk
-dev_keycloak_realm|cop-dev, cop-staging, cop-prod
-dev_keycloak_url|sso-dev.notprod.homeoffice.gov.uk/auth, sso.digital.homeoffice.gov.uk/auth
-dev_kube_namespace_private_cop|private-cop-dev, private-cop-staging, private-cop
-dev_kube_server|https://kube-api-notprod.notprod.acp.homeoffice.gov.uk, https://kube-api-prod.prod.acp.homeoffice.gov.uk
-dev_kube_token|xxx
-dev_redis_port|6379
-dev_redis_ssl|true|false
-dev_redis_token|xxx
-dev_redis_url|cop-dev-redis-rg-001.cop-dev-redis-rg.obrtxl.euw2.cache.amazonaws.com, cop-staging-redis-rg-001.cop-staging-redis-rg.swzhug.euw2.cache.amazonaws.com, cop-prod-redis-rg-001.cop-prod-redis-rg.swzhug.euw2.cache.amazonaws.com
-dev_translation_cors_origin|https://www.dev.cop.homeoffice.gov.uk, https://www.staging.cop.homeoffice.gov.uk, https://www.cop.homeoffice.gov.uk
-dev_translation_private_key|xxx
-dev_translation_url|translation.dev.cop.homeoffice.gov.uk, translation.staging.cop.homeoffice.gov.uk, translation.cop.homeoffice.gov.uk
-dev_whitelist|comma separated x.x.x.x/x list
-dev_www_url|www.dev.cop.homeoffice.gov.uk, www.staging.cop.homeoffice.gov.uk, www.cop.homeoffice.gov.uk
 drone_public_token|Drone token (Global for all github repositories and environments)
+env_api_cop_url|operational-data-api.dev.cop.homeoffice.gov.uk, operational-data-api.staging.cop.homeoffice.gov.uk, operational-data-api.cop.homeoffice.gov.uk
+env_api_form_url|form-api-server.dev.cop.homeoffice.gov.uk, form-api-server.staging.cop.homeoffice.gov.uk, form-api-server.cop.homeoffice.gov.uk
+env_api_ref_url|api.dev.refdata.homeoffice.gov.uk, api.staging.refdata.homeoffice.gov.uk, api.refdata.homeoffice.gov.uk
+env_engine_url|private-workflow-engine.dev.cop.homeoffice.gov.uk, private-workflow-engine.staging.cop.homeoffice.gov.uk, private-workflow-engine.cop.homeoffice.gov.uk
+env_keycloak_realm|cop-dev, cop-staging, cop-prod
+env_keycloak_url|sso-dev.notprod.homeoffice.gov.uk/auth, sso.digital.homeoffice.gov.uk/auth
+env_kube_namespace_private_cop|private-cop-dev, private-cop-staging, private-cop
+env_kube_server|https://kube-api-notprod.notprod.acp.homeoffice.gov.uk, https://kube-api-prod.prod.acp.homeoffice.gov.uk
+env_kube_token|xxx
+env_redis_port|6379
+env_redis_ssl|true|false
+env_redis_token|xxx
+env_redis_url|cop-dev-redis-rg-001.cop-dev-redis-rg.obrtxl.euw2.cache.amazonaws.com, cop-staging-redis-rg-001.cop-staging-redis-rg.swzhug.euw2.cache.amazonaws.com, cop-prod-redis-rg-001.cop-prod-redis-rg.swzhug.euw2.cache.amazonaws.com
+env_translation_cors_origin|https://www.dev.cop.homeoffice.gov.uk, https://www.staging.cop.homeoffice.gov.uk, https://www.cop.homeoffice.gov.uk
+env_translation_private_key|xxx
+env_translation_url|translation.dev.cop.homeoffice.gov.uk, translation.staging.cop.homeoffice.gov.uk, translation.cop.homeoffice.gov.uk
+env_whitelist|comma separated x.x.x.x/x list
+env_www_url|www.dev.cop.homeoffice.gov.uk, www.staging.cop.homeoffice.gov.uk, www.cop.homeoffice.gov.uk
 log_level_info|info
 nginx_image|quay.io/ukhomeofficedigital/nginx-proxy
 nginx_tag|latest
