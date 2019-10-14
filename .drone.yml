@@ -24,6 +24,7 @@ pipeline:
     image: quay.io/ukhomeofficedigital/cop-secrets
     environment:
       - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=dev
     secrets:
       - source: DEV_DRONE_AWS_ACCESS_KEY_ID
         target: AWS_ACCESS_KEY_ID
@@ -38,6 +39,7 @@ pipeline:
     image: quay.io/ukhomeofficedigital/cop-secrets
     environment:
       - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=staging
     secrets:
       - source: STAGING_DRONE_AWS_ACCESS_KEY_ID
         target: AWS_ACCESS_KEY_ID
@@ -46,13 +48,14 @@ pipeline:
       - source: DRONE_PUBLIC_TOKEN
         target: DRONE_TOKEN
     when:
-      event: deployment
-      environment: staging
+      branch: master
+      event: push
 
   synch_production_secrets:
     image: quay.io/ukhomeofficedigital/cop-secrets
     environment:
       - DRONE_SERVER=https://drone.acp.homeoffice.gov.uk
+      - DEPLOY_ENV=production
     secrets:
       - source: PRODUCTION_DRONE_AWS_ACCESS_KEY_ID
         target: AWS_ACCESS_KEY_ID
@@ -61,8 +64,8 @@ pipeline:
       - source: DRONE_PUBLIC_TOKEN
         target: DRONE_TOKEN
     when:
-      event: deployment
-      environment: production
+      branch: master
+      event: push
 
   image_to_quay:
     image: quay.io/ukhomeofficedigital/drone-docker
@@ -83,29 +86,29 @@ pipeline:
   deploy_to_dev:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - source: DEV_API_COP_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_COP_PROTOCOL
       - source: DEV_API_COP_URL
         target: API_COP_URL
-      - source: API_FORM_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_FORM_PROTOCOL
       - source: DEV_API_FORM_URL
         target: API_FORM_URL
-      - source: DEV_API_REF_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_REF_PROTOCOL
       - source: DEV_API_REF_URL
         target: API_REF_URL
-      - source: ENGINE_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: ENGINE_PROTOCOL
       - source: DEV_ENGINE_URL
         target: ENGINE_URL
-      - source: DEV_KEYCLOAK_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: KEYCLOAK_PROTOCOL
       - source: DEV_KEYCLOAK_REALM
         target: KEYCLOAK_REALM
       - source: DEV_KEYCLOAK_URL
         target: KEYCLOAK_URL
-      - source: DEV_TRANSLATION_KUBE_NAMESPACE
+      - source: DEV_KUBE_NAMESPACE_PRIVATE_COP
         target: KUBE_NAMESPACE
       - source: DEV_KUBE_SERVER
         target: KUBE_SERVER
@@ -129,6 +132,8 @@ pipeline:
         target: TRANSLATION_IMAGE
       - source: TRANSLATION_KEYCLOAK_CLIENT_ID
         target: TRANSLATION_KEYCLOAK_CLIENT_ID
+      - source: LOG_LEVEL_INFO
+        target: TRANSLATION_LOG_LEVEL
       - source: TRANSLATION_NAME
         target: TRANSLATION_NAME
       - source: TRANSLATION_PORT
@@ -141,7 +146,7 @@ pipeline:
         target: TRANSLATION_URL
       - source: DEV_WHITELIST
         target: WHITELIST
-      - source: DEV_WWW_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: WWW_PROTOCOL
       - source: DEV_WWW_URL
         target: WWW_URL
@@ -160,29 +165,29 @@ pipeline:
   deploy_to_staging:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - source: STAGING_API_COP_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_COP_PROTOCOL
       - source: STAGING_API_COP_URL
         target: API_COP_URL
-      - source: API_FORM_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_FORM_PROTOCOL
       - source: STAGING_API_FORM_URL
         target: API_FORM_URL
-      - source: STAGING_API_REF_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_REF_PROTOCOL
       - source: STAGING_API_REF_URL
         target: API_REF_URL
-      - source: ENGINE_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: ENGINE_PROTOCOL
       - source: STAGING_ENGINE_URL
         target: ENGINE_URL
-      - source: STAGING_KEYCLOAK_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: KEYCLOAK_PROTOCOL
       - source: STAGING_KEYCLOAK_REALM
         target: KEYCLOAK_REALM
       - source: STAGING_KEYCLOAK_URL
         target: KEYCLOAK_URL
-      - source: STAGING_TRANSLATION_KUBE_NAMESPACE
+      - source: STAGING_KUBE_NAMESPACE_PRIVATE_COP
         target: KUBE_NAMESPACE
       - source: STAGING_KUBE_SERVER
         target: KUBE_SERVER
@@ -206,6 +211,8 @@ pipeline:
         target: TRANSLATION_IMAGE
       - source: TRANSLATION_KEYCLOAK_CLIENT_ID
         target: TRANSLATION_KEYCLOAK_CLIENT_ID
+      - source: LOG_LEVEL_INFO
+        target: TRANSLATION_LOG_LEVEL
       - source: TRANSLATION_NAME
         target: TRANSLATION_NAME
       - source: TRANSLATION_PORT
@@ -218,7 +225,7 @@ pipeline:
         target: TRANSLATION_URL
       - source: STAGING_WHITELIST
         target: WHITELIST
-      - source: STAGING_WWW_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: WWW_PROTOCOL
       - source: STAGING_WWW_URL
         target: WWW_URL
@@ -237,29 +244,29 @@ pipeline:
   deploy_to_production:
     image: quay.io/ukhomeofficedigital/kd
     secrets:
-      - source: PRODUCTION_API_COP_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_COP_PROTOCOL
       - source: PRODUCTION_API_COP_URL
         target: API_COP_URL
-      - source: API_FORM_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_FORM_PROTOCOL
       - source: PRODUCTION_API_FORM_URL
         target: API_FORM_URL
-      - source: PRODUCTION_API_REF_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: API_REF_PROTOCOL
       - source: PRODUCTION_API_REF_URL
         target: API_REF_URL
-      - source: ENGINE_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: ENGINE_PROTOCOL
       - source: PRODUCTION_ENGINE_URL
         target: ENGINE_URL
-      - source: PRODUCTION_KEYCLOAK_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: KEYCLOAK_PROTOCOL
       - source: PRODUCTION_KEYCLOAK_REALM
         target: KEYCLOAK_REALM
       - source: PRODUCTION_KEYCLOAK_URL
         target: KEYCLOAK_URL
-      - source: PRODUCTION_TRANSLATION_KUBE_NAMESPACE
+      - source: PRODUCTION_KUBE_NAMESPACE_PRIVATE_COP
         target: KUBE_NAMESPACE
       - source: PRODUCTION_KUBE_SERVER
         target: KUBE_SERVER
@@ -283,6 +290,8 @@ pipeline:
         target: TRANSLATION_IMAGE
       - source: TRANSLATION_KEYCLOAK_CLIENT_ID
         target: TRANSLATION_KEYCLOAK_CLIENT_ID
+      - source: LOG_LEVEL_INFO
+        target: TRANSLATION_LOG_LEVEL
       - source: TRANSLATION_NAME
         target: TRANSLATION_NAME
       - source: TRANSLATION_PORT
@@ -295,7 +304,7 @@ pipeline:
         target: TRANSLATION_URL
       - source: PRODUCTION_WHITELIST
         target: WHITELIST
-      - source: PRODUCTION_WWW_PROTOCOL
+      - source: PROTOCOL_HTTPS
         target: WWW_PROTOCOL
       - source: PRODUCTION_WWW_URL
         target: WWW_URL
