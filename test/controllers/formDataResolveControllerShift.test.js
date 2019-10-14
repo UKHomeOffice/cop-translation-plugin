@@ -1,12 +1,10 @@
-import JSONPath from "jsonpath";
+import JSONPath from 'jsonpath';
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
 import * as forms from '../forms'
 import {expect, formTranslateController} from '../setUpTests'
 
-
 describe('Form Data Resolve Controller', () => {
-
     describe('resolve shift details context', () => {
         beforeEach(() => {
             nock('http://localhost:8000')
@@ -17,7 +15,7 @@ describe('Form Data Resolve Controller', () => {
                 });
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {
-                    "argstaffemail": "email"
+                    argstaffemail: 'email'
                 })
                 .reply(200, [{
                     staffid: 'abc-123'
@@ -48,25 +46,34 @@ describe('Form Data Resolve Controller', () => {
                     fixedtransport: false,
                     bordercrossing: false,
                     roadterminal: false
-                }]});
+                }]})
+                .get('/v1/view_rolemembers?select=email&rolelabel=eq.bfint,&branchid=eq.undefined')
+                .reply(200, [])
+                .post('/v1/rpc/extendedstaffdetails', {
+                    argstaffemail: 'email'
+                })
+                .reply(200, [{
+                    linemanager_email: 'linemanager@homeoffice.gov.uk'
+                }]);
         });
+
         it('it should return an updated form schema for keycloakContext', async () => {
             const request = httpMocks.createRequest({
                 method: 'GET',
                 url: '/api/translation/form/shiftForm',
                 params: {
-                    formName: "shiftForm"
+                    formName: 'shiftForm'
                 },
                 kauth: {
                     grant: {
                         access_token: {
-                            token: "test-token",
+                            token: 'test-token',
                             content: {
-                                session_state: "session_id",
-                                email: "email",
-                                preferred_username: "test",
-                                given_name: "testgivenname",
-                                family_name: "testfamilyname"
+                                session_state: 'session_id',
+                                email: 'email',
+                                preferred_username: 'test',
+                                given_name: 'testgivenname',
+                                family_name: 'testfamilyname'
                             }
                         }
 
@@ -78,10 +85,8 @@ describe('Form Data Resolve Controller', () => {
             const locationname = JSONPath.value(response, "$..components[?(@.key=='currentlocationname')].defaultValue");
             const classificationQuery = JSONPath.value(response, "$..components[?(@.key=='portclassificationquery')].defaultValue");
 
-            expect(locationname).to.equal("Current");
+            expect(locationname).to.equal('Current');
             expect(classificationQuery).to.equal("&seaport=eq.true&railterminal=eq.false&airport=eq.false&postexchange=eq.false&fixedtransport=eq.false&bordercrossing=eq.false&roadterminal=eq.false")
-
         });
     });
-
 });

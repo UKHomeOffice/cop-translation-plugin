@@ -15,14 +15,12 @@ import FormTranslator from "./form/FormTranslator";
 import FormEngineService from "./services/FormEngineService";
 import FormDataResolveController from "./controllers/FormTranslateController";
 import WorkflowTranslationController from "./controllers/workflowTranslationController";
-
 import logger from './config/winston';
 import Tracing from "./utilities/tracing";
 import cors from 'cors';
 import BusinessKeyGenerator from "./services/BusinessKeyGenerator";
 
 const http = require('http');
-const https = require('https');
 const fs = require('fs');
 
 const kcConfig = {
@@ -88,7 +86,7 @@ app.use(Tracing.middleware);
 
 if (appConfig.cors.origin) {
     app.use(cors({
-        origin: appConfig.cors.origin.split('|'),
+        origin: appConfig.cors.origin.split(','),
         optionsSuccessStatus: 200
     }));
 }
