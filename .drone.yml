@@ -290,7 +290,7 @@ pipeline:
         target: TRANSLATION_IMAGE
       - source: TRANSLATION_KEYCLOAK_CLIENT_ID
         target: TRANSLATION_KEYCLOAK_CLIENT_ID
-      - source: LOG_LEVEL_INFO
+      - source: LOG_LEVEL_DEBUG
         target: TRANSLATION_LOG_LEVEL
       - source: TRANSLATION_NAME
         target: TRANSLATION_NAME
