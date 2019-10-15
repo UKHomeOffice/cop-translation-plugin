@@ -258,7 +258,7 @@ env_redis_port|6379
 env_redis_ssl|true|false
 env_redis_token|xxx
 env_redis_url|cop-dev-redis-rg-001.cop-dev-redis-rg.obrtxl.euw2.cache.amazonaws.com, cop-staging-redis-rg-001.cop-staging-redis-rg.swzhug.euw2.cache.amazonaws.com, cop-prod-redis-rg-001.cop-prod-redis-rg.swzhug.euw2.cache.amazonaws.com
-env_translation_cors_origin|https://www.dev.cop.homeoffice.gov.uk, https://www.staging.cop.homeoffice.gov.uk, https://www.cop.homeoffice.gov.uk
+env_translation_cors_origin|dev:https://www.dev.cop.homeoffice.gov.uk,http://localhost:8080, https://www.staging.cop.homeoffice.gov.uk, https://www.cop.homeoffice.gov.uk
 env_translation_private_key|xxx
 env_translation_url|translation.dev.cop.homeoffice.gov.uk, translation.staging.cop.homeoffice.gov.uk, translation.cop.homeoffice.gov.uk
 env_whitelist|comma separated x.x.x.x/x list
