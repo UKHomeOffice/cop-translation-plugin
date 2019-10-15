@@ -89,7 +89,7 @@ spec:
         - name: TRANSLATION_PRIVATE_KEY_PATH
           value: "{{.TRANSLATION_PRIVATE_KEY_PATH}}"
         - name: TRANSLATION_LOG_LEVEL
-          value: "debug"
+          value: "{{.TRANSLATION_LOG_LEVEL}}"
         - name: REDIS_SSL
           value: "{{.REDIS_SSL}}"
         - name: REDIS_URI
