@@ -277,9 +277,9 @@ pipeline:
         target: NGINX_IMAGE
       - source: NGINX_TAG
         target: NGINX_TAG
-      - source: PRODUCTION_REDIS_SSL
       - source: PRODUCTION_REDIS_PORT
         target: REDIS_PORT
+      - source: PRODUCTION_REDIS_SSL
         target: REDIS_SSL
       - source: PRODUCTION_REDIS_TOKEN
         target: REDIS_TOKEN
