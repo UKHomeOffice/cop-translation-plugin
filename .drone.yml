@@ -20,6 +20,23 @@ pipeline:
         - push
         - pull_request
 
+  build:
+    image: quay.io/ukhomeofficedigital/drone-docker
+    commands:
+      - docker build -t cop-private-translation-service:$${DRONE_COMMIT_SHA} .
+    when:
+      event: push
+
+  vulnerability-scan:
+    image: quay.io/ukhomeofficedigital/anchore-submission:latest
+    dockerfile: Dockerfile
+    image_name: cop-private-translation-service:${DRONE_COMMIT_SHA}
+    local_image: true
+    tolerate: low
+    fail_on_detection: false
+    when:
+      event: push
+
   synch_dev_secrets:
     image: quay.io/ukhomeofficedigital/cop-secrets
     environment:
