@@ -12,20 +12,18 @@ describe('Form Data Controller', () => {
             .reply(200, {
                 total : 1,
                 forms: forms.encryptedImgForm
-            });
-        nock('http://localhost:8000')
+            })
             .get('/form?name=encryptedImgFormWithMissingEncryptionTag')
             .reply(200, {
                 total: 1,
                 forms: forms.encryptedImgFormWithMissingEncryptionTag
             });
+
         nock('http://localhost:9000')
             .get('/api/workflow/tasks/taskId')
-            .reply(200, tasks.taskData);
-        nock('http://localhost:9000')
+            .reply(200, tasks.taskData)
             .get('/api/workflow/tasks/taskId/variables')
-            .reply(200, tasks.taskVariables);
-        nock('http://localhost:9000')
+            .reply(200, tasks.taskVariables)
             .get('/api/workflow/process-instances/processInstanceId/variables')
             .reply(200, tasks.processVariablesWithEncryptedFields);
 
@@ -34,9 +32,9 @@ describe('Form Data Controller', () => {
                 argstaffemail: 'email'
             })
             .reply(200, [{
-                staffid: 'abc-123'
-            }]);
-        nock('http://localhost:9001')
+                staffid: 'abc-123',
+                defaultteamid: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+            }])
             .get('/v1/shift?email=eq.email')
             .reply(200, [])
             .post('/v1/rpc/extendedstaffdetails', {
@@ -44,6 +42,10 @@ describe('Form Data Controller', () => {
             })
             .reply(200, [{
                 linemanager_email: 'linemanager@homeoffice.gov.uk'
+            }])
+            .get('/v1/entities/team')
+            .reply(200, [{
+                id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
             }]);
     });
 

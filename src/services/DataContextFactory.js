@@ -40,8 +40,11 @@ export default class DataContextFactory {
         }
 
         if (staffDetails) {
-            const integrityLeadEmail = await this.platformDataService.getIntegrityLeadEmails(staffDetails.branchId, headers);
-            extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails, integrityLeadEmail);
+            const teams = await this.platformDataService.getTeams(headers);
+            const staffTeam = teams.filter(team => team.id === staffDetails.defaultteamid)[0];
+            const teamIds = teams.filter(team => team.branchid === staffTeam.branchid).map(team => team.id).join();
+            const integrityLeadEmails = await this.platformDataService.getIntegrityLeadEmails(teamIds, headers);
+            extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails, integrityLeadEmails);
         }
 
         if (taskId && processInstanceId) {

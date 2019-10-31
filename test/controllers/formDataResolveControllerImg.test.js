@@ -51,7 +51,12 @@ describe('Form Data Resolve Controller', () => {
                     argstaffemail : 'email'
                 })
                 .reply(200, [{
-                    staffid: 'abc-123'
+                    staffid: 'abc-123',
+                    defaultteamid: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+                }])
+                .get('/v1/entities/team')
+                .reply(200, [{
+                    id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
                 }]);
         });
 

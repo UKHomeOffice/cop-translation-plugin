@@ -16,7 +16,8 @@ describe('Form Data Resolve Controller With Business Key', () => {
                 argstaffemail: "email"
             })
             .reply(200, [{
-                staffid: 'abc-123'
+                staffid: 'abc-123',
+                defaultteamid: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
             }])
             .get('/v1/shift?email=eq.email')
             .reply(200, [])
@@ -27,6 +28,10 @@ describe('Form Data Resolve Controller With Business Key', () => {
             })
             .reply(200, [{
                 linemanager_email: 'linemanager@homeoffice.gov.uk'
+            }])
+            .get('/v1/entities/team')
+            .reply(200, [{
+                id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
             }]);
     });
 
