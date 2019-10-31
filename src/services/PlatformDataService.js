@@ -69,15 +69,18 @@ export default class PlatformDataService {
 
     }
 
-    async getIntegrityLeadEmails(branchId, headers)  {
+    async getIntegrityLeadEmails(teamIds, headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalData.url}/v1/view_rolemembers?select=email&rolelabel=eq.bfint,&branchid=eq.${branchId}`,
-                method: 'GET',
-                headers: headers
+                url: `${this.config.services.operationalData.url}/v1/rpc/rolemembers`,
+                method: 'POST',
+                headers: headers,
+                data: {
+                    argteamids: teamIds,
+                    argrolelabel: 'bfint'
+                }
             });
             const integrityLeadEmails = response.data ? response.data.map(val => val.email) : null;
-            logger.info(`Integrity lead emails found`, integrityLeadEmails);
             return integrityLeadEmails;
         } catch (err) {
             logger.error('Failed to get integrity lead emails ', err);
@@ -104,5 +107,17 @@ export default class PlatformDataService {
         }
     }
 
-
+    async getTeams(headers) {
+        try {
+            const teams = await axios({
+                url: `${this.config.services.referenceData.url}/v1/entities/team`,
+                method: 'GET',
+                headers: headers
+            });
+            return teams && teams.data ? teams.data : null;
+        } catch (err) {
+            logger.error('Failed to get teams ', err);
+            return null;
+        }
+    }
 }
