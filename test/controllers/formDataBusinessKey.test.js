@@ -30,9 +30,11 @@ describe('Form Data Resolve Controller With Business Key', () => {
                 linemanager_email: 'linemanager@homeoffice.gov.uk'
             }])
             .get('/v1/entities/team')
-            .reply(200, [{
-                id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
-            }]);
+            .reply(200, {
+                data: [{
+                    id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+                }]
+            });
     });
 
     it('it returns form with a newBusinessKey label and api of businessKey', async () => {

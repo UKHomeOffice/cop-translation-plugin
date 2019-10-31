@@ -38,9 +38,11 @@ describe('Form Data Resolve Controller', () => {
             .get('/v1/shift?email=eq.staffmember@homeoffice.gov.uk')
             .reply(200, [])
             .get('/v1/entities/team')
-            .reply(200, [{
-                id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
-            }]);
+            .reply(200, {
+                data: [{
+                    id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+                }]
+            });
     });
 
     describe('A call to data resolve controller for user details context', () => {

@@ -114,7 +114,7 @@ export default class PlatformDataService {
                 method: 'GET',
                 headers: headers
             });
-            return teams && teams.data ? teams.data : null;
+            return teams && teams.data ? teams.data.data : null;
         } catch (err) {
             logger.error('Failed to get teams ', err);
             return null;
