@@ -31,9 +31,11 @@ describe('Form Data Resolve Controller', () => {
                     linemanager_email: 'linemanager@homeoffice.gov.uk'
                 }])
                 .get('/v1/entities/team')
-                .reply(200, [{
-                    id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
-                }]);
+                .reply(200, {
+                    data: [{
+                        id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+                    }]
+                });
         });
 
         it('it should return form without any data resolution', async () => {
