@@ -45,7 +45,8 @@ describe('Form Data Resolve Controller', () => {
                     linemanager_email: 'linemanager@homeoffice.gov.uk'
                 }])
                 .post('/v1/rpc/staffdetails', {
-                    argstaffemail : 'email'
+                    argstaffemail : 'email',
+                    defaultteamid: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
                 })
                 .reply(200, [{
                     staffid: 'abc-123'

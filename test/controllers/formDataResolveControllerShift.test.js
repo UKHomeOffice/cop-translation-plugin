@@ -13,29 +13,28 @@ describe('Form Data Resolve Controller', () => {
                     total : 1,
                     forms: forms.shiftForm
                 });
+
             nock('http://localhost:9001')
                 .post('/v1/rpc/staffdetails', {
                     argstaffemail: 'email'
                 })
                 .reply(200, [{
-                    staffid: 'abc-123'
-                }]);
-            nock('http://localhost:9001')
+                    staffid: 'abc-123',
+                    defaultteamid: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+                }])
                 .get('/v1/shift?email=eq.email')
                 .reply(200, [{
                     locationid: 'currentlocationid',
                     teamid: 'teamid',
                     email: 'email'
-                }]);
-            nock('http://localhost:9001')
+                }])
                 .get('/v1/entities/location?id=eq.currentlocationid')
                 .reply(200, {data: [{
                     locationname: 'Current',
                     locationid: 'currentlocationid',
                     bflocationtypeid: 'bflocationtypeid'
 
-                }]});
-            nock('http://localhost:9001')
+                }]})
                 .get('/v1/entities/bflocationtype?id=eq.bflocationtypeid')
                 .reply(200, {data: [{
                     bflocationtypeid: 'bflocationtypeid',
@@ -54,6 +53,10 @@ describe('Form Data Resolve Controller', () => {
                 })
                 .reply(200, [{
                     linemanager_email: 'linemanager@homeoffice.gov.uk'
+                }])
+                .get('/v1/entities/team')
+                .reply(200, [{
+                    id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
                 }]);
         });
 
