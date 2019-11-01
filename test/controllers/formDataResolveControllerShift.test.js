@@ -46,8 +46,6 @@ describe('Form Data Resolve Controller', () => {
                     bordercrossing: false,
                     roadterminal: false
                 }]})
-                .get('/v1/view_rolemembers?select=email&rolelabel=eq.bfint,&branchid=eq.undefined')
-                .reply(200, [])
                 .post('/v1/rpc/extendedstaffdetails', {
                     argstaffemail: 'email'
                 })
@@ -59,7 +57,12 @@ describe('Form Data Resolve Controller', () => {
                     data: [{
                         id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
                     }]
-                });
+                })
+                .get('/v2/view_rolemembers?filter=rolelabel=eq.bfint')
+                .reply(200, [{
+                    email: 'integritylead1@homeoffice.gov.uk',
+                    defaultteamid: '15a13c2a-fa63-4437-b4b0-d6b070e9c17e',
+                }]);
         });
 
         it('it should return an updated form schema for keycloakContext', async () => {
