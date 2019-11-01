@@ -1,18 +1,25 @@
-import StaffDetailsContext from "../models/StaffDetailsContext";
-import EnvironmentContext from "../models/EnvironmentContext";
-import ShiftDetailsContext from "../models/ShiftDetailsContext";
-import DataResolveContext from "../models/DataResolveContext";
+import StaffDetailsContext from '../models/StaffDetailsContext';
+import EnvironmentContext from '../models/EnvironmentContext';
+import ShiftDetailsContext from '../models/ShiftDetailsContext';
+import DataResolveContext from '../models/DataResolveContext';
 import ExtendedStaffDetailsContext from '../models/ExtendedStaffDetailsContext';
-import ProcessContext from "../models/ProcessContext";
-import TaskContext from "../models/TaskContext";
-import appConfig from "../config/appConfig";
+import ProcessContext from '../models/ProcessContext';
+import TaskContext from '../models/TaskContext';
+import appConfig from '../config/appConfig';
 
 export default class DataContextFactory {
-    constructor(platformDataService, processService, dataDecryptor, referenceGenerator) {
+    constructor(
+        platformDataService,
+        processService,
+        dataDecryptor,
+        referenceGenerator,
+        integrityLeadService
+    ) {
         this.platformDataService = platformDataService;
         this.processService = processService;
         this.dataDecryptor = dataDecryptor;
-        this.referenceGenerator = referenceGenerator
+        this.referenceGenerator = referenceGenerator;
+        this.integrityLeadService = integrityLeadService;
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
@@ -40,10 +47,7 @@ export default class DataContextFactory {
         }
 
         if (staffDetails) {
-            const teams = await this.platformDataService.getTeams(headers);
-            const staffTeam = teams.filter(team => team.id === staffDetails.defaultteamid)[0];
-            const teamIds = teams.filter(team => team.branchid === staffTeam.branchid).map(team => team.id).join();
-            const integrityLeadEmails = await this.platformDataService.getIntegrityLeadEmails(teamIds, headers);
+            const integrityLeadEmails = await this.integrityLeadService.getEmails(staffDetails.defaultteamid, headers);
             extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails, integrityLeadEmails);
         }
 

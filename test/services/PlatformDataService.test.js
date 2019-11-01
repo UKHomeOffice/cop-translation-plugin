@@ -18,24 +18,30 @@ describe('PlatformDataService', () => {
         nock.cleanAll();
     });
 
-    describe('getIntegrityLeadEmails', () => {
+    describe('getIntegrityLeads', () => {
         it('should return the correct data when integrity leads are found successfully', async () => {
+            const integrityLeads = [{
+                staffid: "a4335c55-d7e9-49db-88e5-1acc2e6cff6c",
+                identityid: "3fca4748-0adf-4a59-ab73-386c54fe292f",
+                email: "integritylead@homeoffice.gov.uk",
+                gradeid: "ca976df5-21b5-4e46-9e3f-ebb8fbec6d70",
+                phone: "07123123456",
+                defaultteamid: "57ba6ac8-0193-47ef-9c52-ec77f7daedb5",
+                adelphi: 12345678,
+                dateofleaving: null,
+                defaultlocationid: 2,
+                onboardprocessinstanceid: null,
+                rolelabel: "bfint"
+            }];
             nock('http://localhost:9000', { Authorization: 'Bearer token' })
-            .log(console.log)
-            .post('/v1/rpc/rolemembers')
-            .reply(200, [{
-                email: 'integritylead1@homeoffice.gov.uk'
-            }, {
-                email: 'integritylead2@homeoffice.gov.uk'
-            }]);
+                .log(console.log)
+                .get('/v2/view_rolemembers?filter=rolelabel=eq.bfint')
+                .reply(200, integrityLeads);
 
             const platformDataService = new PlatformDataService(config);
-            const response = await platformDataService.getIntegrityLeadEmails(10, { Authorization: 'Bearer token' });
+            const response = await platformDataService.getIntegrityLeads({ Authorization: 'Bearer token' });
 
-            expect(response).to.deep.equal([
-                'integritylead1@homeoffice.gov.uk',
-                'integritylead2@homeoffice.gov.uk'
-            ]);
+            expect(response).to.deep.equal(integrityLeads);
         });
 
         it('should return null when an error occurs', async () => {
@@ -45,7 +51,7 @@ describe('PlatformDataService', () => {
                 .reply(500, 'Internal Server Error');
 
             const platformDataService = new PlatformDataService(config);
-            const response = await platformDataService.getIntegrityLeadEmails(null, { Authorization: 'Bearer token' });
+            const response = await platformDataService.getIntegrityLeads({ Authorization: 'Bearer token' });
 
             expect(response).to.equal(null);
         });

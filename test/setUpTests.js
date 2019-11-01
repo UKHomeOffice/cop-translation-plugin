@@ -8,6 +8,7 @@ import FormEngineService from "../src/services/FormEngineService";
 import DataContextFactory from "../src/services/DataContextFactory";
 import PlatformDataService from "../src/services/PlatformDataService";
 import ProcessService from "../src/services/ProcessService";
+import IntegrityLeadService from '../src/services/IntegrityLeadService';
 import FormTranslateController from "../src/controllers/FormTranslateController";
 import WorkflowTranslationController from "../src/controllers/workflowTranslationController";
 import fs from "fs";
@@ -41,9 +42,20 @@ const referenceGenerator = new BusinessKeyGenerator(mockRedis);
 
 const processService = new ProcessService(appConfig)
 const formEngineService = new FormEngineService(appConfig);
-const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor, referenceGenerator);
-const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
-
+const platformDataService = new PlatformDataService(appConfig);
+const integrityLeadService = new IntegrityLeadService(platformDataService);
+const dataContextFactory = new DataContextFactory(
+    new PlatformDataService(appConfig),
+    processService,
+    dataDecryptor,
+    referenceGenerator,
+    integrityLeadService
+);
+const translator = new FormTranslator(
+    new FormEngineService(appConfig),
+    dataContextFactory,
+    dataDecryptor
+);
 const formTranslateController = new FormTranslateController(translator, processService);
 const workflowTranslatorController = new WorkflowTranslationController(processService, translator);
 Tracing.correlationId = () => "CorrelationId";

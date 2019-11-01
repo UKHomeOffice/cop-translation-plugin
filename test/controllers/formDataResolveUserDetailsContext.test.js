@@ -48,8 +48,11 @@ describe('Form Data Resolve Controller', () => {
     describe('A call to data resolve controller for user details context', () => {
         beforeEach(() => {
             nock('http://localhost:9001')
-                .get('/v1/view_rolemembers?select=email&rolelabel=eq.bfint,&branchid=eq.undefined')
-                .reply(200, [])
+                .get('/v2/view_rolemembers?filter=rolelabel=eq.bfint')
+                .reply(200, [{
+                    email: 'integritylead1@homeoffice.gov.uk',
+                    defaultteamid: '15a13c2a-fa63-4437-b4b0-d6b070e9c17e',
+                }])
                 .post('/v1/rpc/extendedstaffdetails', {
                     argstaffemail: 'staffmember@homeoffice.gov.uk'
                 })

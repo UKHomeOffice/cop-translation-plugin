@@ -69,21 +69,16 @@ export default class PlatformDataService {
 
     }
 
-    async getIntegrityLeadEmails(teamIds, headers)  {
+    async getIntegrityLeads(headers)  {
         try {
             const response = await axios({
-                url: `${this.config.services.operationalData.url}/v1/rpc/rolemembers`,
-                method: 'POST',
-                headers: headers,
-                data: {
-                    argteamids: teamIds,
-                    argrolelabel: 'bfint'
-                }
+                url: `${this.config.services.operationalData.url}/v2/view_rolemembers?filter=rolelabel=eq.bfint`,
+                method: 'GET',
+                headers: headers
             });
-            const integrityLeadEmails = response.data ? response.data.map(val => val.email) : null;
-            return integrityLeadEmails;
+            return response.data;
         } catch (err) {
-            logger.error('Failed to get integrity lead emails ', err);
+            logger.error('Failed to get integrity leads ', err);
             return null;
         }
     }

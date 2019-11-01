@@ -6,19 +6,20 @@ import appConfig from './config/appConfig'
 import Redis from 'ioredis';
 import Keycloak from 'keycloak-connect';
 import helmet from 'helmet';
-import KeyRepository from "./services/KeyRepository";
-import DataDecryptor from "./services/DataDecryptor";
-import DataContextFactory from "./services/DataContextFactory";
-import PlatformDataService from "./services/PlatformDataService";
-import ProcessService from "./services/ProcessService";
-import FormTranslator from "./form/FormTranslator";
-import FormEngineService from "./services/FormEngineService";
-import FormDataResolveController from "./controllers/FormTranslateController";
-import WorkflowTranslationController from "./controllers/workflowTranslationController";
+import KeyRepository from './services/KeyRepository';
+import DataDecryptor from './services/DataDecryptor';
+import DataContextFactory from './services/DataContextFactory';
+import PlatformDataService from './services/PlatformDataService';
+import ProcessService from './services/ProcessService';
+import FormTranslator from './form/FormTranslator';
+import FormEngineService from './services/FormEngineService';
+import FormDataResolveController from './controllers/FormTranslateController';
+import WorkflowTranslationController from './controllers/workflowTranslationController';
 import logger from './config/winston';
-import Tracing from "./utilities/tracing";
+import Tracing from './utilities/tracing';
 import cors from 'cors';
-import BusinessKeyGenerator from "./services/BusinessKeyGenerator";
+import BusinessKeyGenerator from './services/BusinessKeyGenerator';
+import IntegrityLeadService from './services/IntegrityLeadService';
 
 const http = require('http');
 const fs = require('fs');
@@ -74,8 +75,20 @@ const redis = checkRedisSSL(appConfig.redis.ssl);
 
 const processService = new ProcessService(appConfig);
 const referenceGenerator = new BusinessKeyGenerator(redis);
-const dataContextFactory = new DataContextFactory(new PlatformDataService(appConfig), processService, dataDecryptor, referenceGenerator);
-const translator = new FormTranslator(new FormEngineService(appConfig), dataContextFactory, dataDecryptor);
+const platformDataService = new PlatformDataService(appConfig);
+const integrityLeadService = new IntegrityLeadService(platformDataService);
+const dataContextFactory = new DataContextFactory(
+    platformDataService,
+    processService,
+    dataDecryptor,
+    referenceGenerator,
+    integrityLeadService
+);
+const translator = new FormTranslator(
+    new FormEngineService(appConfig),
+    dataContextFactory,
+    dataDecryptor
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
