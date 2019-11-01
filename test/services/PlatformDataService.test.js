@@ -56,11 +56,13 @@ describe('PlatformDataService', () => {
             nock('http://localhost:9001', {Authorization: 'Bearer token'})
             .log(console.log)
             .get('/v1/entities/team')
-            .reply(200, [{
-                id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
-            }, {
-                id: 'ccbf8c53-0e54-414d-ad4a-0c3edad07515'
-            }]);
+            .reply(200, {
+                data: [{
+                    id: '018d7442-4b4e-4ff3-acc6-f2d865a6e6ad'
+                }, {
+                    id: 'ccbf8c53-0e54-414d-ad4a-0c3edad07515'
+                }]
+            });
 
             const platformDataService = new PlatformDataService(config);
             const response = await platformDataService.getTeams({ Authorization: 'Bearer token' });
