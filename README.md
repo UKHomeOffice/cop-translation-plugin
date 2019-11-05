@@ -83,6 +83,7 @@ Using the logged in user's credentials the service will create a data context wh
 {$.extendedStaffDetailsContext.linemanagerEmail}
 {$.extendedStaffDetailsContext.delegateEmails}
 {$.extendedStaffDetailsContext.integrityLeadEmails}
+{$.extendedStaffDetailsContext.linemanagerDelegateEmails}
 
 ```
 
