@@ -21,7 +21,7 @@ export default class FormTranslator {
                     customDataContext = {}) {
         logger.info(`Loading form ${id}`);
         let form;
-        if ((live && live === 1) && validator.isUUID(id)) {
+        if ((live && live === '1') && validator.isUUID(id)) {
             logger.info('Form requested with id and live = 1');
             form = await this.formEngineService.getFormById(id, keycloakContext);
         } else {

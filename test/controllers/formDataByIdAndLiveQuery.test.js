@@ -50,7 +50,7 @@ describe('Form Data Resolve Controller with UUID and live === 1', () => {
                 id: `${uuid}`
             },
             query: {
-                live: 1
+                live: '1'
             },
             kauth: {
                 grant: {
