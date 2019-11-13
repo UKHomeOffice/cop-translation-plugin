@@ -9,10 +9,10 @@ const keycloakContext = {
 describe('Form Data Controller', () => {
     beforeEach(() => {
         nock('http://localhost:8000')
-            .get('/form/myFormId?full=true')
+            .get('/form/myFormId')
             .reply(200, forms.simpleForm[0]);
         nock('http://localhost:8000')
-            .get('/form/unknownFormId?full=true')
+            .get('/form/unknownFormId')
             .reply(404);
     });
 

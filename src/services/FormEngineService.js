@@ -22,7 +22,7 @@ class FormEngineService {
                     });
                     if (subFormComponents && subFormComponents.length >= 1) {
                         logger.info(`Found sub form inside ${formName}...initiating a full form load...`);
-                        const fullForm = await axios.get(`${appConfig.services.form.url}/form/${form.id}?full=true`, { headers: headers } );
+                        const fullForm = await axios.get(`${appConfig.services.form.url}/form/${form.id}`, { headers: headers } );
                         return fullForm.data;
                     }
                     logger.info(`No sub forms detected for ${formName}`);
@@ -44,11 +44,11 @@ class FormEngineService {
     async getFormById (formId, keycloakContext) {
         try {
             const headers = this.createHeader(keycloakContext);
-            const response = await axios.get(`${this.config.services.form.url}/form/${formId}?full=true`, { headers: headers });
+            const response = await axios.get(`${this.config.services.form.url}/form/${formId}`, { headers: headers });
             if (response && response.data) {
                 const form = response.data;
                 if (form) {
-                    logger.info(`Form  ${form.name} found`);
+                    logger.info(`Form ${form.name} found`);
                     return form;
                 } else {
                     return null;

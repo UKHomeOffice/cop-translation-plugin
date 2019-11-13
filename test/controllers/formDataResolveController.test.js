@@ -49,7 +49,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/testFrom',
                 params: {
-                    formName: 'testForm'
+                    id: 'testForm'
                 },
                 kauth: {
                     grant: {
@@ -100,7 +100,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/dataUrlForm',
                 params: {
-                    formName: 'dataUrlForm'
+                    id: 'dataUrlForm'
                 }, query: {
                     taskId: 'taskId',
                     processInstanceId : 'processInstanceId'

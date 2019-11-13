@@ -72,7 +72,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/imgForm',
                 params: {
-                    formName: 'imgForm'
+                    id: 'imgForm'
                 },
                 query: {
                     taskId: 'taskId',
@@ -106,7 +106,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/jpgImgForm',
                 params: {
-                    formName: 'jpgImgForm'
+                    id: 'jpgImgForm'
                 },
                 query: {
                     taskId: 'taskId',

@@ -66,7 +66,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/processContextForm',
                 params: {
-                    formName: 'processContextForm'
+                    id: 'processContextForm'
                 },
                 query: {
                     taskId: 'taskId',
@@ -119,7 +119,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/taskContextForm',
                 params: {
-                    formName: 'taskContextForm'
+                    id: 'taskContextForm'
                 },
                 query: {
                     taskId: 'taskId',
@@ -172,7 +172,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form',
                 params: {
-                    formName: 'taskContextForm'
+                    id: 'taskContextForm'
                 },
                 query: {
                     taskId: 'taskId',

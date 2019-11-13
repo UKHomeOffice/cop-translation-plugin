@@ -7,17 +7,17 @@ const router = express.Router();
 const formDataResolveRouter = (keycloak, formTranslatorController) => {
 
     router
-        .get('/form/:formName',
+        .get('/form/:id',
             [keycloak.protect(), (req, res) => {
-                const {formName} = req.params;
+                const {id} = req.params;
                 formTranslatorController.getForm(req).then((form) => {
-                    responseHandler.res(null, {formName, form}, res);
+                    responseHandler.res(null, {id, form}, res);
                 }).catch((err) => {
                     logger.error(`Error translating form ${err.message}`, err);
                     responseHandler.res({
                         code: err.code,
                         message: err.message
-                    }, {formName}, res);
+                    }, {id}, res);
                 })
 
             }]);

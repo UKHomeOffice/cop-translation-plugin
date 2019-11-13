@@ -62,7 +62,7 @@ describe('Form Data Controller', () => {
             method: 'GET',
             url: '/api/translation/form/encryptedImgForm',
             params: {
-                formName: 'encryptedImgForm'
+                id: 'encryptedImgForm'
             },
             query: {
                 taskId: 'taskId',
@@ -99,7 +99,7 @@ describe('Form Data Controller', () => {
             method: 'GET',
             url: '/api/translation/form/encryptedImgFormWithMissingEncryptionTag',
             params: {
-                formName: 'encryptedImgFormWithMissingEncryptionTag'
+                id: 'encryptedImgFormWithMissingEncryptionTag'
             },
             query: {
                 taskId: 'taskId',

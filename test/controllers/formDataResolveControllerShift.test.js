@@ -70,7 +70,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/shiftForm',
                 params: {
-                    formName: 'shiftForm'
+                    id: 'shiftForm'
                 },
                 kauth: {
                     grant: {

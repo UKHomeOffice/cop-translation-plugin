@@ -4,26 +4,31 @@ import TranslationServiceError from "../TranslationServiceError";
 import logger from "../config/winston";
 import FormComponent from "../models/FormComponent";
 import FormComponentVisitor from "./FormComponentVisitor";
-import FormDataDecryptor from "./FormDataDecryptor";
+import validator from 'validator';
 
 export default class FormTranslator {
 
-    constructor(formEngineService, dataContextFactory, dataDecryptor) {
+    constructor(formEngineService, dataContextFactory) {
         this.formEngineService = formEngineService;
         this.dataContextFactory = dataContextFactory;
         this.jsonPathEvaluator = new JsonPathEvaluator();
-        this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator, dataDecryptor);
-        this.formDataDecryptor = new FormDataDecryptor(dataDecryptor);
+        this.formComponentVisitor = new FormComponentVisitor(this.jsonPathEvaluator);
     }
 
-    async translate(formName,
+    async translate(id,
                     keycloakContext,
-                    {processInstanceId, taskId},
+                    {processInstanceId, taskId, live},
                     customDataContext = {}) {
-        logger.info(`Loading form ${formName}`);
-        const form = await this.formEngineService.getForm(formName, keycloakContext);
+        logger.info(`Loading form ${id}`);
+        let form;
+        if ((live && live === 1) && validator.isUUID(id)) {
+            logger.info('Form requested with id and live = 1');
+            form = await this.formEngineService.getFormById(id, keycloakContext);
+        } else {
+            form = await this.formEngineService.getForm(id, keycloakContext);
+        }
         if (!form) {
-            throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
+            throw new TranslationServiceError(`Form ${id} could not be found`, 404);
         }
         logger.info(`Form ${form.name} has been successfully loaded`);
         const dataContext = await this.dataContextFactory.createDataContext(keycloakContext, {
@@ -79,16 +84,6 @@ export default class FormTranslator {
             logger.warn(`Not encrypting data for form ${formSchema.name} as there is no business key field on the form`);
             return submit();
         }
-
-        // this.formDataDecryptor.encryptFormData(formSchema.components, formData.data, submissionContext);
-        // if (submissionContext.encryptionMetaData) {
-        //     const {iv, publicKey} = submissionContext.encryptionMetaData;
-
-        //     formData.data._encryptionMetaData = {
-        //       iv: iv.toString('base64'),
-        //       publicKey: publicKey.toString('base64'),
-        //     }
-        // }
 
         return submit();
     }

@@ -41,7 +41,7 @@ describe('Workflow Controller', () => {
               .reply(200);
             nock('http://localhost:8000', {})
               .log(console.log)
-              .get('/form/myFormId?full=true')
+              .get('/form/myFormId')
               .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
@@ -88,7 +88,7 @@ describe('Workflow Controller', () => {
               .reply(400);
             nock('http://localhost:8000', {})
               .log(console.log)
-              .get('/form/myFormId?full=true')
+              .get('/form/myFormId')
               .reply(200, forms.userDetailsContextForm[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',

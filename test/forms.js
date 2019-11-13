@@ -1,4 +1,5 @@
 const simpleForm = [{
+    name: 'simpleForm',
     components: [
         {
             type: 'textfield',

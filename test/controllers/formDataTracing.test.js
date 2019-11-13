@@ -57,7 +57,7 @@ describe('Form Data Resolve Controller Tracing', () => {
                     method: 'GET',
                     url: '/api/translation/form/processContextForm',
                     params: {
-                        formName: "processContextForm"
+                        id: "processContextForm"
                     },
                     query: {
                         taskId: "taskId",
