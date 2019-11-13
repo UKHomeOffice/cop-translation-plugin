@@ -9,10 +9,11 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('Health Routes', () => {
+
     describe('/GET healthz', () => {
         it('it should return a boyd of {status:OK}', (done) => {
             chai.request(server)
-                .get('/api/translation/healthz')
+                .get('/healthz')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -24,7 +25,7 @@ describe('Health Routes', () => {
     describe ("/GET readiness", () => {
         it('it should return a body of {ready:true}', (done) => {
             chai.request(server)
-                .get('/api/translation/readiness')
+                .get('/readiness')
                 .end((err, res) => {
                     logger.info(JSON.stringify(res));
                     res.should.have.status(200);
