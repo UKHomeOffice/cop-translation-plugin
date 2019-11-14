@@ -39,11 +39,11 @@ describe('Form Data Controller', () => {
                 });
             nock('http://localhost:8000', {})
                 .log(console.log)
-                .get('/form/formId?full=true')
+                .get('/form/formId')
                 .reply(200, forms.formWithSensitiveField[0]);
             const request = httpMocks.createRequest({
                 method: 'POST',
-                url: '/api/translation/form/formId/submission',
+                url: '/form/formId/submission',
                 body: {
                     nonShiftApiCall: false,
                     processKey: 'processKey',
@@ -88,7 +88,7 @@ describe('Form Data Controller', () => {
                 .reply(200, forms.formWithSensitiveField[0]);
             nock('http://localhost:8000', {})
                 .log(console.log)
-                .get('/form/formId?full=true')
+                .get('/form/formId')
                 .reply(200, forms.formWithSensitiveField[0]);
             nock('http://localhost:9000', {})
                 .log(console.log)
@@ -108,7 +108,7 @@ describe('Form Data Controller', () => {
                 });
             const request = httpMocks.createRequest({
                 method: 'POST',
-                url: '/api/translation/form/formId/submission',
+                url: '/form/formId/submission',
                 body: {
                     nonShiftApiCall: false,
                     processKey: 'processKey',

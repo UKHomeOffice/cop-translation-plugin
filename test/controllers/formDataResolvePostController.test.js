@@ -99,7 +99,7 @@ describe('Form Data Resolve Controller', () => {
         it('it should return 404 status', async () => {
             const request = httpMocks.createRequest({
                 method: 'POST',
-                url: '/api/translation/form',
+                url: '/form',
                 body: {
                     formName: 'randomForm',
                     dataContext: {

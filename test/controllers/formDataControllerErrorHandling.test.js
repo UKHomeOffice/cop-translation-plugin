@@ -39,7 +39,7 @@ describe('Form Data Resolve Controller', () => {
                 method: 'GET',
                 url: '/api/translation/form/userDetailsContextForm',
                 params: {
-                    formName: 'userDetailsContextForm'
+                    id: 'userDetailsContextForm'
                 },
                 kauth: {
                     grant: {

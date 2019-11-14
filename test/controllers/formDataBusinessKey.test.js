@@ -50,9 +50,9 @@ describe('Form Data Resolve Controller With Business Key', () => {
 
         const request = httpMocks.createRequest({
             method: 'GET',
-            url: '/api/translation/form/testFrom',
+            url: '/form/testFrom',
             params: {
-                formName: "testForm"
+                id: "testForm"
             },
             kauth: {
                 grant: {
@@ -87,9 +87,9 @@ describe('Form Data Resolve Controller With Business Key', () => {
 
         const request = httpMocks.createRequest({
             method: 'GET',
-            url: '/api/translation/form/simpleFormWithoutBusinessKey',
+            url: '/form/simpleFormWithoutBusinessKey',
             params: {
-                formName: "simpleFormWithoutBusinessKey"
+                id: "simpleFormWithoutBusinessKey"
             },
             kauth: {
                 grant: {
@@ -123,9 +123,9 @@ describe('Form Data Resolve Controller With Business Key', () => {
 
         const request = httpMocks.createRequest({
             method: 'GET',
-            url: '/api/translation/form/simpleFormBusinessKeyWithDefaultValue',
+            url: '/form/simpleFormBusinessKeyWithDefaultValue',
             params: {
-                formName: "simpleFormBusinessKeyWithDefaultValue"
+                id: "simpleFormBusinessKeyWithDefaultValue"
             },
             kauth: {
                 grant: {

@@ -42,7 +42,8 @@
     "express-session": "^1.15.6",
     "express-validator": "^4.3.0",
     "formiojs": "^2.30.2",
-    "helmet": "^3.12.0",
+    "helmet": "^3.21.2",
+    "https-proxy-agent": "^3.0.1",
     "ioredis": "^4.14.0",
     "jsonpath": "^1.0.1",
     "keycloak-connect": "^4.5.0",
@@ -53,6 +54,7 @@
     "requirejs": "^2.3.5",
     "static-eval": "^2.0.2",
     "uuid": "^3.3.2",
+    "validator": "^12.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {

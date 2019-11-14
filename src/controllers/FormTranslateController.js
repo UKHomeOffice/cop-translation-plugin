@@ -7,12 +7,12 @@ export default class FormTranslateController {
     }
 
     async getForm(req) {
-        const {formName} = req.params;
-        const {taskId, processInstanceId} = req.query;
-        const form = await this.formTranslator.translate(formName,
-            new KeycloakContext(req.kauth), {taskId, processInstanceId});
+        const {id} = req.params;
+        const {taskId, processInstanceId, live} = req.query;
+        const form = await this.formTranslator.translate(id,
+            new KeycloakContext(req.kauth), {taskId, processInstanceId, live});
         if (!form) {
-            throw new TranslationServiceError(`Form ${formName} could not be found`, 404);
+            throw new TranslationServiceError(`Form ${id} could not be found`, 404);
         }
         return form;
     }

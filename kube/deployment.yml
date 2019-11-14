@@ -50,14 +50,14 @@ spec:
           runAsNonRoot: true
         readinessProbe:
           httpGet:
-            path: /api/translation/readiness
+            path: /readiness
             port: {{.TRANSLATION_PORT}}
             scheme: HTTP
           initialDelaySeconds: 60
           periodSeconds: 60
         livenessProbe:
           httpGet:
-            path: /api/translation/healthz
+            path: /healthz
             port: {{.TRANSLATION_PORT}}
             scheme: HTTP
           initialDelaySeconds: 60
