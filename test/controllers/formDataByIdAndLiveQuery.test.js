@@ -1,16 +1,14 @@
-
 import nock from 'nock';
 import httpMocks from 'node-mocks-http';
-import * as forms from '../forms'
-import {expect, formTranslateController} from '../setUpTests'
-import sinon from "sinon";
+import { expect, formTranslateController } from '../setUpTests'
 import uuid4 from 'uuid';
+import * as forms from '../forms'
 
 describe('Form Data Resolve Controller with UUID and live === 1', () => {
     beforeEach(() => {
         nock('http://localhost:9001')
             .post('/v1/rpc/staffdetails', {
-                argstaffemail: "email"
+                argstaffemail: 'email'
             })
             .reply(200, [{
                 staffid: 'abc-123',
@@ -55,13 +53,13 @@ describe('Form Data Resolve Controller with UUID and live === 1', () => {
             kauth: {
                 grant: {
                     access_token: {
-                        token: "test-token",
+                        token: 'test-token',
                         content: {
-                            session_state: "session_id",
-                            email: "email",
-                            preferred_username: "test",
-                            given_name: "testgivenname",
-                            family_name: "testfamilyname"
+                            session_state: 'session_id',
+                            email: 'email',
+                            preferred_username: 'test',
+                            given_name: 'testgivenname',
+                            family_name: 'testfamilyname'
                         }
                     }
 
@@ -70,7 +68,6 @@ describe('Form Data Resolve Controller with UUID and live === 1', () => {
         });
 
         const response = await formTranslateController.getForm(request);
-        expect(response.name).to.equal("simpleForm");
+        expect(response.name).to.equal('simpleForm');
     });
-
 });
