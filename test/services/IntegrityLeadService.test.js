@@ -14,7 +14,7 @@ describe('IntegrityLeadService', () => {
     platformDataService = sinon.createStubInstance(PlatformDataService);
     platformDataService.getTeams.returns([{
       id: staffTeamId,
-      branchId: 12
+      branchid: 12
     }]);
     integrityLeads = [{
       email: 'integritylead1@homeoffice.gov.uk',
@@ -145,7 +145,7 @@ describe('IntegrityLeadService', () => {
         directorateid: 14
       }, {
         id: '444e92aa-16e6-41fb-9642-783532f4dd84',
-        branchid: null,
+        branchid: 12,
         directorateid: 16
       }, {
         id: 'bfb30c46-e7fa-4716-81b7-7687eef2c312',
@@ -157,7 +157,6 @@ describe('IntegrityLeadService', () => {
       const teamIds = integrityLeadService.filterTeamsById(teams, { directorateid: 16 });
 
       expect(teamIds).toEqual([
-        '444e92aa-16e6-41fb-9642-783532f4dd84',
         'bfb30c46-e7fa-4716-81b7-7687eef2c312'
       ]);
     });
@@ -165,13 +164,13 @@ describe('IntegrityLeadService', () => {
     it('should return the correct teams filtered by department when not given a branch or directorate', () => {
       teams = [{
         id: staffTeamId,
-        branchid: null,
+        branchid: 12,
         directorateid: null,
         departmentid: 17
       }, {
         id: '444e92aa-16e6-41fb-9642-783532f4dd84',
         branchid: null,
-        directorateid: null,
+        directorateid: 16,
         departmentid: 18
       }, {
         id: 'bfb30c46-e7fa-4716-81b7-7687eef2c312',
@@ -184,8 +183,8 @@ describe('IntegrityLeadService', () => {
       const teamIds = integrityLeadService.filterTeamsById(teams, { departmentid: 18 });
 
       expect(teamIds).toEqual([
-        '444e92aa-16e6-41fb-9642-783532f4dd84',
-        'bfb30c46-e7fa-4716-81b7-7687eef2c312'
+        'bfb30c46-e7fa-4716-81b7-7687eef2c312',
+        ...integrityLeadService.fallbackTeamList
       ]);
     });
   });
