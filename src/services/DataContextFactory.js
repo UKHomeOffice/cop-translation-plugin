@@ -2,71 +2,75 @@ import StaffDetailsContext from '../models/StaffDetailsContext';
 import EnvironmentContext from '../models/EnvironmentContext';
 import ShiftDetailsContext from '../models/ShiftDetailsContext';
 import DataResolveContext from '../models/DataResolveContext';
-import ExtendedStaffDetailsContext from '../models/ExtendedStaffDetailsContext';
 import ProcessContext from '../models/ProcessContext';
 import TaskContext from '../models/TaskContext';
 import appConfig from '../config/appConfig';
-
+import FormioUtils from "formiojs/utils";
+import FormComponent from "../models/FormComponent";
+import BusinessKeyVisitor from "../form/BusinessKeyVisitor";
+import logger from "../config/winston";
+import Tracing from "../utilities/tracing";
+const getNamespace = require('cls-hooked').getNamespace;
 export default class DataContextFactory {
     constructor(
         platformDataService,
         processService,
-        dataDecryptor,
         referenceGenerator,
-        integrityLeadService
     ) {
         this.platformDataService = platformDataService;
         this.processService = processService;
-        this.dataDecryptor = dataDecryptor;
         this.referenceGenerator = referenceGenerator;
-        this.integrityLeadService = integrityLeadService;
     }
-
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
-        const email = keycloakContext.email;
-        const headers = this.createHeader(keycloakContext);
+        const session = getNamespace('requestId');
+        return session.runAndReturn(async () => {
+            Tracing.setCorrelationId(keycloakContext.correlationId);
+            try {
+                const email = keycloakContext.email;
+                const headers = this.createHeader(keycloakContext);
 
-        const [staffDetails, shiftDetails, extendedStaffDetails] = await Promise.all([
-            this.platformDataService.getStaffDetails(email, headers),
-            this.platformDataService.getShiftDetails(email, headers),
-            this.platformDataService.getExtendedStaffDetails(email, headers)
-        ]);
+                const [staffDetails, shiftDetails] = await Promise.all([
+                    this.platformDataService.getStaffDetails(email, headers),
+                    this.platformDataService.getShiftDetails(email, headers),
+                ]);
 
-        const staffDetailsContext = new StaffDetailsContext(staffDetails);
-        const environmentContext = new EnvironmentContext(appConfig);
-        let shiftDetailsContext = null;
-        let extendedStaffDetailsContext = null;
+                const staffDetailsContext = new StaffDetailsContext(staffDetails);
+                const environmentContext = new EnvironmentContext(appConfig);
+                let shiftDetailsContext = null;
+                let extendedStaffDetailsContext = null;
 
-        if (shiftDetails) {
-            const location = await this.platformDataService.getLocation(shiftDetails.locationid, headers);
-            let locationType = null;
-            if (location.bflocationtypeid !== null) {
-                locationType = await this.platformDataService.getLocationType(location.bflocationtypeid, headers);
+                if (shiftDetails) {
+                    const location = await this.platformDataService.getLocation(shiftDetails.locationid, headers);
+                    let locationType = null;
+                    if (location.bflocationtypeid !== null) {
+                        locationType = await this.platformDataService.getLocationType(location.bflocationtypeid, headers);
+                    }
+                    shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
+                }
+                if (taskId && processInstanceId) {
+                    const [taskData, processData, taskVariables] = await Promise.all([
+                        this.processService.getTaskData(taskId, headers),
+                        this.processService.getProcessVariables(processInstanceId, headers),
+                        this.processService.getTaskVariables(taskId, headers)
+                    ]);
+                    return new DataResolveContext(keycloakContext, staffDetailsContext,
+                        environmentContext,
+                        await this.createProcessContext(processData),
+                        new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
+
+                } else {
+                    return new DataResolveContext(keycloakContext,
+                        staffDetailsContext, environmentContext, await this.createProcessContext([]), null,
+                        customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
+                }
+            } catch (e) {
+                logger.error('Failed to load context', e);
+                return null;
+            } finally {
+                logger.info('Data context resolution processed from plugin')
             }
-            shiftDetailsContext = new ShiftDetailsContext(shiftDetails, location, locationType);
-        }
+        })
 
-        if (staffDetails) {
-            const integrityLeadEmails = await this.integrityLeadService.getEmails(staffDetails.defaultteamid, headers);
-            extendedStaffDetailsContext = new ExtendedStaffDetailsContext(extendedStaffDetails, integrityLeadEmails);
-        }
-
-        if (taskId && processInstanceId) {
-            const [taskData, processData, taskVariables] = await Promise.all([
-                this.processService.getTaskData(taskId, headers),
-                this.processService.getProcessVariables(processInstanceId, headers),
-                this.processService.getTaskVariables(taskId, headers)
-            ]);
-            return new DataResolveContext(keycloakContext, staffDetailsContext,
-                environmentContext,
-                await this.createProcessContext(processData),
-                new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
-
-        } else {
-            return new DataResolveContext(keycloakContext,
-                staffDetailsContext, environmentContext, await this.createProcessContext([]), null,
-                customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
-        }
     }
 
     async createProcessContext(processData) {
@@ -74,8 +78,17 @@ export default class DataContextFactory {
         if (!processContext.businessKey) {
           processContext.businessKey = await this.referenceGenerator.newBusinessKey();
         }
-        processContext.encryptionMetaData = await this.dataDecryptor.ensureKeys(processContext.businessKey);
         return processContext;
+    }
+
+    async postProcess(dataContext, form) {
+        const components = form.components;
+        FormioUtils.eachComponent(components, (component) => {
+            const formComponent = new FormComponent(component, dataContext);
+            formComponent.accept(new BusinessKeyVisitor());
+        });
+
+        return Promise.resolve(form);
     }
 
     createHeader(keycloakContext) {
@@ -86,15 +99,4 @@ export default class DataContextFactory {
         };
     }
 
-    createSubmissionContext(formData) {
-      const businessKey = formData.data.businessKey;
-      if (businessKey) {
-        const keys = this.dataDecryptor.ensureKeys(businessKey);
-        return {
-          businessKey: businessKey,
-          encryptionMetaData: keys,
-        };
-      }
-      return { };
-    }
 }

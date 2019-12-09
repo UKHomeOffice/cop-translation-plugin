@@ -1,5 +1,5 @@
 import {createLogger, format, transports} from 'winston';
-import Tracing from '../utilities/tracing.js';
+import Tracing from "../utilities/tracing";
 
 const { combine, timestamp, json, splat} = format;
 

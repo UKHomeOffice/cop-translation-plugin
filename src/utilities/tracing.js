@@ -1,20 +1,13 @@
-import httpContext from 'express-http-context';
-import uuid4 from 'uuid';
+const createNamespace = require('cls-hooked').createNamespace;
+const session = createNamespace('requestId');
 
 const Tracing = {
     correlationId() {
-        return httpContext.get('correlationId');
+        return session.get('correlationId');
     },
 
-    middleware(req, res, next) {
-        httpContext.middleware(req, res, () => {
-            if (req.header('nginxId')) {
-                httpContext.set('correlationId', req.header('nginxId'));
-            } else {
-                httpContext.set('correlationId', uuid4());
-            }
-            next();
-        });
+    setCorrelationId(correlationId) {
+        session.set('correlationId', correlationId);
     }
 };
 

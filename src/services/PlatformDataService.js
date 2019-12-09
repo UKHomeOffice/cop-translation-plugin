@@ -69,38 +69,7 @@ export default class PlatformDataService {
 
     }
 
-    async getIntegrityLeads(headers)  {
-        try {
-            const response = await axios({
-                url: `${this.config.services.operationalData.url}/v2/view_rolemembers?filter=rolelabel=eq.bfint`,
-                method: 'GET',
-                headers: headers
-            });
-            return response.data;
-        } catch (err) {
-            logger.error('Failed to get integrity leads ', err);
-            return null;
-        }
-    }
 
-    async getExtendedStaffDetails(email, headers)  {
-        try {
-            const response = await axios({
-                url: `${this.config.services.operationalData.url}/v1/rpc/extendedstaffdetails`,
-                method: 'POST',
-                headers: headers,
-                data: {
-                    argstaffemail: email
-                }
-            });
-            const extendedStaffDetails = response.data ? response.data[0] : null;
-            logger.info(`Extended staff details found`, extendedStaffDetails);
-            return extendedStaffDetails;
-        } catch (err) {
-            logger.error('Failed to get extended staff details ', err);
-            return null;
-        }
-    }
 
     async getTeams(headers) {
         try {

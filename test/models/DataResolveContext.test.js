@@ -31,6 +31,5 @@ describe('DataResolveContext', () => {
             expect(dataResolveContext.customDataContext).to.equal(undefined);
             expect(dataResolveContext.contextInCustomData).to.equal(customDataContext.contextInCustomData);
             expect(dataResolveContext.shiftDetailsContext).to.equal(shiftDetailsContext);
-            expect(dataResolveContext.extendedStaffDetailsContext).to.equal(extendedStaffDetailsContext);
     });
 });

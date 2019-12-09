@@ -30,14 +30,4 @@ describe('DataContextFactory', () => {
 
         expect(processContext.businessKey).to.equal('existingKey');
     });
-    it('Should add encryption metadata', async () => {
-        const processData = {
-            businessKey: 'existingKey',
-        };
-
-        const processContext = await dataContextFactory.createProcessContext(processData);
-
-        expect(processContext.encryptionMetaData).to.not.be.null;
-        expect(processContext.encryptionMetaData).to.not.be.undefined;
-    });
 });

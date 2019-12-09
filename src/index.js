@@ -1,141 +1,51 @@
-import bodyParser from 'body-parser';
-import express from 'express';
-import expressValidator from 'express-validator';
-import route from './routes';
-import appConfig from './config/appConfig'
-import Redis from 'ioredis';
-import Keycloak from 'keycloak-connect';
-import helmet from 'helmet';
-import KeyRepository from './services/KeyRepository';
-import DataDecryptor from './services/DataDecryptor';
-import DataContextFactory from './services/DataContextFactory';
-import PlatformDataService from './services/PlatformDataService';
-import ProcessService from './services/ProcessService';
-import FormTranslator from './form/FormTranslator';
-import FormEngineService from './services/FormEngineService';
-import FormDataResolveController from './controllers/FormTranslateController';
-import WorkflowTranslationController from './controllers/workflowTranslationController';
-import logger from './config/winston';
-import Tracing from './utilities/tracing';
-import cors from 'cors';
-import BusinessKeyGenerator from './services/BusinessKeyGenerator';
-import IntegrityLeadService from './services/IntegrityLeadService';
+import DataContextFactory from "./services/DataContextFactory";
+import ProcessService from "./services/ProcessService";
+import appConfig from "./config/appConfig";
+import BusinessKeyGenerator from "./services/BusinessKeyGenerator";
+import PlatformDataService from "./services/PlatformDataService";
+import Redis from "ioredis";
+import logger from "./config/winston";
 
-const http = require('http');
-const fs = require('fs');
 
-const kcConfig = {
-    clientId: appConfig.keycloak.clientId,
-    serverUrl: appConfig.keycloak.url,
-    realm: appConfig.keycloak.realm,
-    bearerOnly: true
-};
+const processService = new ProcessService(appConfig);
 
-const app = express();
-
-const port = appConfig.port;
-
-app.set('port', port);
-
-logger.debug('Keycloak ClientID = ' + kcConfig.clientId);
-logger.debug('Keycloak serverUrl = ' + kcConfig.serverUrl);
-logger.debug('Keycloak realm = ' + kcConfig.realm);
-
-const keycloak = new Keycloak({}, kcConfig);
-
-const path = appConfig.privateKey.path;
-
-logger.debug('Private key path = ' + path);
-const ecKey = Buffer.from(fs.readFileSync(path));
-logger.debug('EC Key content resolved');
-
-const keyRepository = new KeyRepository();
-const dataDecryptor = new DataDecryptor(ecKey, keyRepository);
-
-function checkRedisSSL(redisSSl){
-    if(redisSSl) {
-        const redis = new Redis({
+const checkRedisSSL = (redisSSl) => {
+    if (redisSSl === true) {
+        return new Redis({
             host: `${appConfig.redis.url}`,
             port: appConfig.redis.port,
             password: appConfig.redis.token,
             tls: {}
-        });
-        return redis;
+        })
     } else {
-        const redis = new Redis({
+        return new Redis({
             host: `${appConfig.redis.url}`,
             port: appConfig.redis.port,
             password: appConfig.redis.token,
         });
-        return redis;
     }
-}
+};
 
 const redis = checkRedisSSL(appConfig.redis.ssl);
 
-const processService = new ProcessService(appConfig);
+redis.on('ready', () => {
+    logger.info('Client ready from plugin source');
+});
+redis.on('connect', () => {
+    logger.info('Client connected from plugin source');
+});
+
+redis.on('error', (error) => {
+    logger.error(`Could not connect to redis in plugin source due to [${error.message}]`);
+});
+
 const referenceGenerator = new BusinessKeyGenerator(redis);
 const platformDataService = new PlatformDataService(appConfig);
-const integrityLeadService = new IntegrityLeadService(platformDataService);
 const dataContextFactory = new DataContextFactory(
     platformDataService,
     processService,
-    dataDecryptor,
     referenceGenerator,
-    integrityLeadService
-);
-const translator = new FormTranslator(
-    new FormEngineService(appConfig),
-    dataContextFactory,
-    dataDecryptor
 );
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(expressValidator());
-app.use(helmet());
-app.use(keycloak.middleware());
-app.use(Tracing.middleware);
+module.exports = dataContextFactory;
 
-if (appConfig.cors.origin) {
-    app.use(cors({
-        origin: appConfig.cors.origin.split(','),
-        optionsSuccessStatus: 200
-    }));
-}
-
-app.use('/', route.allApiRouter(keycloak, new FormDataResolveController(translator, processService), new WorkflowTranslationController(processService, translator)));
-
-const server = http.createServer(app).listen(app.get('port'), function () {
-    logger.info('Listening on port %d', port);
-});
-
-process.on('SIGTERM', shutDown);
-process.on('SIGINT', shutDown);
-process.on('SIGQUIT', shutDown);
-
-let connections = [];
-
-server.on('connection', connection => {
-    connections.push(connection);
-    connection.on('close', () => connections = connections.filter(curr => curr !== connection));
-});
-
-function shutDown() {
-    logger.info('Received kill signal, shutting down gracefully');
-    server.close(() => {
-        logger.info('Closed out remaining connections');
-        process.exit(0);
-    });
-
-    setTimeout(() => {
-        logger.error('Could not close connections in time, forcefully shutting down');
-        process.exit(1);
-    }, 10000);
-
-    connections.forEach(curr => curr.end());
-    setTimeout(() => connections.forEach(curr => curr.destroy()), 5000);
-}
-
-
-module.exports = app;

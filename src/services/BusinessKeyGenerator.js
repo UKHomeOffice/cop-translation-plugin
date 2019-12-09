@@ -12,12 +12,10 @@ export default class BusinessKeyGenerator {
         const currentDate = today.format("YYYYMMDD");
         const key = _.isEmpty(prefix) ? `BF-${currentDate}` : `${prefix}-${currentDate}`;
         const expiryAt = today.add(1, 'day').unix();
-
         const count = await this.redis.multi()
             .incr(key)
             .expireat(key, expiryAt)
             .exec();
-
         return `${key}-${count[0][1]}`;
     }
 
