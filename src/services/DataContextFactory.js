@@ -6,10 +6,11 @@ import ProcessContext from '../models/ProcessContext';
 import TaskContext from '../models/TaskContext';
 import appConfig from '../config/appConfig';
 import FormioUtils from "formiojs/utils";
-import FormComponent from "../models/FormComponent";
-import BusinessKeyVisitor from "../form/BusinessKeyVisitor";
 import logger from "../config/winston";
 import Tracing from "../utilities/tracing";
+import BusinessKeyVisitor from "../form/BusinessKeyVisitor";
+import FormComponent from "../models/FormComponent";
+
 const getNamespace = require('cls-hooked').getNamespace;
 export default class DataContextFactory {
     constructor(
@@ -21,6 +22,7 @@ export default class DataContextFactory {
         this.processService = processService;
         this.referenceGenerator = referenceGenerator;
     }
+
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
         const session = getNamespace('requestId');
         return session.runAndReturn(async () => {
@@ -55,12 +57,12 @@ export default class DataContextFactory {
                     ]);
                     return new DataResolveContext(keycloakContext, staffDetailsContext,
                         environmentContext,
-                        await this.createProcessContext(processData),
+                        this.createProcessContext(processData),
                         new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
 
                 } else {
                     return new DataResolveContext(keycloakContext,
-                        staffDetailsContext, environmentContext, await this.createProcessContext([]), null,
+                        staffDetailsContext, environmentContext, null, null,
                         customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
                 }
             } catch (e) {
@@ -73,19 +75,16 @@ export default class DataContextFactory {
 
     }
 
-    async createProcessContext(processData) {
-        const processContext = new ProcessContext(processData);
-        if (!processContext.businessKey) {
-          processContext.businessKey = await this.referenceGenerator.newBusinessKey();
-        }
-        return processContext;
+    createProcessContext(processData) {
+        return new ProcessContext(processData);
     }
 
     async postProcess(dataContext, form) {
         const components = form.components;
-        FormioUtils.eachComponent(components, (component) => {
+        const businessKeyVisitor = new BusinessKeyVisitor(this.referenceGenerator);
+        FormioUtils.eachComponent(components, async (component) => {
             const formComponent = new FormComponent(component, dataContext);
-            formComponent.accept(new BusinessKeyVisitor());
+            await formComponent.accept(businessKeyVisitor);
         });
 
         return Promise.resolve(form);
