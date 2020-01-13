@@ -21,7 +21,7 @@ export default class DataContextFactory {
         this.platformDataService = platformDataService;
         this.processService = processService;
         this.referenceGenerator = referenceGenerator;
-        console.log("referenceGenerator" , this.referenceGenerator);
+        this.businessKeyVisitor = new BusinessKeyVisitor(this.referenceGenerator);
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
@@ -83,13 +83,13 @@ export default class DataContextFactory {
     }
 
     async postProcess(dataContext, form) {
+        logger.info('In post process');
         const components = form.components;
-        const businessKeyVisitor = new BusinessKeyVisitor(this.referenceGenerator);
         FormioUtils.eachComponent(components, async (component) => {
             const formComponent = new FormComponent(component, dataContext);
-            await formComponent.accept(businessKeyVisitor);
+            await formComponent.accept(this.businessKeyVisitor);
         });
-
+        logger.info('Post process complete');
         return Promise.resolve(form);
     }
 
