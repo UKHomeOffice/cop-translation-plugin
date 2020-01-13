@@ -21,6 +21,7 @@ export default class DataContextFactory {
         this.platformDataService = platformDataService;
         this.processService = processService;
         this.referenceGenerator = referenceGenerator;
+        console.log("referenceGenerator" , this.referenceGenerator);
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
@@ -38,6 +39,7 @@ export default class DataContextFactory {
 
                 const staffDetailsContext = new StaffDetailsContext(staffDetails);
                 const environmentContext = new EnvironmentContext(appConfig);
+
                 let shiftDetailsContext = null;
                 let extendedStaffDetailsContext = null;
 
@@ -61,6 +63,7 @@ export default class DataContextFactory {
                         new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
 
                 } else {
+                    console.log('In here!');
                     return new DataResolveContext(keycloakContext,
                         staffDetailsContext, environmentContext, null, null,
                         customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
