@@ -3,10 +3,10 @@ const {
     API_REF_URI,
     ENGINE_URI,
     WWW_URI,
-    REDIS_HOST,
+    REDIS_URI,
     REDIS_PORT,
     REDIS_TOKEN,
-    REDIS_SSL,
+    REDIS_SSL
 } = process.env;
 
 const appConfig = {
@@ -25,7 +25,7 @@ const appConfig = {
         }
     },
     redis: {
-        url: REDIS_HOST || 'localhost',
+        url: REDIS_URI || 'localhost',
         port: REDIS_PORT || 6379,
         token: REDIS_TOKEN,
         ssl: REDIS_SSL || false,
