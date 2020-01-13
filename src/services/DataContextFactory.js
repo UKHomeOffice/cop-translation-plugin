@@ -63,7 +63,7 @@ export default class DataContextFactory {
                         new TaskContext(taskData, taskVariables), customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
 
                 } else {
-                    console.log('In here!');
+                    logger.info('No process instance defined');
                     return new DataResolveContext(keycloakContext,
                         staffDetailsContext, environmentContext, null, null,
                         customDataContext, shiftDetailsContext, extendedStaffDetailsContext);
@@ -85,7 +85,7 @@ export default class DataContextFactory {
     async postProcess(dataContext, form) {
         logger.info('In post process');
         const components = form.components;
-        FormioUtils.eachComponent(components, async (component) => {
+        await FormioUtils.eachComponent(components, async (component) => {
             const formComponent = new FormComponent(component, dataContext);
             await formComponent.accept(this.businessKeyVisitor);
         });
