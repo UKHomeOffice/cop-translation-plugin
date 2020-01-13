@@ -85,12 +85,15 @@ export default class DataContextFactory {
     async postProcess(dataContext, form) {
         logger.info('In post process');
         const components = form.components;
-        await FormioUtils.eachComponent(components, async (component) => {
-            const formComponent = new FormComponent(component, dataContext);
-            await formComponent.accept(this.businessKeyVisitor);
-        });
+        const businessKeyComponent = FormioUtils.getComponent(components, 'businessKey');
+
+        if (businessKeyComponent && (!businessKeyComponent.defaultValue || businessKeyComponent.defaultValue === '')) {
+            const businessKey = await this.referenceGenerator.newBusinessKey();
+            logger.info(`New business key ${businessKey}`);
+            businessKeyComponent.defaultValue = businessKey;
+        }
         logger.info('Post process complete');
-        return Promise.resolve(form);
+        return form;
     }
 
     createHeader(keycloakContext) {
