@@ -8,7 +8,6 @@ import appConfig from '../config/appConfig';
 import FormioUtils from "formiojs/utils";
 import logger from "../config/winston";
 import Tracing from "../utilities/tracing";
-import BusinessKeyVisitor from "../form/BusinessKeyVisitor";
 import FormComponent from "../models/FormComponent";
 
 const getNamespace = require('cls-hooked').getNamespace;
