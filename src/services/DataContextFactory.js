@@ -20,7 +20,6 @@ export default class DataContextFactory {
         this.platformDataService = platformDataService;
         this.processService = processService;
         this.referenceGenerator = referenceGenerator;
-        this.businessKeyVisitor = new BusinessKeyVisitor(this.referenceGenerator);
     }
 
     async createDataContext(keycloakContext, {processInstanceId, taskId}, customDataContext) {
